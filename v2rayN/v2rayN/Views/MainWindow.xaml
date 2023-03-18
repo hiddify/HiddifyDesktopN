@@ -13,7 +13,7 @@
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:vms="clr-namespace:v2rayN.ViewModels"
     Title="HiddifyN"
-    Width="1000"
+    Width="1200"
     Height="700"
     MinWidth="800"
     MinHeight="600"
@@ -68,12 +68,18 @@
                             </MenuItem>
                         </Menu>
                         <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
-                            <StackPanel HorizontalAlignment="Center">
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                     <TextBlock Text="{x:Static resx:ResUI.TbEnableProxy}" />
-                                    <ToggleButton Margin="0,3,0,0"
+                                
+                                
+                                    <ToggleButton Margin="8,3,0,0"
                                 x:Name="togEnableProxy"
                                 Click="togEnableProxy_Click"
-                                HorizontalAlignment="Center"/>
+                                >
+                                    <ToggleButton.Effect>
+                                        <DropShadowEffect/>
+                                    </ToggleButton.Effect>
+                                </ToggleButton>
                             </StackPanel>
 
                         </Menu>
@@ -461,6 +467,7 @@
                             Orientation="Horizontal">
                             <ComboBox
                                 x:Name="cmbSystemProxy"
+                                Visibility="Collapsed"
                                 Width="120"
                                 Margin="8,0"
                                 materialDesign:HintAssist.Hint="{x:Static resx:ResUI.menuSystemproxy}"

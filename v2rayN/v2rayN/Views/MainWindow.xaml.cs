@@ -669,14 +669,16 @@ namespace v2rayN.Views
 
         private void togEnableTun_Click(object sender, RoutedEventArgs e)
         {
+            //TODO @sarina plz check if is admin, if not restart the app in admin mode (similar to your restart app but open in admin)
             MessageBox.Show("You should open app as an admin");
-            togEnableProxy.IsChecked=togEnableTun.IsChecked;
+            togEnableProxy.IsChecked=togEnableTun.IsChecked;//in anycase enabling tun mode should enable proxy button
         }
 
         private void togEnableProxy_Click(object sender, RoutedEventArgs e)
         {
+
             
-            var is_admin = false;
+            var is_admin = false;//TODO @sarina plz check if is admin
             if (is_admin)
             {
                 togEnableTun.IsChecked = togEnableProxy.IsChecked;
