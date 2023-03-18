@@ -2,30 +2,51 @@
   {
     "outboundTag": "direct",
     "domain": [
-      "domain:example-example.com",
-      "domain:example-example2.com"
+      "domain:example.com",
+      "domain:example2.com"
     ]
   },
   {
+    "type": "field",
     "outboundTag": "block",
     "domain": [
       "geosite:category-ads-all"
     ]
   },
   {
+    "type": "field",
     "outboundTag": "direct",
     "domain": [
-      "geosite:cn"
+      "geosite:private",
+      "geosite:apple@cn",
+      "geosite:google@cn",
+      "geosite:tld-cn",
+      "geosite:tld-ir",
+      "domain:ir"
     ]
   },
   {
+    "type": "field",
+    "outboundTag": "proxy",
+    "domain": [
+      "geosite:geolocation-!ir"
+    ]
+  },
+  {
+    "type": "field",
     "outboundTag": "direct",
     "ip": [
       "geoip:private",
-      "geoip:cn"
+      "geoip:cn",
+      "geoip:ir"
+    ],
+    "domain": [
+      "geosite:cn",
+      "domain:ir"
     ]
   },
   {
+    "type": "field",
     "port": "0-65535",
     "outboundTag": "proxy"
   }

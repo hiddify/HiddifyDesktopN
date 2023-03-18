@@ -188,50 +188,6 @@
                             </MenuItem>
                         </Menu>
                         <Separator />
-                        <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
-                            <MenuItem Padding="8,0">
-                                <MenuItem.Header>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Margin="0,0,8,0"
-                                            VerticalAlignment="Center"
-                                            Kind="Update" />
-                                        <TextBlock Text="{x:Static resx:ResUI.menuCheckUpdate}" />
-                                    </StackPanel>
-                                </MenuItem.Header>
-                                <MenuItem
-                                    x:Name="menuCheckUpdateN"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="HiddifyN" />
-                                <MenuItem
-                                    x:Name="menuCheckUpdateV2flyCore"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="V2fly v5 Core" />
-                                <MenuItem
-                                    x:Name="menuCheckUpdateSagerNetCore"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="SagerNet Core" />
-                                <MenuItem
-                                    x:Name="menuCheckUpdateXrayCore"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="Xray Core" />
-                                <Separator Margin="-40,5" />
-                                <MenuItem
-                                    x:Name="menuCheckUpdateClashCore"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="Clash Core" />
-                                <MenuItem
-                                    x:Name="menuCheckUpdateClashMetaCore"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="Clash.Meta Core" />
-                                <Separator Margin="-40,5" />
-                                <MenuItem
-                                    x:Name="menuCheckUpdateGeo"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="Geo files" />
-                            </MenuItem>
-                        </Menu>
-                        <Separator />
                         
                         <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
                             <MenuItem
@@ -260,19 +216,6 @@
                             
                             <StackPanel Margin="8">
                                 <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
-                                    <MenuItem x:Name="menuHelp" Padding="8,0">
-                                        <MenuItem.Header>
-                                            <StackPanel Orientation="Horizontal">
-                                                <materialDesign:PackIcon
-                                            Margin="0,0,8,0"
-                                            VerticalAlignment="Center"
-                                            Kind="HelpCircleOutline" />
-                                                <TextBlock Text="{x:Static resx:ResUI.menuHelp}" />
-                                            </StackPanel>
-                                        </MenuItem.Header>
-                                    </MenuItem>
-                                </Menu>
-                                <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
                                     <MenuItem
                                 x:Name="menuClose"
                                 Padding="8,0"
@@ -288,6 +231,64 @@
                                         </MenuItem.Header>
                                     </MenuItem>
                                 </Menu>
+                                <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
+                                    <MenuItem Padding="8,0">
+                                        <MenuItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                            Margin="0,0,8,0"
+                                            VerticalAlignment="Center"
+                                            Kind="Update" />
+                                                <TextBlock Text="{x:Static resx:ResUI.menuCheckUpdate}" />
+                                            </StackPanel>
+                                        </MenuItem.Header>
+                                        <MenuItem
+                                    x:Name="menuCheckUpdateN"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="HiddifyN" />
+                                        <MenuItem
+                                    x:Name="menuCheckUpdateV2flyCore"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="V2fly v5 Core" />
+                                        <MenuItem
+                                    x:Name="menuCheckUpdateSagerNetCore"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="SagerNet Core" />
+                                        <MenuItem
+                                    x:Name="menuCheckUpdateXrayCore"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="Xray Core" />
+                                        <Separator Margin="-40,5" />
+                                        <MenuItem
+                                    x:Name="menuCheckUpdateClashCore"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="Clash Core" />
+                                        <MenuItem
+                                    x:Name="menuCheckUpdateClashMetaCore"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="Clash.Meta Core" />
+                                        <Separator Margin="-40,5" />
+                                        <MenuItem
+                                    x:Name="menuCheckUpdateGeo"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="Geo files" />
+                                    </MenuItem>
+                                </Menu>
+                                
+                                <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
+                                    <MenuItem x:Name="menuHelp" Padding="8,0">
+                                        <MenuItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                            Margin="0,0,8,0"
+                                            VerticalAlignment="Center"
+                                            Kind="HelpCircleOutline" />
+                                                <TextBlock Text="{x:Static resx:ResUI.menuHelp}" />
+                                            </StackPanel>
+                                        </MenuItem.Header>
+                                    </MenuItem>
+                                </Menu>
+                                <Separator />
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />

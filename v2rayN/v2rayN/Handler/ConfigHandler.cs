@@ -1478,7 +1478,7 @@ namespace v2rayN.Handler
                 //Bypass the mainland
                 var item2 = new RoutingItem()
                 {
-                    remarks = "绕过大陆(Whitelist)",
+                    remarks = "All Foreign Sites سایتهای خارجی",
                     url = string.Empty,
                     sort = maxSort + 1,
                 };
@@ -1487,7 +1487,7 @@ namespace v2rayN.Handler
                 //Blacklist
                 var item3 = new RoutingItem()
                 {
-                    remarks = "黑名单(Blacklist)",
+                    remarks = "Only blocked sites فقط سایت های فیلتر",
                     url = string.Empty,
                     sort = maxSort + 2,
                 };
@@ -1496,7 +1496,7 @@ namespace v2rayN.Handler
                 //Global
                 var item1 = new RoutingItem()
                 {
-                    remarks = "全局(Global)",
+                    remarks = "Global",
                     url = string.Empty,
                     sort = maxSort + 3,
                 };
