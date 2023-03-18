@@ -358,7 +358,7 @@
                         </MenuItem>
                     </Menu>
                     <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
-                        <MenuItem Padding="8,0">
+                        <MenuItem Padding="8,0" x:Name="menuSubSetting">
                             <MenuItem.Header>
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon
@@ -368,28 +368,8 @@
                                     <TextBlock Text="{x:Static resx:ResUI.menuSubscription}" />
                                 </StackPanel>
                             </MenuItem.Header>
-                            <MenuItem
-                                    x:Name="menuSubSetting"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="{x:Static resx:ResUI.menuSubSetting}" />
-                            <Separator Margin="-40,5" />
-                            <MenuItem
-                                    x:Name="menuSubUpdate"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="{x:Static resx:ResUI.menuSubUpdate}" />
-                            <MenuItem
-                                    x:Name="menuSubUpdateViaProxy"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="{x:Static resx:ResUI.menuSubUpdateViaProxy}" />
-                            <MenuItem
-                                    x:Name="menuSubGroupUpdate"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="{x:Static resx:ResUI.menuSubGroupUpdate}" />
-                            <MenuItem
-                                    x:Name="menuSubGroupUpdateViaProxy"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="{x:Static resx:ResUI.menuSubGroupUpdateViaProxy}" />
                         </MenuItem>
+
                     </Menu>
                     <Separator />
                     <ListBox
