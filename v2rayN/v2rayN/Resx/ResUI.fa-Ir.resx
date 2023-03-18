@@ -282,7 +282,7 @@
   <data name="MsgProgramNeedsRestarting" xml:space="preserve">
     <value>! برای انجام این عملیات، برنامه باید راه‌اندازی مجدد شود</value>
   </data>
-	<data name="MsgUpdateSubscriptionStart" xml:space="preserve">
+  <data name="MsgUpdateSubscriptionStart" xml:space="preserve">
     <value>بروزرسانی اشتراک شروع شد</value>
   </data>
   <data name="MsgUpdateV2rayCoreSuccessfully" xml:space="preserve">
@@ -1074,5 +1074,8 @@
   </data>
   <data name="TbSettingsEnableHWA" xml:space="preserve">
     <value>فعال‌سازی شتاب‌دهنده سخت‌افزاری (نیاز به راه‌اندازی مجدد)</value>
+  </data>
+  <data name="TbEnableProxy" xml:space="preserve">
+    <value>فعال کردن پروکسی</value>
   </data>
 </root>

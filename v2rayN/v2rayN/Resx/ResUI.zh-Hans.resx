@@ -274,9 +274,6 @@
     <value>正在解压......</value>
   </data>
   <data name="MsgUpdateSubscriptionEnd" xml:space="preserve">
-    <value>更新订阅结束</value>
-  </data>
-  <data name="MsgUpdateSubscriptionEnd" xml:space="preserve">
     <value>未更新任何内容</value>
   </data>
   <data name="MsgUpdateSubscriptionStart" xml:space="preserve">
@@ -1155,5 +1152,8 @@
   </data>
   <data name="SpeedtestingWait" xml:space="preserve">
     <value>等待测试中...</value>
+  </data>
+  <data name="TbEnableProxy" xml:space="preserve">
+    <value>Active Proxy</value>
   </data>
 </root>

@@ -239,7 +239,7 @@ namespace v2rayN.Views
             var IsAdministrator = Utils.IsAdministrator();
             this.Title = $"{Utils.GetVersion()} - {(IsAdministrator ? ResUI.RunAsAdmin : ResUI.NotRunAsAdmin)}";
 
-            spEnableTun.Visibility = IsAdministrator ? Visibility.Visible : Visibility.Collapsed;
+            //spEnableTun.IsEnabled = IsAdministrator ? Visibility.Visible : Visibility.Collapsed;
 
             if (_config.uiItem.autoHideStartup)
             {
@@ -285,6 +285,18 @@ namespace v2rayN.Views
             ViewModel?.ShowHideWindow(false);
         }
 
+
+        private void update_sub_click(object sender, RoutedEventArgs e)
+        {
+            var item = (MenuItem)sender;
+
+            //MessageBox.Show(item.Uid);           
+            ViewModel?.UpdateSubscriptionProcess(item.Uid, false);//without proxy
+            ViewModel?.UpdateSubscriptionProcess(item.Uid, true);//with proxy
+            
+
+        }
+
         private void menuExit_Click(object sender, RoutedEventArgs e)
         {
             tbNotify.Dispose();
@@ -315,7 +327,9 @@ namespace v2rayN.Views
 
         private void LstProfiles_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (_config.uiItem.doubleClick2Activate)
+            
+            //if (_config.uiItem.doubleClick2Activate)
+            if (ViewModel?.SelectedProfile?.isActive==false)
             {
                 ViewModel?.SetDefaultServer();
             }
@@ -650,8 +664,29 @@ namespace v2rayN.Views
             }
         }
 
+
         #endregion
 
+        private void togEnableTun_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("You should open app as an admin");
+            togEnableProxy.IsChecked=togEnableTun.IsChecked;
+        }
+
+        private void togEnableProxy_Click(object sender, RoutedEventArgs e)
+        {
+            
+            var is_admin = false;
+            if (is_admin)
+            {
+                togEnableTun.IsChecked = togEnableProxy.IsChecked;
+            }
+            else
+            {
+                cmbSystemProxy.SelectedIndex = togEnableProxy.IsChecked==true ? 1 : 0;
+                
+            }
+        }
 
     }
 }

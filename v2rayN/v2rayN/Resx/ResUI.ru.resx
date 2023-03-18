@@ -1117,4 +1117,7 @@
   <data name="TbSettingsEnableHWA" xml:space="preserve">
     <value>Включить аппаратное ускорение (требуется перезагрузка)</value>
   </data>
+  <data name="TbEnableProxy" xml:space="preserve">
+    <value>Active Proxy</value>
+  </data>
 </root>

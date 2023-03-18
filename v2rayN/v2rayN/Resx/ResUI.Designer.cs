@@ -1204,7 +1204,7 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Subscription group.
+        ///   Looks up a localized string similar to Subs group.
         /// </summary>
         public static string menuSubscription {
             get {
@@ -2038,6 +2038,15 @@ namespace v2rayN.Resx {
         public static string TbEdit {
             get {
                 return ResourceManager.GetString("TbEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Proxy.
+        /// </summary>
+        public static string TbEnableProxy {
+            get {
+                return ResourceManager.GetString("TbEnableProxy", resourceCulture);
             }
         }
         
