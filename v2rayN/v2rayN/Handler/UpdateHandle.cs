@@ -79,7 +79,7 @@ namespace v2rayN.Handler
             {
                 if (args.Success)
                 {
-                    _updateFunc(false, string.Format(ResUI.MsgParsingSuccessfully, "v2rayN"));
+                    _updateFunc(false, string.Format(ResUI.MsgParsingSuccessfully, "HiddifyN"));
 
                     url = args.Msg;
                     askToDownload(downloadHandle, url, true);
@@ -90,7 +90,7 @@ namespace v2rayN.Handler
                     _updateFunc(false, args.Msg);
                 }
             };
-            _updateFunc(false, string.Format(ResUI.MsgStartUpdating, "v2rayN"));
+            _updateFunc(false, string.Format(ResUI.MsgStartUpdating, "HiddifyN"));
             CheckUpdateAsync(ECoreType.v2rayN, preRelease);
         }
 
@@ -161,6 +161,8 @@ namespace v2rayN.Handler
                 return;
             }
 
+            bool anySubUpdated = false;
+
             Task.Run(async () =>
             {
                 //Turn off system proxy
@@ -173,8 +175,9 @@ namespace v2rayN.Handler
                 //    Thread.Sleep(3000);
                 //}
 
-                foreach (var item in subItem)
+                for (int i = 0; i< subItem.Count; i++)
                 {
+                    var item = subItem[i];
                     if (item.enabled == false)
                     {
                         continue;
@@ -228,6 +231,10 @@ namespace v2rayN.Handler
                             Utils.SaveLog("FailedImportSubscription");
                             Utils.SaveLog(result);
                         }
+                        else
+                        {
+                            anySubUpdated = true;
+                        }
                         _updateFunc(false,
                             ret > 0
                                 ? $"{hashCode}{ResUI.MsgUpdateSubscriptionEnd}"
@@ -241,6 +248,10 @@ namespace v2rayN.Handler
                 //    config.sysProxyType = ESysProxyType.ForcedChange;
                 //    SysProxyHandle.UpdateSysProxy(config, false);
                 //}
+                if (!anySubUpdated) 
+                {
+                    _updateFunc(false, $"{ResUI.MsgNothingUpdated}");
+                }
                 _updateFunc(true, $"{ResUI.MsgUpdateSubscriptionEnd}");
 
             });

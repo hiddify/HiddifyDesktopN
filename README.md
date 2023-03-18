@@ -9,13 +9,14 @@ A V2Ray client for Windows, support [Xray core](https://github.com/XTLS/Xray-cor
 
 ### How to use
 - If you are new to this, please download v2rayN-Core.zip from [releases](https://github.com/2dust/v2rayN/releases)
-- Otherwise please download v2rayN.zip (you will also need to download v2ray core into the same folder with v2rayN.exe)
-- Run v2rayN.exe
+- Otherwise please download v2rayN.zip (you will also need to download v2ray core into the same folder with HiddifyN.exe)
+- Run HiddifyN.exe
 
 ### Requirements  
 - Microsoft [.NET Framework 4.8 Runtime](https://dotnet.microsoft.com/zh-cn/download/dotnet-framework/thank-you/net48-offline-installer)
 - v2fly core [https://github.com/v2fly/v2ray-core/releases](https://github.com/v2fly/v2ray-core/releases)
 - Xray core [https://github.com/XTLS/Xray-core/releases](https://github.com/XTLS/Xray-core/releases)
 
-### Telegram Channel
-[github_2dust](https://t.me/github_2dust)
+### Telegram
+- Channel: [Hiddify](https://t.me/hiddify)
+- Group: [Hiddify Discussion](https://t.me/hiddify_board)

@@ -276,7 +276,13 @@
   <data name="MsgUpdateSubscriptionEnd" xml:space="preserve">
     <value>بروزرسانی اشتراک به پایان رسید</value>
   </data>
-  <data name="MsgUpdateSubscriptionStart" xml:space="preserve">
+  <data name="MsgNothingUpdated" xml:space="preserve">
+    <value>چیزی بروزرسانی نشد</value>
+  </data>
+  <data name="MsgProgramNeedsRestarting" xml:space="preserve">
+    <value>! برای انجام این عملیات، برنامه باید راه‌اندازی مجدد شود</value>
+  </data>
+	<data name="MsgUpdateSubscriptionStart" xml:space="preserve">
     <value>بروزرسانی اشتراک شروع شد</value>
   </data>
   <data name="MsgUpdateV2rayCoreSuccessfully" xml:space="preserve">
@@ -494,7 +500,7 @@
     <value>تنظیمات پارامتر</value>
   </data>
   <data name="menuPromotion" xml:space="preserve">
-    <value>ترفیع</value>
+    <value>اطلاع رسانی</value>
   </data>
   <data name="menuReload" xml:space="preserve">
     <value>بارگذاری مجدد</value>

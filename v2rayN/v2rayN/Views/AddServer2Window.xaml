@@ -11,7 +11,7 @@
     xmlns:reactiveui="http://reactiveui.net"
     xmlns:resx="clr-namespace:v2rayN.Resx"
     xmlns:vms="clr-namespace:v2rayN.ViewModels"
-    Title="v2rayN"
+    Title="HiddifyN"
     Width="700"
     Height="500"
     x:TypeArguments="vms:AddServer2ViewModel"

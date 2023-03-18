@@ -1,9 +1,11 @@
-﻿using System.Data;
+﻿using Splat;
+using System.Data;
 using System.IO;
 using System.Text.RegularExpressions;
 using v2rayN.Base;
 using v2rayN.Mode;
 using v2rayN.Tool;
+using v2rayN.ViewModels;
 
 namespace v2rayN.Handler
 {
@@ -371,7 +373,7 @@ namespace v2rayN.Handler
             }
 
             AddServerCommon(ref config, profileItem, toFile);
-
+            
             return 0;
         }
 
@@ -1235,6 +1237,7 @@ namespace v2rayN.Handler
             }
             if (SqliteHelper.Instance.Replace(subItem) > 0)
             {
+                Utils.SetMainPageReload();
                 return 0;
             }
             else

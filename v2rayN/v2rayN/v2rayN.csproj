@@ -14,17 +14,22 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Downloader" Version="3.0.3" />		
-		<PackageReference Include="MaterialDesignThemes" Version="4.7.1" />
+	  <None Remove="v2rayN.ico" />
+	  <None Remove="Views\v2rayN.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Downloader" Version="3.0.4" />		
+		<PackageReference Include="MaterialDesignThemes" Version="4.8.0" />
 		<PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />		 
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="QRCoder.Xaml" Version="1.4.3" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
 		<PackageReference Include="TaskScheduler" Version="2.10.1" /> 
 		<PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.12" />
-		<PackageReference Include="ReactiveUI.Fody" Version="18.4.1" />
-		<PackageReference Include="ReactiveUI.Validation" Version="3.0.22" />
-		<PackageReference Include="ReactiveUI.WPF" Version="18.4.1" />
+		<PackageReference Include="ReactiveUI.Fody" Version="18.4.26" />
+		<PackageReference Include="ReactiveUI.Validation" Version="3.1.7" />
+		<PackageReference Include="ReactiveUI.WPF" Version="18.4.26" />
 		<PackageReference Include="Splat.NLog" Version="14.6.8" />
 		<PackageReference Include="System.Reactive" Version="5.0.0" />
 	</ItemGroup>
@@ -66,9 +71,6 @@
         </EmbeddedResource>  
         <EmbeddedResource Include="Sample\SampleServerConfig">
           <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-        </EmbeddedResource>  
-        <EmbeddedResource Include="v2rayN.ico">
-          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
         <Resource Include="Resources\NotifyIcon1.ico" />
         <Resource Include="Resources\NotifyIcon2.ico" />
@@ -76,6 +78,7 @@
         <Resource Include="v2rayN.ico">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Resource>
+        <Resource Include="Views\v2rayN.ico" />
     </ItemGroup> 	 
 	
 	<ItemGroup>

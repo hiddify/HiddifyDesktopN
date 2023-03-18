@@ -10,6 +10,7 @@ using System.Drawing;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Security.RightsManagement;
 using System.Text;
 using System.Windows;
 using System.Windows.Forms;
@@ -197,10 +198,12 @@ namespace v2rayN.ViewModels
 
         [Reactive]
         public string CurrentLanguage { get; set; }
+
         #endregion
 
         #region Init
 
+        private bool ForInitiationLanguage = true;
         public MainWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue, Action<string> updateView)
         {
             _updateView = updateView;
@@ -268,7 +271,7 @@ namespace v2rayN.ViewModels
 
             BindingUI();
             RestoreUI();
-            AutoHideStartup();
+            //AutoHideStartup();
 
             //servers
             AddVmessServerCmd = ReactiveCommand.Create(() =>
@@ -652,38 +655,41 @@ namespace v2rayN.ViewModels
                     break;
             }
         }
+        private void PreExit(bool blWindowsShutDown)
+        {
+            Utils.SaveLog("PreExit Begin");
+
+            StorageUI();
+            ConfigHandler.SaveConfig(ref _config);
+
+            //HttpProxyHandle.CloseHttpAgent(config);
+            if (blWindowsShutDown)
+            {
+                SysProxyHandle.ResetIEProxy4WindowsShutDown();
+            }
+            else
+            {
+                SysProxyHandle.UpdateSysProxy(_config, true);
+            }
+
+            ProfileExHandler.Instance.SaveTo();
+
+            _statistics?.SaveTo();
+            _statistics?.Close();
+
+            _coreHandler.CoreStop();
+            Utils.SaveLog("PreExit End");
+        }
         public void MyAppExit(bool blWindowsShutDown)
         {
             try
             {
-                Utils.SaveLog("MyAppExit Begin");
-
-                StorageUI();
-                ConfigHandler.SaveConfig(ref _config);
-
-                //HttpProxyHandle.CloseHttpAgent(config);
-                if (blWindowsShutDown)
-                {
-                    SysProxyHandle.ResetIEProxy4WindowsShutDown();
-                }
-                else
-                {
-                    SysProxyHandle.UpdateSysProxy(_config, true);
-                }
-
-                ProfileExHandler.Instance.SaveTo();
-
-                _statistics?.SaveTo();
-                _statistics?.Close();
-
-                _coreHandler.CoreStop();
-                Utils.SaveLog("MyAppExit End");
+                PreExit(blWindowsShutDown);
             }
             catch { }
             finally
             {
-                Application.Current.Shutdown();
-                Environment.Exit(0);
+                Utils.ExitSuccess();
             }
         }
 
@@ -691,7 +697,7 @@ namespace v2rayN.ViewModels
 
         #region Servers && Groups
 
-        private void SubSelectedChanged(bool c)
+        public void SubSelectedChanged(bool c)
         {
             if (!c)
             {
@@ -815,7 +821,7 @@ namespace v2rayN.ViewModels
             }
         }
 
-        private void InitSubscriptionView()
+        public void InitSubscriptionView()
         {
             _subItems.Clear();
 
@@ -1250,8 +1256,13 @@ namespace v2rayN.ViewModels
         {
             if ((new SubSettingWindow()).ShowDialog() == true)
             {
+                // Update view
                 InitSubscriptionView();
                 SubSelectedChanged(true);
+
+                // Update Subscription after add
+                SubItem latestSubItem = LazyConfig.Instance.GetLastSubItem();
+                UpdateSubscriptionProcess(latestSubItem.id, true);
             }
         }
         private void AddSub()
@@ -1260,10 +1271,16 @@ namespace v2rayN.ViewModels
             var ret = (new SubEditWindow(item)).ShowDialog();
             if (ret == true)
             {
+                // Update view
                 InitSubscriptionView();
                 SubSelectedChanged(true);
+
+                // Update Subscription after add
+                SubItem latestSubItem = LazyConfig.Instance.GetLastSubItem();
+                UpdateSubscriptionProcess(latestSubItem.id, true);
             }
         }
+
 
         private void UpdateSubscriptionProcess(string subId, bool blProxy)
         {
@@ -1670,9 +1687,26 @@ namespace v2rayN.ViewModels
                 {
                     if (!Utils.IsNullOrEmpty(CurrentLanguage))
                     {
-                        _config.uiItem.currentLanguage = CurrentLanguage;
                         Thread.CurrentThread.CurrentUICulture = new(CurrentLanguage);
-                        ConfigHandler.SaveConfig(ref _config);
+                        if (ForInitiationLanguage)
+                        {
+                            ForInitiationLanguage = false;
+                        }
+                        else
+                        {
+                            var userRes = UI.ShowYesNo(ResUI.MsgProgramNeedsRestarting);
+                            if (userRes == DialogResult.Yes)
+                            {
+                                _config.uiItem.currentLanguage = CurrentLanguage;
+                                ConfigHandler.SaveConfig(ref _config);
+
+                                // Restart program
+                                PreExit(true);
+                                Utils.RestartProgram();
+
+                            }
+                        }
+
                     }
                 });
         }

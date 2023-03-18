@@ -35,11 +35,11 @@ namespace v2rayUpgrade
         {
             try
             {
-                Process[] existing = Process.GetProcessesByName("v2rayN");
+                Process[] existing = Process.GetProcessesByName("HiddifyN");
                 foreach (Process p in existing)
                 {
                     string? path = p.MainModule?.FileName;
-                    if (path == GetPath("v2rayN.exe"))
+                    if (path == GetPath("HiddifyN.exe"))
                     {
                         p.Kill();
                         p.WaitForExit(100);
@@ -114,7 +114,7 @@ namespace v2rayUpgrade
                 return;
             }
 
-            Process.Start("v2rayN.exe");
+            Process.Start("HiddifyN.exe");
             MessageBox.Show("Upgrade successed(升级成功)", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             Close();

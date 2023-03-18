@@ -276,6 +276,12 @@
   <data name="MsgUpdateSubscriptionEnd" xml:space="preserve">
     <value>Обновление подписки закончено</value>
   </data>
+  <data name="MsgNothingUpdated" xml:space="preserve">
+    <value>ничего не было обновлено</value>
+  </data>
+  <data name="MsgProgramNeedsRestarting" xml:space="preserve">
+    <value>Для выполнения этой операции программу необходимо перезапустить !</value>
+  </data>
   <data name="MsgUpdateSubscriptionStart" xml:space="preserve">
     <value>Обновление подписки начинается</value>
   </data>

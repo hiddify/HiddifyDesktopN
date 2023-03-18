@@ -276,6 +276,12 @@
   <data name="MsgUpdateSubscriptionEnd" xml:space="preserve">
     <value>Update subscription end</value>
   </data>
+  <data name="MsgNothingUpdated" xml:space="preserve">
+    <value>Nothing has been Updated</value>
+  </data>
+  <data name="MsgProgramNeedsRestarting" xml:space="preserve">
+    <value>To perform this operation, the program must be restarted !</value>
+  </data>
   <data name="MsgUpdateSubscriptionStart" xml:space="preserve">
     <value>Update subscription starts</value>
   </data>
@@ -494,7 +500,7 @@
     <value>OptionSetting</value>
   </data>
   <data name="menuPromotion" xml:space="preserve">
-    <value>Promotion</value>
+    <value>Channel</value>
   </data>
   <data name="menuReload" xml:space="preserve">
     <value>Reload</value>

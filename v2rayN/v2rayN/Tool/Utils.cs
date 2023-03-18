@@ -10,6 +10,7 @@ using System.IO.Compression;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Printing.IndexedProperties;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -865,13 +866,13 @@ namespace v2rayN
                 string location = GetExePath();
                 if (blFull)
                 {
-                    return string.Format("v2rayN - V{0} - {1}",
+                    return string.Format("HiddifyN - V{0} - {1}",
                             FileVersionInfo.GetVersionInfo(location).FileVersion.ToString(),
                             File.GetLastWriteTime(location).ToString("yyyy/MM/dd"));
                 }
                 else
                 {
-                    return string.Format("v2rayN/{0}",
+                    return string.Format("HiddifyN/{0}",
                         FileVersionInfo.GetVersionInfo(location).FileVersion.ToString());
                 }
             }
@@ -1237,5 +1238,78 @@ namespace v2rayN
         public static extern int DwmSetWindowAttribute(IntPtr hwnd, DWMWINDOWATTRIBUTE attribute, ref int attributeValue, uint attributeSize);
 
         #endregion
+
+        // It doesn't really lock the file, because if the program be closed, the file will be unlocked
+        // Instead of that, it will write locked in the file
+        private static void LockMainFormReloadFile()
+        {
+            File.WriteAllText(Global.MainFormReloadFilePath, "locked");
+        }
+        private static void UnlockMainFormReloadFile()
+        {
+            File.WriteAllText(Global.MainFormReloadFilePath, "unlocked");
+        }
+        private static bool IsMainFormReloadFileLocked()
+        {
+           if (!File.Exists(Global.MainFormReloadFilePath))
+           {
+                return false;
+           }
+           string content = File.ReadAllText(Global.MainFormReloadFilePath);
+           if (content == "locked")
+           {
+                return true;
+           }
+           else if (content == "unlocked")
+           {
+                return false;
+           }
+           else
+           {
+                throw new Exception($"the {Global.MainFormReloadFilePath} lock file, abnormaly changed, please delete it");
+           }
+        }
+
+        public static void SetMainPageReload()
+        {
+            LockMainFormReloadFile();
+        }
+        public static void UnsetMainPageReload()
+        {
+            UnlockMainFormReloadFile();
+        }
+        public static bool DoesMainPageNeedReload()
+        {
+            return IsMainFormReloadFileLocked();
+        }
+        public static void ExitSuccess()
+        {
+            System.Windows.Application.Current.Shutdown();
+            Environment.Exit(0);
+        }
+        public static void ExitError(int err)
+        {
+            System.Windows.Application.Current.Shutdown();
+            Environment.Exit(err);
+        }
+        public static int GetAppProcessID()
+        {
+            return Process.GetCurrentProcess().Id;
+        }
+        public static void RestartProgram()
+        {
+            new Thread(delegate ()
+            {
+                var mainProgramID = GetAppProcessID();
+                var pInfo = new ProcessStartInfo();
+                pInfo.FileName = Global.RestartProgramExePath;
+                pInfo.WorkingDirectory = Environment.CurrentDirectory;
+                pInfo.Arguments = $"{mainProgramID}";
+                pInfo.CreateNoWindow = true;
+
+                Process.Start(pInfo);
+
+            }).Start();
+        }
     }
 }

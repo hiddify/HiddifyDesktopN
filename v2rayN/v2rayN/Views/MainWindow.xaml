@@ -12,8 +12,8 @@
     xmlns:resx="clr-namespace:v2rayN.Resx"
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:vms="clr-namespace:v2rayN.ViewModels"
-    Title="v2rayN"
-    Width="900"
+    Title="HiddifyN"
+    Width="1000"
     Height="700"
     MinWidth="800"
     MinHeight="600"
@@ -202,7 +202,7 @@
                                 <MenuItem
                                     x:Name="menuCheckUpdateN"
                                     Height="{StaticResource MenuItemHeight}"
-                                    Header="v2rayN" />
+                                    Header="HiddifyN" />
                                 <MenuItem
                                     x:Name="menuCheckUpdateV2flyCore"
                                     Height="{StaticResource MenuItemHeight}"
@@ -232,20 +232,7 @@
                             </MenuItem>
                         </Menu>
                         <Separator />
-                        <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
-                            <MenuItem x:Name="menuHelp" Padding="8,0">
-                                <MenuItem.Header>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Margin="0,0,8,0"
-                                            VerticalAlignment="Center"
-                                            Kind="HelpCircleOutline" />
-                                        <TextBlock Text="{x:Static resx:ResUI.menuHelp}" />
-                                    </StackPanel>
-                                </MenuItem.Header>
-                            </MenuItem>
-                        </Menu>
-                        <Separator />
+                        
                         <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
                             <MenuItem
                                 x:Name="menuPromotion"
@@ -263,29 +250,44 @@
                             </MenuItem>
                         </Menu>
                         <Separator />
-                        <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
-                            <MenuItem
-                                x:Name="menuClose"
-                                Padding="8,0"
-                                Click="menuClose_Click">
-                                <MenuItem.Header>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon
-                                            Margin="0,0,8,0"
-                                            VerticalAlignment="Center"
-                                            Kind="Minimize" />
-                                        <TextBlock Text="{x:Static resx:ResUI.menuClose}" />
-                                    </StackPanel>
-                                </MenuItem.Header>
-                            </MenuItem>
-                        </Menu>
+                        
 
                         <materialDesign:PopupBox
                             Padding="8,0"
                             HorizontalAlignment="Right"
                             StaysOpen="True"
                             Style="{StaticResource MaterialDesignToolForegroundPopupBox}">
+                            
                             <StackPanel Margin="8">
+                                <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
+                                    <MenuItem x:Name="menuHelp" Padding="8,0">
+                                        <MenuItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                            Margin="0,0,8,0"
+                                            VerticalAlignment="Center"
+                                            Kind="HelpCircleOutline" />
+                                                <TextBlock Text="{x:Static resx:ResUI.menuHelp}" />
+                                            </StackPanel>
+                                        </MenuItem.Header>
+                                    </MenuItem>
+                                </Menu>
+                                <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
+                                    <MenuItem
+                                x:Name="menuClose"
+                                Padding="8,0"
+                                Click="menuClose_Click">
+                                        <MenuItem.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon
+                                            Margin="0,0,8,0"
+                                            VerticalAlignment="Center"
+                                            Kind="Minimize" />
+                                                <TextBlock Text="{x:Static resx:ResUI.menuClose}" />
+                                            </StackPanel>
+                                        </MenuItem.Header>
+                                    </MenuItem>
+                                </Menu>
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />
@@ -293,16 +295,19 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
+
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
+                                    
                                     <TextBlock
                                         Grid.Row="0"
                                         Grid.Column="0"
                                         VerticalAlignment="Center"
                                         Style="{StaticResource ToolbarTextBlock}"
                                         Text="{x:Static resx:ResUI.TbSettingsColorMode}" />
+
                                     <ToggleButton
                                         x:Name="togDarkMode"
                                         Grid.Row="0"

@@ -65,6 +65,13 @@ namespace v2rayN.Handler
         {
             return SqliteHelper.Instance.Table<SubItem>().ToList();
         }
+        public SubItem GetLastSubItem()
+        {
+            IList<SubItem> subItems = SubItems();
+            int latestSortNumber = subItems.Max(t => t == null ? 0 : t.sort);
+            SubItem latestAddedSubItem = subItems.First(item => item.sort == latestSortNumber);
+            return latestAddedSubItem;
+        }
         public SubItem GetSubItem(string subid)
         {
             return SqliteHelper.Instance.Table<SubItem>().FirstOrDefault(t => t.id == subid);

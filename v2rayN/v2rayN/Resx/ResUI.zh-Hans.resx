@@ -276,6 +276,9 @@
   <data name="MsgUpdateSubscriptionEnd" xml:space="preserve">
     <value>更新订阅结束</value>
   </data>
+  <data name="MsgUpdateSubscriptionEnd" xml:space="preserve">
+    <value>未更新任何内容</value>
+  </data>
   <data name="MsgUpdateSubscriptionStart" xml:space="preserve">
     <value>更新订阅开始</value>
   </data>
@@ -468,6 +471,12 @@
   </data>
   <data name="LabLocal" xml:space="preserve">
     <value>本地</value>
+  </data>
+  <data name="MsgNothingUpdated" xml:space="preserve">
+    <value>没有更新任何内容</value>
+  </data>
+  <data name="MsgProgramNeedsRestarting" xml:space="preserve">
+    <value>要执行此操作，必须重新启动程序 !</value>
   </data>
   <data name="MsgServerTitle" xml:space="preserve">
     <value>服务器过滤器</value>

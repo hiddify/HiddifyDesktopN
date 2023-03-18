@@ -3,6 +3,7 @@ using System.Windows.Threading;
 using v2rayN.Handler;
 using v2rayN.Mode;
 using v2rayN.Tool;
+using v2rayN.ViewModels;
 
 namespace v2rayN
 {
@@ -12,7 +13,9 @@ namespace v2rayN
     public partial class App : Application
     {
         public static EventWaitHandle ProgramStarted;
+        public static bool IsNewInstance = false;
         private static Config _config;
+        
 
         public App()
         {
@@ -28,15 +31,17 @@ namespace v2rayN
         /// <param name="e"></param>
         protected override void OnStartup(StartupEventArgs e)
         {
+
+            // Register URI scheme for application
+            DeepLinking.RegisterSchemes();
+            
             Global.ExePathKey = Utils.GetMD5(Utils.GetExePath());
 
             ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, Global.ExePathKey, out bool bCreatedNew);
             if (!bCreatedNew)
             {
                 ProgramStarted.Set();
-                Current.Shutdown();
-                Environment.Exit(0);
-                return;
+                IsNewInstance = true;
             }
 
             Global.processJob = new Job();
@@ -58,7 +63,7 @@ namespace v2rayN
             if (ConfigHandler.LoadConfig(ref _config) != 0)
             {
                 UI.ShowWarning($"Loading GUI configuration file is abnormal,please restart the application{Environment.NewLine}加载GUI配置文件异常,请重启应用");
-                Application.Current.Shutdown();
+                Current.Shutdown();
                 Environment.Exit(0);
                 return;
             }

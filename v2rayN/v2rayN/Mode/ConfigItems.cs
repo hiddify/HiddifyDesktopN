@@ -115,14 +115,14 @@ namespace v2rayN.Mode
         public double mainHeight { get; set; }
         public double mainGirdHeight1 { get; set; }
         public double mainGirdHeight2 { get; set; }
-        public bool colorModeDark { get; set; }
+        public bool colorModeDark { get; set; } = true;
         public string? colorPrimaryName { get; set; }
         public string currentLanguage { get; set; }
         public string currentFontFamily { get; set; }
-        public int currentFontSize { get; set; }
+        public int currentFontSize { get; set; } = 14;
         public bool enableDragDropSort { get; set; }
         public bool doubleClick2Activate { get; set; }
-        public bool autoHideStartup { get; set; } = true;
+        public bool autoHideStartup { get; set; } = false;
         public string mainMsgFilter { get; set; }
         public List<ColumnItem> mainColumnItem { get; set; }
 

@@ -71,7 +71,10 @@ namespace v2rayN.ViewModels
             if (ConfigHandler.AddSubItem(ref _config, item) == 0)
             {
                 _noticeHandler?.Enqueue(ResUI.OperationSuccess);
-                _view.DialogResult = true;
+                if (_view.IsActive)
+                {
+                    _view.DialogResult = true;
+                }
                 //_view?.Close();
             }
             else

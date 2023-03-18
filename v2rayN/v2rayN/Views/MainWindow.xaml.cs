@@ -1,4 +1,6 @@
-﻿using ReactiveUI;
+﻿using DynamicData;
+using DynamicData.Binding;
+using ReactiveUI;
 using Splat;
 using System.ComponentModel;
 using System.Drawing;
@@ -13,6 +15,7 @@ using v2rayN.Base;
 using v2rayN.Handler;
 using v2rayN.Mode;
 using v2rayN.Resx;
+using v2rayN.Tool;
 using v2rayN.ViewModels;
 using Point = System.Windows.Point;
 using SystemInformation = System.Windows.Forms.SystemInformation;
@@ -44,6 +47,51 @@ namespace v2rayN.Views
             }
 
             ViewModel = new MainWindowViewModel(MainSnackbar.MessageQueue!, UpdateViewHandler);
+
+            // Handle URI scheme, If there is any
+            string[] Args = Environment.GetCommandLineArgs();
+            if (Args.Length > 1)
+            {
+                var uri = Args[1];
+                var (isValidUri, scheme) = DeepLinking.IsUriForProgram(uri);
+                if (isValidUri)
+                {
+                    var item = DeepLinking.ParseUri(uri);
+                    //if (item != null)
+                    //{
+                    //    var subEditWin = new SubEditWindow(item);
+                    //    subEditWin.ViewModel?.SaveCmd.Execute().Subscribe();
+
+                    //}
+                }
+            }
+
+            if (App.IsNewInstance)
+            {
+                App.Current.Shutdown();
+                Environment.Exit(0);
+                return;
+            }
+
+            // Declare and start a thread to handle reloading main page whenever need
+            new Thread(delegate ()
+            {
+                while (true)
+                {
+                    if (Utils.DoesMainPageNeedReload())
+                    {
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            ViewModel?.InitSubscriptionView();
+                            ViewModel?.SubSelectedChanged(true);
+                            Utils.UnsetMainPageReload();
+
+                        });
+                    }
+                    Thread.Sleep(1000);
+                }
+            }).Start();
+
             Locator.CurrentMutable.RegisterLazySingleton(() => ViewModel, typeof(MainWindowViewModel));
 
             for (int i = Global.MinFontSize; i <= Global.MinFontSize + 8; i++)
@@ -202,6 +250,13 @@ namespace v2rayN.Views
             {
                 RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
             }
+            App.Current.MainWindow.Show();
+            Application.Current.MainWindow.Show();
+            if (Application.Current.MainWindow.WindowState == WindowState.Minimized)
+            {
+                Application.Current.MainWindow.WindowState = WindowState.Normal;
+            }
+            Application.Current.MainWindow.Activate();
         }
 
         #region Event 
@@ -397,7 +452,7 @@ namespace v2rayN.Views
         }
         private void menuPromotion_Click(object sender, RoutedEventArgs e)
         {
-            Utils.ProcessStart($"{Utils.Base64Decode(Global.PromotionUrl)}?t={DateTime.Now.Ticks}");
+            Utils.ProcessStart($"{Utils.Base64Decode(Global.PromotionUrl)}");
         }
 
         private void txtRunningInfoDisplay_MouseDoubleClick(object sender, MouseButtonEventArgs e)
