@@ -1287,7 +1287,7 @@ namespace v2rayN.Handler
             SubItem subItem = new()
             {
                 id = string.Empty,
-                remarks = "import_sub",
+                remarks = "Imported Sub",
                 url = url
             };
 
