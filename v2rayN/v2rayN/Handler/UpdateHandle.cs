@@ -50,7 +50,7 @@ namespace v2rayN.Handler
                         {
                             StartInfo = new ProcessStartInfo
                             {
-                                FileName = "v2rayUpgrade.exe",
+                                FileName = Global.UpgradeProgramExePath,
                                 Arguments = $"\"{fileName}\"",
                                 WorkingDirectory = Utils.StartupPath()
                             }

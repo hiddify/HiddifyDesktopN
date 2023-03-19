@@ -7,5 +7,6 @@
 	<FileVersion>1.1.0.0</FileVersion>
 	<ApplicationManifest>app.manifest</ApplicationManifest>
 	<Nullable>enable</Nullable>
+	<AssemblyName>UpgradeHiddifyN</AssemblyName>
   </PropertyGroup>
 </Project>

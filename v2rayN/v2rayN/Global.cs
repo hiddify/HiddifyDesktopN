@@ -135,7 +135,8 @@ namespace v2rayN
         public static string ExePathKey { get; set; }
 
         public static string MainFormReloadFilePath { get; set; } = Utils.GetTempPath("mainPageReloadLockFile.txt");
-        public static readonly string RestartProgramExePath = Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, "bin", "restartProgram", "RestartProgram.exe"));
+        public static readonly string RestartProgramExePath = Path.GetFullPath(Path.Combine(Utils.StartupPath(), "bin", "restartProgram", "RestartProgram.exe"));
+        public static readonly string UpgradeProgramExePath = Path.GetFullPath(Path.Combine(Utils.StartupPath(), "bin", "updateProgram", "UpgradeHiddifyN.exe"));
         #endregion
 
     }
