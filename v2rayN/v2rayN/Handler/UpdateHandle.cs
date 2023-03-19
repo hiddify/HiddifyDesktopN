@@ -233,6 +233,7 @@ namespace v2rayN.Handler
                         }
                         else
                         {
+                            ConfigHandler.SortServers(ref _config, id, "", true);
                             anySubUpdated = true;
                         }
                         _updateFunc(false,

@@ -639,11 +639,33 @@
                         <DataGrid.Resources>
                             <Style BasedOn="{StaticResource MaterialDesignDataGridRow}" TargetType="DataGridRow">
                                 <EventSetter Event="MouseDoubleClick" Handler="LstProfiles_MouseDoubleClick" />
-
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding configType}" Value="ERROR">
+                                        <Setter Property="Background" Value="Red"></Setter>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding configType}" Value="Usage">
+                                        <Setter Property="Background" Value="#FFFDDEDE"></Setter>
+                                        <Setter Property="BorderThickness" Value="1"></Setter>
+                                        <Setter Property="BorderBrush" Value="Black"></Setter>
+                                        <Setter Property="IsSelected" Value="False"></Setter>
+                                        <Setter Property="IsEnabled" Value="True"></Setter>
+                                    </DataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding configType}" Value="Usage" />
+                                            <Condition Binding="{Binding ElementName=togDarkMode, Path=IsChecked}" Value="True" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Background" Value="#FF484343"></Setter>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
                             </Style>
+                            
                             <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="DataGridColumnHeader">
                                 <EventSetter Event="Click" Handler="LstProfiles_ColumnHeader_Click" />
                             </Style>
+                            
+                            
+                            
                         </DataGrid.Resources>
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Width="40">

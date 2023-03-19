@@ -323,11 +323,18 @@ namespace v2rayN.Views
             //}
 
             e.Row.Header = e.Row.GetIndex() + 1;
+            
         }
 
         private void LstProfiles_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            
+            if (ViewModel?.SelectedProfile?.configType == EConfigType.Usage)
+            {
+                Utils.ProcessStart($"{ViewModel?.SelectedProfile?.address}");
+                return;
+            }
+
+                
             //if (_config.uiItem.doubleClick2Activate)
             if (ViewModel?.SelectedProfile?.isActive==false)
             {
@@ -335,6 +342,7 @@ namespace v2rayN.Views
             }
             else
             {
+                if (((int)ViewModel?.SelectedProfile?.configType) >100 ) return;
                 ViewModel?.EditServer(false, EConfigType.Custom);
             }
         }

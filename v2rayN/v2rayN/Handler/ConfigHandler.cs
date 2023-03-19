@@ -735,18 +735,40 @@ namespace v2rayN.Handler
                     propertyName = "subid";
                     break;
                 default:
-                    return -1;
+                    //return -1;
+                    propertyName = "indexId";
+                    break;
             }
 
             var items = lstProfile.AsQueryable();
 
+            
+
             if (asc)
             {
                 lstProfile = items.OrderBy(propertyName).ToList();
+
             }
             else
             {
                 lstProfile = items.OrderByDescending(propertyName).ToList();
+            }
+            var lbi = lstProfile.FirstOrDefault(p => p.configType == EConfigType.LoadBalance);
+            if (lbi != null) {
+                lstProfile.Remove(lbi);
+                lstProfile.Insert(0, lbi);
+            }
+            var lpi = lstProfile.FirstOrDefault(p => p.configType == EConfigType.LowestPing);
+            if (lpi != null)
+            {
+                lstProfile.Remove(lpi);
+                lstProfile.Insert(0, lpi);
+            }
+            var usagei = lstProfile.FirstOrDefault(p => p.configType == EConfigType.Usage);
+            if (lpi != null)
+            {
+                lstProfile.Remove(usagei);
+                lstProfile.Insert(0, usagei);
             }
             for (int i = 0; i < lstProfile.Count; i++)
             {
@@ -777,7 +799,24 @@ namespace v2rayN.Handler
 
             return 0;
         }
+        class CustomComparer : IComparer<ProfileItem>
+        {
+            CustomComparer(String property)
+            {
 
+            }
+            public int Compare(ProfileItem a, ProfileItem b)
+            {
+                if ((int)a.configType>100 && (int)b.configType<100)
+                    return -1;
+                if ((int)a.configType < 100 && (int)b.configType > 100)
+                    return 1;
+                if ((int)a.configType > 100 && (int)b.configType > 100)
+                    return (int)a.configType-(int)b.configType;
+                return 0;
+                //return positive if a should be higher, return negative if b should be higher
+            }
+        }
         /// <summary>
         /// 添加服务器或编辑
         /// </summary>
@@ -937,6 +976,36 @@ namespace v2rayN.Handler
 
             int countServers = 0;
             List<ProfileItem> lstAdd = new();
+            var usageItem = new ProfileItem()
+            {
+                configType = EConfigType.Usage,
+                remarks = "10GB/100GB ",//TODO sarina read from http request header. https://docs.cfw.lbyczf.com/contents/urlscheme.html#%E5%93%8D%E5%BA%94%E5%A4%B4
+                security = "Expire in 10 days", 
+                address = "https://hiddify.com",//TODO sarina read from http request header. https://docs.cfw.lbyczf.com/contents/urlscheme.html#%E5%93%8D%E5%BA%94%E5%A4%B4
+                coreType = ECoreType.Xray,
+                subid = subid
+            };
+            AddServerCommon(ref config, usageItem, false);
+
+            var LowestPingItem = new ProfileItem()
+            {
+                configType = EConfigType.LowestPing,
+                remarks="Lowest Ping",
+                address = "All",
+                coreType = ECoreType.Xray,
+                subid = subid
+            };
+            AddServerCommon(ref config, LowestPingItem, false);
+            var loadBalanceItem = new ProfileItem()
+            {
+                configType = EConfigType.LoadBalance,
+                remarks = "Load Balance",
+                address = "All",
+                coreType =ECoreType.Xray,
+                subid = subid
+            };
+            AddServerCommon(ref config, loadBalanceItem, false);
+
             string[] arrData = clipboardData.Split(Environment.NewLine.ToCharArray());
             foreach (string str in arrData)
             {
@@ -999,6 +1068,12 @@ namespace v2rayN.Handler
 
                 if (addStatus == 0)
                 {
+                    if (countServers == 0)
+                    {
+                        lstAdd.Add(usageItem);
+                        lstAdd.Add(LowestPingItem);
+                        lstAdd.Add(loadBalanceItem);
+                    }
                     countServers++;
                     lstAdd.Add(profileItem);
                 }

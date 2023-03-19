@@ -348,7 +348,12 @@ namespace v2rayN.Mode
         /// 
         /// </summary>
         public List<RulesItem> rules { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<BalancerItem> balancers { get; set; }
     }
+
 
     public class StreamSettings
     {

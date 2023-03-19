@@ -11,6 +11,7 @@
         public List<string> inboundTag { get; set; }
 
         public string outboundTag { get; set; }
+        public string balancerTag { get; set; }
 
         public List<string> ip { get; set; }
 
