@@ -19,7 +19,7 @@
     "port": "",
     "outboundTag": "proxy",
     "domain": [
-      "geosite:tld-!ir"
+      "tld-!ir"
     ]
   },
   {
