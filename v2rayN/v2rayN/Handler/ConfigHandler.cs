@@ -766,7 +766,7 @@ namespace v2rayN.Handler
                 lstProfile.Insert(0, lpi);
             }
             var usagei = lstProfile.FirstOrDefault(p => p.configType == EConfigType.Usage);
-            if (lpi != null)
+            if (usagei != null)
             {
                 lstProfile.Remove(usagei);
                 lstProfile.Insert(0, usagei);
@@ -1115,7 +1115,7 @@ namespace v2rayN.Handler
                         address = "All",
                         coreType = ECoreType.Xray,
                         subid = subid,
-                      indexId = "0"
+                      indexId = "0"+ new Random().Next(0, 10000000)
                   };
                     AddServerCommon(ref config, LowestPingItem, false);
                     var loadBalanceItem = new ProfileItem()
@@ -1125,7 +1125,7 @@ namespace v2rayN.Handler
                         address = "All",
                         coreType = ECoreType.Xray,
                         subid = subid,
-                        indexId="0"
+                        indexId="1"+new Random().Next(0, 10000000)
                     };
                     AddServerCommon(ref config, loadBalanceItem, false);
                         lstAdd.Add(LowestPingItem);
