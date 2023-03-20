@@ -1050,7 +1050,7 @@ namespace v2rayN.Handler
                 balancer.strategy = new BalancerStrategyItem();
                 if (node.configType==EConfigType.LowestPing)
                     balancer.strategy.type = "leastPing";
-                balancer.selector = LazyConfig.Instance.ProfileItems(node.subid).Select(p => "p" + p.indexId).ToArray();
+                balancer.selector = LazyConfig.Instance.ProfileItems(node.subid).Where(p=>((int)p.configType)<100).Select(p => "p" + p.indexId).ToArray();
 
                 routing(config, ref v2rayConfig, balancer);
 
