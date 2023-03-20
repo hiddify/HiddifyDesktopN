@@ -404,6 +404,7 @@ namespace v2rayN.ViewModels
                         break;
                     case 101:
                     case 102:
+                    case 103:
                         type = CoreType2;
                         break;
                 }

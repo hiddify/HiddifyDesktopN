@@ -1107,9 +1107,29 @@ namespace v2rayN.Handler
                 {
                     if (countServers == 0)
                     {
-                        //lstAdd.Add(usageItem);
-                        //lstAdd.Add(LowestPingItem);
-                        //lstAdd.Add(loadBalanceItem);
+//                        lstAdd.Add(usageItem);
+                  var LowestPingItem = new ProfileItem()
+                    {
+                        configType = EConfigType.LowestPing,
+                        remarks = "Lowest Ping",
+                        address = "All",
+                        coreType = ECoreType.Xray,
+                        subid = subid,
+                      indexId = "0"
+                  };
+                    AddServerCommon(ref config, LowestPingItem, false);
+                    var loadBalanceItem = new ProfileItem()
+                    {
+                        configType = EConfigType.LoadBalance,
+                        remarks = "Load Balance",
+                        address = "All",
+                        coreType = ECoreType.Xray,
+                        subid = subid,
+                        indexId="0"
+                    };
+                    AddServerCommon(ref config, loadBalanceItem, false);
+                        lstAdd.Add(LowestPingItem);
+                        lstAdd.Add(loadBalanceItem);
                     }
                     countServers++;
                     lstAdd.Add(profileItem);
