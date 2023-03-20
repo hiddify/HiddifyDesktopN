@@ -279,6 +279,12 @@
   <data name="MsgNothingUpdated" xml:space="preserve">
     <value>چیزی بروزرسانی نشد</value>
   </data>
+  <data name="MsgStartProgramAsAdmin" xml:space="preserve">
+    <value>برای اجرای این عملیات، برنامه باید در حالت Administrator اجرا شود</value>
+  </data>
+  <data name="MsgDeepLinkIsInvalid" xml:space="preserve">
+    <value>لینک نامعتبر است</value>
+  </data>
   <data name="MsgProgramNeedsRestarting" xml:space="preserve">
     <value>! برای انجام این عملیات، برنامه باید راه‌اندازی مجدد شود</value>
   </data>

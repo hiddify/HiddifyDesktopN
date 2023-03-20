@@ -36,12 +36,13 @@ namespace v2rayN.ViewModels
         private string _subId = string.Empty;
         private string _serverFilter = string.Empty;
         private static Config _config;
-        private NoticeHandler? _noticeHandler;
         private readonly PaletteHelper _paletteHelper = new();
         private Dictionary<string, bool> _dicHeaderSort = new();
         private Action<string> _updateView;
 
         #endregion
+        // It's public because we need it in MainWindow.xaml.cs
+        public NoticeHandler? _noticeHandler;
 
         #region ObservableCollection
 
@@ -203,7 +204,10 @@ namespace v2rayN.ViewModels
 
         #region Init
 
+        // Program will change some values when it start
+        // We will ignore that change, so we just consider user changes
         private bool ForInitiationLanguage = true;
+        private bool ForInitiationTun = true;
         public MainWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue, Action<string> updateView)
         {
             _updateView = updateView;
@@ -300,7 +304,7 @@ namespace v2rayN.ViewModels
             });
             AddServerViaClipboardCmd = ReactiveCommand.Create(() =>
             {
-                AddServerViaClipboard();
+                AddServerOrSubViaClipboard();
             });
             AddServerViaScanCmd = ReactiveCommand.CreateFromTask(() =>
             {
@@ -915,7 +919,7 @@ namespace v2rayN.ViewModels
             }
         }
 
-        public void AddServerViaClipboard()
+        public void AddServerOrSubViaClipboard()
         {
             string clipboardData = Utils.GetClipboardData();
             int ret = ConfigHandler.AddBatchServers(ref _config, clipboardData, _subId, false);
@@ -924,7 +928,37 @@ namespace v2rayN.ViewModels
                 InitSubscriptionView();
                 RefreshServers();
                 _noticeHandler?.Enqueue(string.Format(ResUI.SuccessfullyImportedServerViaClipboard, ret));
+
+                // This update all subscriptions
+                // TODO: update just added sub, if was a sub added
+                UpdateSubscriptionProcess("", Utils.IsSystemProxyEnabled(_config.sysProxyType));
             }
+        }
+        public void AddServerOrSubViaDeepLink(string url)
+        {
+            int ret = ConfigHandler.AddBatchServers(ref _config, url, _subId, false);
+            if (ret > 0)
+            {
+                InitSubscriptionView();
+                RefreshServers();
+                _noticeHandler?.Enqueue(string.Format(ResUI.SuccessfullyImportedServerViaClipboard, ret));
+
+                // This update all subscriptions
+                // TODO: update just added sub, if was a sub added
+                UpdateSubscriptionProcess("", Utils.IsSystemProxyEnabled(_config.sysProxyType));
+            }
+        }
+        public void AddServersViaDeeplink(string servers_link)
+        {
+
+        }
+        public void AddSubViaDeeplink(string sub_url)
+        {
+
+        }
+        public void AddSubAndServerViaDeeplink(string data)
+        {
+
         }
         public async Task ScanScreenTaskAsync()
         {
@@ -1262,7 +1296,10 @@ namespace v2rayN.ViewModels
 
                 // Update Subscription after add
                 SubItem latestSubItem = LazyConfig.Instance.GetLastSubItem();
-                UpdateSubscriptionProcess(latestSubItem.id, true);
+                if (latestSubItem != null)
+                {
+                    UpdateSubscriptionProcess(latestSubItem.id, true);
+                }
             }
         }
         private void AddSub()
@@ -1277,7 +1314,10 @@ namespace v2rayN.ViewModels
 
                 // Update Subscription after add
                 SubItem latestSubItem = LazyConfig.Instance.GetLastSubItem();
-                UpdateSubscriptionProcess(latestSubItem.id, true);
+                if (latestSubItem != null ) 
+                { 
+                    UpdateSubscriptionProcess(latestSubItem.id, true);
+                }
             }
         }
 
@@ -1552,11 +1592,22 @@ namespace v2rayN.ViewModels
 
         void DoEnableTun(bool c)
         {
-            if (_config.tunModeItem.enableTun != EnableTun)
+            // If it's for initiation, we ignore (user didn't change the value)
+            if (ForInitiationTun)
             {
-                _config.tunModeItem.enableTun = EnableTun;
+                ForInitiationTun = false;
+                return;
             }
-            TunModeSwitch();
+
+            if (Utils.IsAdministrator())
+            {
+                if (_config.tunModeItem.enableTun != EnableTun)
+                {
+                    _config.tunModeItem.enableTun = EnableTun;
+                }
+                TunModeSwitch();
+            }
+          
         }
 
         void TunModeSwitch()

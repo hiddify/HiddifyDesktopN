@@ -1330,6 +1330,15 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The link is invalid.
+        /// </summary>
+        public static string MsgDeepLinkIsInvalid {
+            get {
+                return ResourceManager.GetString("MsgDeepLinkIsInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download GeoFile: {0} successfully.
         /// </summary>
         public static string MsgDownloadGeoFileSuccessfully {
@@ -1470,6 +1479,15 @@ namespace v2rayN.Resx {
         public static string MsgStartGettingSubscriptions {
             get {
                 return ResourceManager.GetString("MsgStartGettingSubscriptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To do this, the program must be run in Administrator mode.
+        /// </summary>
+        public static string MsgStartProgramAsAdmin {
+            get {
+                return ResourceManager.GetString("MsgStartProgramAsAdmin", resourceCulture);
             }
         }
         

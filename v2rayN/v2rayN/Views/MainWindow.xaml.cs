@@ -48,7 +48,7 @@ namespace v2rayN.Views
 
             ViewModel = new MainWindowViewModel(MainSnackbar.MessageQueue!, UpdateViewHandler);
 
-            // Handle URI scheme, If there is any
+            // Handle URI scheme(Deep link), If there is any
             string[] Args = Environment.GetCommandLineArgs();
             if (Args.Length > 1)
             {
@@ -56,13 +56,34 @@ namespace v2rayN.Views
                 var (isValidUri, scheme) = DeepLinking.IsUriForProgram(uri);
                 if (isValidUri)
                 {
+                    // Parse uri
                     var item = DeepLinking.ParseUri(uri);
-                    //if (item != null)
-                    //{
-                    //    var subEditWin = new SubEditWindow(item);
-                    //    subEditWin.ViewModel?.SaveCmd.Execute().Subscribe();
-
-                    //}
+                    // Error handling
+                    if (item.err != null && item.err != "" && item.res == null)
+                    {
+                        // Notice error
+                        ViewModel?._noticeHandler?.SendMessage(ResUI.MsgDeepLinkIsInvalid);
+                        
+                    }
+                    // Add server or subscription to the program
+                    else
+                    {
+                        if (item.res.protocol != null)
+                        {
+                            ViewModel?.AddServerOrSubViaDeepLink(item.res.protocol.Uri);
+                        
+                            Utils.SetMainPageReload();
+                        }
+                        else if (item.res.subscription != null)
+                        {
+                            ViewModel?.AddServerOrSubViaDeepLink(item.res.subscription.Url);
+                            Utils.SetMainPageReload();
+                        }
+                        else
+                        {
+                            // WTF is happening here !
+                        }
+                    }
                 }
             }
 
@@ -84,11 +105,23 @@ namespace v2rayN.Views
                         {
                             ViewModel?.InitSubscriptionView();
                             ViewModel?.SubSelectedChanged(true);
+                            if (this.IsVisible)
+                            {
+                                this.Show();
+                            }
+                            if (this.WindowState == WindowState.Minimized)
+                            {
+                                this.WindowState = WindowState.Normal;
+                            }
+                            this.Activate();
+                            this.Topmost = true;
+                            this.Topmost = false;
+                            this.Focus();
                             Utils.UnsetMainPageReload();
 
                         });
                     }
-                    Thread.Sleep(1000);
+                    Thread.Sleep(666);
                 }
             }).Start();
 
@@ -380,7 +413,7 @@ namespace v2rayN.Views
             {
                 if (e.Key == Key.V)
                 {
-                    ViewModel?.AddServerViaClipboard();
+                    ViewModel?.AddServerOrSubViaClipboard();
                 }
                 else if (e.Key == Key.P)
                 {
@@ -677,25 +710,29 @@ namespace v2rayN.Views
 
         private void togEnableTun_Click(object sender, RoutedEventArgs e)
         {
-            //TODO @sarina plz check if is admin, if not restart the app in admin mode (similar to your restart app but open in admin)
-            MessageBox.Show("You should open app as an admin");
-            togEnableProxy.IsChecked=togEnableTun.IsChecked;//in anycase enabling tun mode should enable proxy button
+            if (Utils.IsAdministrator())
+            {
+                togEnableProxy.IsChecked = togEnableTun.IsChecked;
+            }
+            else
+            {
+                UI.ShowError(ResUI.MsgStartProgramAsAdmin);
+                togEnableTun.IsChecked = false;
+            }
         }
 
         private void togEnableProxy_Click(object sender, RoutedEventArgs e)
         {
-
+            // @hiddify it's just for proxy, i think we shoudn't check for Administrator right (it will work anyway)
+            //if (Utils.IsAdministrator())
+            //{
+            //    togEnableTun.IsChecked = togEnableProxy.IsChecked;
+            //}
+            //else
+            //{
+            //}
             
-            var is_admin = false;//TODO @sarina plz check if is admin
-            if (is_admin)
-            {
-                togEnableTun.IsChecked = togEnableProxy.IsChecked;
-            }
-            else
-            {
-                cmbSystemProxy.SelectedIndex = togEnableProxy.IsChecked==true ? 1 : 0;
-                
-            }
+            cmbSystemProxy.SelectedIndex = togEnableProxy.IsChecked==true ? 1 : 0;
         }
 
     }

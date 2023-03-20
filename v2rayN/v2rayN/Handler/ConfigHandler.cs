@@ -1,6 +1,7 @@
 ﻿using Splat;
 using System.Data;
 using System.IO;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using v2rayN.Base;
 using v2rayN.Mode;
@@ -976,35 +977,6 @@ namespace v2rayN.Handler
 
             int countServers = 0;
             List<ProfileItem> lstAdd = new();
-            var usageItem = new ProfileItem()
-            {
-                configType = EConfigType.Usage,
-                remarks = "10GB/100GB ",//TODO sarina read from http request header. https://docs.cfw.lbyczf.com/contents/urlscheme.html#%E5%93%8D%E5%BA%94%E5%A4%B4
-                security = "Expire in 10 days", 
-                address = "https://hiddify.com",//TODO sarina read from http request header. https://docs.cfw.lbyczf.com/contents/urlscheme.html#%E5%93%8D%E5%BA%94%E5%A4%B4
-                coreType = ECoreType.Xray,
-                subid = subid
-            };
-            AddServerCommon(ref config, usageItem, false);
-
-            var LowestPingItem = new ProfileItem()
-            {
-                configType = EConfigType.LowestPing,
-                remarks="Lowest Ping",
-                address = "All",
-                coreType = ECoreType.Xray,
-                subid = subid
-            };
-            AddServerCommon(ref config, LowestPingItem, false);
-            var loadBalanceItem = new ProfileItem()
-            {
-                configType = EConfigType.LoadBalance,
-                remarks = "Load Balance",
-                address = "All",
-                coreType =ECoreType.Xray,
-                subid = subid
-            };
-            AddServerCommon(ref config, loadBalanceItem, false);
 
             string[] arrData = clipboardData.Split(Environment.NewLine.ToCharArray());
             foreach (string str in arrData)
@@ -1012,12 +984,77 @@ namespace v2rayN.Handler
                 //maybe sub
                 if (Utils.IsNullOrEmpty(subid) && (str.StartsWith(Global.httpsProtocol) || str.StartsWith(Global.httpProtocol)))
                 {
-                    if (AddSubItem(ref config, str) == 0)
+                    // If it's sub we get remaining day to expire & used data & total remained data
+                    // We add this information as a Server but these's just for display to user for their information
+
+                    // Get user subscription info (like donwloaded/uploaded/total usage and expire date)
+                    // Get expire epoch date
+                    var headers = Utils.GetUrlResponseHeader(str);
+                    var userSubInfo = Utils.GetClashSubscriptionInfoAsDict(headers);
+                    if (userSubInfo == null)
                     {
-                        countServers++;
+                        // Handle error
+                    }
+
+                    // It's a custom feature for this app (probably none of your business)
+                    string? panelAddress = Utils.GetHostAndFirstTwoPathInUri(str);
+                    // If we can't get panel address we just put host address in there
+                    if (panelAddress == null)
+                    {
+                        panelAddress = new Uri(str).Host;
+                    }
+
+                    var usageItem = new ProfileItem()
+                    {
+                        configType = EConfigType.Usage,
+                        remarks = $"{userSubInfo.DownloadAndUploadTotalGigaBytes()}GB/{userSubInfo.TotalGigaBytes()}GB ",
+                        security = $"Expire in {userSubInfo.DaysLeftToExpire()} days",
+                        // Direct panel address
+                        address = panelAddress,
+                        coreType = ECoreType.Xray,
+                        subid = subid
+                    };
+                    AddServerCommon(ref config, usageItem, false);
+
+                    var LowestPingItem = new ProfileItem()
+                    {
+                        configType = EConfigType.LowestPing,
+                        remarks = "Lowest Ping",
+                        address = "All",
+                        coreType = ECoreType.Xray,
+                        subid = subid
+                    };
+                    AddServerCommon(ref config, LowestPingItem, false);
+                    var loadBalanceItem = new ProfileItem()
+                    {
+                        configType = EConfigType.LoadBalance,
+                        remarks = "Load Balance",
+                        address = "All",
+                        coreType = ECoreType.Xray,
+                        subid = subid
+                    };
+                    AddServerCommon(ref config, loadBalanceItem, false);
+
+
+                    var subName = Utils.ExtractNameParameterFromUri(str);
+                    
+                    if (subName == null)
+                    {
+                        if (AddSubItem(ref config, str) == 0)
+                        {
+                            countServers++;
+                        }
+                    }else
+                    {
+                        if (AddSubItem(ref config, str, subName) == 0)
+                        {
+                            countServers++;
+                        }
                     }
                     continue;
                 }
+
+                // Add server(s)
                 ProfileItem profileItem = ShareHandler.ImportFromClipboardConfig(str, out string msg);
                 if (profileItem == null)
                 {
@@ -1070,9 +1107,9 @@ namespace v2rayN.Handler
                 {
                     if (countServers == 0)
                     {
-                        lstAdd.Add(usageItem);
-                        lstAdd.Add(LowestPingItem);
-                        lstAdd.Add(loadBalanceItem);
+                        //lstAdd.Add(usageItem);
+                        //lstAdd.Add(LowestPingItem);
+                        //lstAdd.Add(loadBalanceItem);
                     }
                     countServers++;
                     lstAdd.Add(profileItem);
@@ -1276,7 +1313,7 @@ namespace v2rayN.Handler
         /// <param name="config"></param>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static int AddSubItem(ref Config config, string url)
+        public static int AddSubItem(ref Config config, string url,string sub_name = "Imported Sub")
         {
             //already exists
             if (SqliteHelper.Instance.Table<SubItem>().Where(e => e.url == url).Count() > 0)
@@ -1287,7 +1324,7 @@ namespace v2rayN.Handler
             SubItem subItem = new()
             {
                 id = string.Empty,
-                remarks = "Imported Sub",
+                remarks = sub_name,
                 url = url
             };
 

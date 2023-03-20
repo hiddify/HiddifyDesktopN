@@ -1,13 +1,17 @@
-﻿using Microsoft.Win32;
+﻿using Downloader;
+using Microsoft.Win32;
 using Microsoft.Win32.TaskScheduler;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NLog;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Printing.IndexedProperties;
@@ -15,6 +19,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Cryptography;
+using System.Security.Policy;
 using System.Security.Principal;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -23,12 +28,16 @@ using System.Windows.Forms;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using v2rayN.Base;
+using v2rayN.Handler;
 using v2rayN.Mode;
+using v2rayN.Tool;
 using ZXing;
 using ZXing.Common;
 using ZXing.QrCode;
 using ZXing.Windows.Compatibility;
+using ByteSizeLib;
 
 namespace v2rayN
 {
@@ -1285,18 +1294,28 @@ namespace v2rayN
         public static void ExitSuccess()
         {
             System.Windows.Application.Current.Shutdown();
+            //int id = GetAppProcessID();
+            //Process.GetProcessById(id).Kill(true);
             Environment.Exit(0);
         }
         public static void ExitError(int err)
         {
             System.Windows.Application.Current.Shutdown();
+            //int id = GetAppProcessID();
+            //Process.GetProcessById(id).Kill(true);
             Environment.Exit(err);
         }
         public static int GetAppProcessID()
         {
             return Process.GetCurrentProcess().Id;
         }
-        public static void RestartProgram()
+        public static IWebProxy GetAppProxyAddress()
+        {
+            var httpPort = LazyConfig.Instance.GetLocalPort(Global.InboundHttp);
+
+            return new WebProxy(Global.Loopback, httpPort);
+        }
+        public static void RestartProgram(bool asAdmin = false)
         {
             new Thread(delegate ()
             {
@@ -1304,12 +1323,245 @@ namespace v2rayN
                 var pInfo = new ProcessStartInfo();
                 pInfo.FileName = Global.RestartProgramExePath;
                 pInfo.WorkingDirectory = Environment.CurrentDirectory;
-                pInfo.Arguments = $"{mainProgramID}";
+                if (asAdmin)
+                {
+                    pInfo.Arguments = $"{mainProgramID} --a";
+                }
+                else
+                {
+                    pInfo.Arguments = $"{mainProgramID}";
+                }
                 pInfo.CreateNoWindow = true;
 
                 Process.Start(pInfo);
 
             }).Start();
         }
+        // I think it's the right way
+        public static bool IsSystemProxyEnabled(ESysProxyType sysProxyType)
+        {
+            if (sysProxyType == ESysProxyType.ForcedChange || sysProxyType == ESysProxyType.Pac)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static string? ExtractNameParameterFromUri(string uri)
+        {
+            // Extract name
+            if (uri.Contains("name="))
+            {
+                var splitted = uri.Split("name=");
+                if (splitted.Length > 1)
+                {
+                    string name = "";
+                    foreach (char c in splitted[1].ToCharArray())
+                    {
+                        if (c == '&' || c == '?')
+                        {
+                            break;
+                        }
+                        name += c;
+                    }
+                    return name;
+                }
+            }
+            return null;
+        }
+        public static string? ExtractUrlParameterFromUri(string uri)
+        {
+            var splitted = uri.Split("url=");
+            string? url = "";
+            if (splitted.Length > 1)
+            {
+                foreach (char c in splitted[1].ToCharArray())
+                {
+                    if (c == '&' || c == '?')
+                    {
+                        break;
+                    }
+                    url += c;
+                }
+            }
+            if (Utils.IsNullOrEmpty(url))
+            {
+                return null;
+            }
+            return url;
+        }
+
+        public static string ChangeHiddifySubDeeplinkToNormalSubUri(string hiddifySubDepplink)
+        {
+            // Valid uri sample: hiddify://install-sub?url=domain.com/path/clash.yml&name=sub_name
+            // We need after "url=" part
+
+            // Remove "hiddify://install-sub?"
+            if (hiddifySubDepplink.Contains("url="))
+            {
+                return hiddifySubDepplink.Split("url=")[1];
+
+            }
+            return hiddifySubDepplink;
+        }
+
+        public static HttpResponseHeaders? GetUrlResponseHeader(string url)
+        {
+            using (var client = new HttpClient())
+            {
+                Url sUrl = new Url(url);
+                HttpResponseMessage response = client.GetAsync(url).Result;
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    return response.Headers;
+                }
+            }
+            return null;
+        }
+
+        public static DateTime EpochToDate(long epoch)
+        {
+            return DateTimeOffset.FromUnixTimeSeconds(epoch).DateTime;
+        }
+
+
+        public static string? GetHostAndFirstTwoPathInUri(string url)
+        {
+            // For example:
+            //   https://domain.com/first/two/all.txt?parameter=value
+            // Will be:
+            //   https://domain.com/first/two/
+            
+            Uri uri = new Uri(url);
+            string[] splitted = uri.AbsolutePath.TrimStart('/').Split('/', 3);
+            if (splitted.Length < 3)
+            {
+                return null;
+            }
+            return uri.Scheme + "://" + uri.Host + '/' + splitted[0] + '/' + splitted[1] + '/';
+
+        }
+
+
+        #region Clash Subscription Info
+        public static ClashSubscriptionInfo? GetClashSubscriptionInfoAsDict(HttpResponseHeaders headers)
+        {
+            IEnumerable<string> userSubInfoValues;
+            if (!headers.TryGetValues("Subscription-Userinfo", out userSubInfoValues))
+            {
+                return null;
+            }
+
+            ClashSubscriptionInfo clashSubscriptionInfo = new ClashSubscriptionInfo();
+            // Split values
+            foreach (var item in userSubInfoValues.FirstOrDefault().Split(";"))
+            {
+                // Split key and values
+                int equalsSignIndex = item.IndexOf("=");
+                string key = item.Substring(0, equalsSignIndex);
+                string value = item.Substring(equalsSignIndex + 1);
+
+                if (key == "upload")
+                {
+                    long longValue;
+                    if (long.TryParse(value,out longValue))
+                    {
+                        clashSubscriptionInfo.Upload = longValue;
+                    }
+                }else if (key == "download")
+                {
+                    long longValue;
+                    if (long.TryParse(value, out longValue))
+                    {
+                        clashSubscriptionInfo.Download = longValue;
+                    }
+                }
+                else if (key == "total")
+                {
+                    long longValue;
+                    if (long.TryParse(value, out longValue))
+                    {
+                        clashSubscriptionInfo.Total = longValue;
+                    }
+                }
+                else if (key == "expire")
+                {
+                    long longValue;
+                    if (long.TryParse(value, out longValue))
+                    {
+                        clashSubscriptionInfo.ExpireDate = longValue;
+                    }
+                    
+                }
+            }
+            return clashSubscriptionInfo;
+        }
+
+        public class ClashSubscriptionInfo
+        {
+            public long Upload { get; set; }
+            public long Download { get; set; }
+            public long Total { get; set; }
+            public long ExpireDate { get; set; }
+
+            public double UploadMegaBytes()
+            {
+                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Upload).MegaBytes);
+            }
+            public double DownloadMegaBytes()
+            {
+                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Download).MegaBytes);
+            }
+            public double TotalMegaBytes()
+            {
+                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Total).MegaBytes);
+            }
+
+            public double UploadGigaBytes()
+            {
+                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Upload).GigaBytes);
+            }
+            public double DownloadGigaBytes()
+            {
+                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Download).GigaBytes);
+            }
+            public double TotalGigaBytes()
+            {
+                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Total).GigaBytes);
+            }
+
+            public double DownloadAndUploadTotalGigaBytes()
+            {
+                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Download + this.Upload).GigaBytes);
+            }
+            public DateTime ExpireToDate()
+            {
+                return Utils.EpochToDate(this.ExpireDate);
+            }
+
+            public int DaysLeftToExpire()
+            {
+                return this.ExpireToDate().Subtract(DateTime.Now).Days;
+            }
+            
+            private double GetJustThreeDigitOfaNumber(double num)
+            {
+                string strNum = "";
+                int counter = 0;
+                foreach (var n in num.ToString().ToCharArray())
+                {
+                    if (counter == 3)
+                    {
+                        break;
+                    }
+                    strNum += n;
+                    counter++;
+                }
+
+                return double.Parse(strNum);
+            }
+
+        }
+        #endregion
     }
 }

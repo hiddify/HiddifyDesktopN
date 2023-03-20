@@ -472,6 +472,12 @@
   <data name="MsgNothingUpdated" xml:space="preserve">
     <value>没有更新任何内容</value>
   </data>
+  <data name="MsgStartProgramAsAdmin" xml:space="preserve">
+    <value>为此，程序必须在 "Administrator" 中运行</value>
+  </data>
+  <data name="MsgDeepLinkIsInvalid" xml:space="preserve">
+    <value>链接无效</value>
+  </data>
   <data name="MsgProgramNeedsRestarting" xml:space="preserve">
     <value>要执行此操作，必须重新启动程序 !</value>
   </data>

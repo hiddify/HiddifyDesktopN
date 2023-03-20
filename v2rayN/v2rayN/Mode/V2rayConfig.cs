@@ -40,8 +40,17 @@ namespace v2rayN.Mode
         /// 路由配置
         /// </summary>
         public Routing routing { get; set; }
+        public Observatory observatory { get; set; }
     }
 
+    public class Observatory
+    {
+        public String[] subjectSelector { get; set; }
+        public String probeURL { get; set; }
+        public String probeInterval { get; set; }
+
+
+    };
     public class Stats { };
 
     public class API

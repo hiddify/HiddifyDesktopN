@@ -1,12 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using v2rayN.Mode;
+﻿using Microsoft.Win32;
+using v2rayN.Handler;
 
 namespace v2rayN.Tool
 {
@@ -14,9 +7,9 @@ namespace v2rayN.Tool
     {
         const string FriendlyName = "HiddifyDesktopN URI Scheme";
         const string SchemeSeperator = "://";
+        readonly static string applicationLocation = Utils.GetExePath();
         public static void RegisterSchemes()
         {
-            string applicationLocation = Utils.GetExePath();
 
             foreach (var scheme in System.Enum.GetNames(typeof(Scheme)))
             {
@@ -54,13 +47,25 @@ namespace v2rayN.Tool
             {
                 if (key?.GetValue("")?.ToString() == "URL:" + FriendlyName)
                 {
-                    return true;
+                    using (var defaultIcon = key.OpenSubKey("DefaultIcon"))
+                    {
+                        if (defaultIcon?.GetValue("").ToString() == applicationLocation + ",1")
+                        {
+                            using (var commandKey = key.OpenSubKey(@"shell\open\command"))
+                            {
+                                if (commandKey?.GetValue("").ToString() == "\"" + applicationLocation + "\" \"%1\"")
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             return false;
         }
 
-        public static (bool,string?) IsUriForProgram(string uri)
+        public static (bool, string?) IsUriForProgram(string uri)
         {
             uri = uri.ToLower();
 
@@ -72,89 +77,127 @@ namespace v2rayN.Tool
                 }
 
             }
-            return (false,null);
+            return (false, null);
         }
-        public static (ParseResult? res,string? err) ParseUri(string uri)
+        private static (Protocol?, string?) ParseProtocol(string uri)
         {
-            uri = uri.ToLower();
+            Protocol protocol = new Protocol();
+            string err = null;
 
-            ParseResult result = new ParseResult();
-
-
-            // Parse Clash Uri
-            if (uri.StartsWith("clash" + SchemeSeperator))
-            {
-                // Valid URI sample = clash://install-config?url=https://mysite.com/all.yml&name=profilename
-
-                string correct_uri, name;
-
-                // Remove additional things
-                var prunedUri = uri.Split("url=");
-                if (prunedUri.Length < 2)
-                {
-                    return (null,$"Invalid Uri: {uri}");
-                }
-                // Just keep url and profile name
-                prunedUri = prunedUri[1].Split('&');
-                // Check to see if profile name provided
-                if (prunedUri.Length > 1)
-                {
-                    correct_uri = prunedUri[0];
-
-                    // For extract profile name from uri
-                    prunedUri = prunedUri[1].Split('=');
-                    if (prunedUri.Length < 2)
-                    {
-                        return (null, $"Invalid Uri: {uri}");
-                    }
-                    name = prunedUri[1];
-
-                    result.Name = name;
-                    result.Url = correct_uri;
-                }
-                else
-                {
-                    result.Name = "Url Subscription";
-                    result.Url = prunedUri[0];           
-                }
-                result.Scheme = Scheme.clash;
-            }
             // Parse Vless Uri
-            else if (uri.StartsWith("vless" + SchemeSeperator))
+            if (uri.StartsWith("vless" + SchemeSeperator))
             {
-
-                result.Scheme = Scheme.vless;
+                protocol.Uri = uri;
+                protocol.Scheme = Scheme.vless;
             }
             // Parse Vmess Uri
             else if (uri.StartsWith("vmess" + SchemeSeperator))
             {
-
-                result.Scheme = Scheme.vmees;
+                protocol.Uri = uri;
+                protocol.Scheme = Scheme.vmees;
             }
             // Parse Shadowsocks(ss) Uri
             else if (uri.StartsWith("ss" + SchemeSeperator))
             {
-                string name, correct_uri;
-                if (uri.Contains("#"))
-                {
-                    name = uri.Split("#", 1)[1];
-                }
-
-                result.Scheme = Scheme.ss;
+                protocol.Uri = uri;
+                protocol.Scheme = Scheme.ss;
             }
             // Parse Trojan Uri
             else if (uri.StartsWith("trojan" + SchemeSeperator))
             {
-
-                result.Scheme = Scheme.trojan;
+                protocol.Uri = uri;
+                protocol.Scheme = Scheme.trojan;
             }
             // Handle Unexcepted Uri
             else
             {
-                return (res:null,err:$"The {uri} is not supported in deep linking");
+                return (res: null, err: $"The {uri} is not supported in deep linking");
             }
 
-            
+            return (protocol, err);
+        }
+
+        private static (Subscription?, string?) ParseSubscription(string uri)
+        {
+            // Valid uri sample: hiddify://install-sub?url=domain.com/path/clash.yml&name=sub_name
+            if (!uri.Contains("url="))
+            {
+                return (null, "Invalid uri");
+            }
+
+            // Extract url
+            //var url Utils.ExtractUrlParameterFromUri(uri);
+           
+            #region Download sub link data
+            //// Download url data
+            //string data = "";
+            //string err = "";
+            //var task = Task.Run(async () =>
+            //{
+            //    try
+            //    {
+            //        var downloader = new DownloadHandle();
+
+            //        // Download through proxy
+            //        string url_res = await downloader.TryDownloadString(subscription.Url, false, "");
+            //        if (Utils.IsNullOrEmpty(url_res.Trim()))
+            //        {
+            //            // Download without proxy
+            //            url_res = await downloader.TryDownloadString(subscription.Url, false, "");
+            //        }
+            //        data = url_res;
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        err = e.Message;
+            //    }
+
+            //});
+            //task.Wait();
+
+            //if (err != "")
+            //{
+            //    return (null, err);
+            //}
+            //if (Utils.IsNullOrEmpty(data.Trim()))
+            //{
+            //    return (null, "Error occurred getting url data");
+            //}
+            //subscription.Data = data;
+            #endregion
+
+            Subscription subscription = new Subscription();
+            subscription.Url = Utils.ChangeHiddifySubDeeplinkToNormalSubUri(uri);
+            return (subscription, "");
+        }
+        private static bool IsUriSub(string uri)
+        {
+            if (uri.StartsWith("hiddify://install-sub"))
+            {
+                return true;
+            }
+            return false;
+        }
+        public static (ParseResult? res, string? err) ParseUri(string uri)
+        {
+
+            ParseResult result = new ParseResult();
+            string err = null;
+            // If the uri is a subscription link we should download it and then add it
+            // If the uri is just a protocol link, we have nothing much to do
+            if (IsUriSub(uri))
+            {
+                (result.subscription,err) = ParseSubscription(uri);
+            }
+            else
+            {
+                (result.protocol,err) = ParseProtocol(uri);
+
+            }
+            if (err != null && err != "")
+            {
+                return (null, err);
+            }
             // Return result (error field is null)
             return (result, null);
 
@@ -162,17 +205,40 @@ namespace v2rayN.Tool
     }
     public class ParseResult
     {
-        public Scheme Scheme { get; set; }
-        public string Url { get; set; }
-        public string? Name { get; set; }
+        public Protocol? protocol { get; set; }
+
+        public Subscription? subscription { get; set; }
     }
+
+    public class Protocol
+    {
+        // It will be extracted when it's getting add
+        //public string? Name { get; set; }
+        public string Uri { get; set; }
+        // It's useless for now
+        public Scheme Scheme { get; set; }
+    }
+
+
+    public class Subscription
+    {
+        // Name of the sub will be extracted when it's getting add
+        //public string Name { get; set; }
+        public string Url { get; set; }
+        // We don't download sub link data, we just imoprt it and then update the sub
+        //public string Data { get; set; }
+    }
+
 
     public enum Scheme
     {
-        clash,
+        // Clash will be regarded as a subscription
+        //clash
         vless,
         vmees,
         ss,
-        trojan
+        trojan,
+        // The program main scheme
+        hiddify,
     }
 }

@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "HiddifyRestartN": {
+      "commandName": "Project",
+      "commandLineArgs": "2342 --admin",
+      "workingDirectory": "C:\\Users\\me\\Desktop\\HiddifyDesktopN\\v2rayN\\v2rayN\\bin\\Debug\\net6.0-windows"
+    }
+  }
+}

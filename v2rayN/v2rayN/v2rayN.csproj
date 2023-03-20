@@ -20,6 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="ByteSize" Version="2.1.1" />
 		<PackageReference Include="Downloader" Version="3.0.4" />		
 		<PackageReference Include="MaterialDesignThemes" Version="4.8.0" />
 		<PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />		 
