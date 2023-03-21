@@ -67,6 +67,7 @@
         /// TLS fingerprint
         /// </summary>
         public string fp { get; set; } = string.Empty;
+        public string allowInsecure { get; set; } = string.Empty;
 
     }
 }

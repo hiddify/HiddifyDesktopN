@@ -62,8 +62,9 @@ namespace v2rayN.Handler
                 tls = item.streamSecurity,
                 sni = item.sni,
                 alpn = item.alpn,
-                fp = item.fingerprint
-            };
+                fp = item.fingerprint,
+                allowInsecure = item.allowInsecure
+        };
 
             url = Utils.ToJson(vmessQRCode);
             url = Utils.Base64Encode(url);
@@ -196,6 +197,10 @@ namespace v2rayN.Handler
             if (!Utils.IsNullOrEmpty(item.fingerprint))
             {
                 dicQuery.Add("fp", Utils.UrlEncode(item.fingerprint));
+            }
+            if (!Utils.IsNullOrEmpty(item.allowInsecure))
+            {
+                dicQuery.Add("allowInsecure", item.allowInsecure);
             }
 
             dicQuery.Add("type", !Utils.IsNullOrEmpty(item.network) ? item.network : "tcp");
@@ -404,7 +409,8 @@ namespace v2rayN.Handler
             profileItem.sni = Utils.ToString(vmessQRCode.sni);
             profileItem.alpn = Utils.ToString(vmessQRCode.alpn);
             profileItem.fingerprint = Utils.ToString(vmessQRCode.fp);
-
+            
+            profileItem.allowInsecure = Utils.ToString(vmessQRCode.allowInsecure);
             return profileItem;
         }
 
@@ -523,7 +529,7 @@ namespace v2rayN.Handler
                 default:
                     return null;
             }
-
+            i.allowInsecure = q["allowInsecure"] ?? "";
             return i;
         }
 
@@ -586,7 +592,7 @@ namespace v2rayN.Handler
                     return null;
                 }
             }
-
+            server.allowInsecure = queryParameters["allowInsecure"] ?? "";
             return server;
         }
 
@@ -755,6 +761,7 @@ namespace v2rayN.Handler
             item.streamSecurity = query["security"] ?? "";
             item.sni = query["sni"] ?? "";
             item.alpn = Utils.UrlDecode(query["alpn"] ?? "");
+            item.allowInsecure= query["allowInsecure"] ?? "";
             item.fingerprint = Utils.UrlDecode(query["fp"] ?? "");
             item.network = query["type"] ?? "tcp";
             switch (item.network)
