@@ -16,37 +16,25 @@ namespace HiddifyN.Tool
             WebProxy p = (WebProxy)Utils.GetAppProxyAddress();
             _appHttpProxy = p.Address.OriginalString;
         }
+
         public double? UploadSpeed(bool withProxy = true)
         {
             var sInfo = new ProcessStartInfo();
-            if (withProxy)
+            var extra = withProxy ? $"--http-proxy={_appHttpProxy}" : "";
+            sInfo = new ProcessStartInfo()
             {
-                sInfo = new ProcessStartInfo()
-                {
-                    FileName = Global.SpeedTestProgramExePath,
-                    Arguments = $"--no-download --no-icmp --json --http-proxy={_appHttpProxy}",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                };
-            }
-            else
-            {
-                sInfo = new ProcessStartInfo()
-                {
-                    FileName = Global.SpeedTestProgramExePath,
-                    Arguments = $"--no-download --no-icmp --json",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                };
-            }
+                FileName = Global.SpeedTestProgramExePath,
+                Arguments = $"--no-download --no-icmp --json {extra}",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true,
+            };
+            
 
             // Start speed tester program and get its output or error and handle it
             var (stdout, stderr) = Utils.StartProcess(sInfo);
-            if (stderr == null)
+            if (stdout == null)
             {
                 return null;
             }
@@ -54,42 +42,29 @@ namespace HiddifyN.Tool
             dynamic testerResult = JObject.Parse(ConvertJsonListToObject(stdout.Trim()));
 
             // Get download speed as Mbps
-            double downloadSpeed = testerResult.download;
+            double uploadSpeed = testerResult.upload;
 
-            return downloadSpeed;
+            return uploadSpeed;
 
         }
         public double? DownloadSpeed(bool withProxy = true)
         {
             var sInfo = new ProcessStartInfo();
-            if (withProxy)
+            var extra = withProxy ? $"--http-proxy={_appHttpProxy}" : "";
+            sInfo = new ProcessStartInfo()
             {
-                sInfo = new ProcessStartInfo()
-                {
-                    FileName = Global.SpeedTestProgramExePath,
-                    Arguments = $"--no-upload --no-icmp --json --http-proxy={_appHttpProxy}",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                };
-            }
-            else
-            {
-                sInfo = new ProcessStartInfo()
-                {
-                    FileName = Global.SpeedTestProgramExePath,
-                    Arguments = $"--no-upload --no-icmp --json",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                };
-            }
+                FileName = Global.SpeedTestProgramExePath,
+                Arguments = $"--no-upload --no-icmp --json {extra}",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true,
+            };
+            
 
             // Start speed tester program and get its output or error and handle it
             var (stdout, stderr) = Utils.StartProcess(sInfo);
-            if (stderr == null)
+            if (stdout == null)
             {
                 return null;
             }

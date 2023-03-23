@@ -38,7 +38,7 @@
                     <DockPanel Margin="16"
                      DockPanel.Dock="Top"
                      LastChildFill="False">
-
+                        <Label>Hi</Label>
                     </DockPanel>
                 </DockPanel>
             </materialDesign:DrawerHost.LeftDrawerContent>
