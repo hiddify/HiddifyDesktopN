@@ -46,7 +46,10 @@ namespace HiddifyN.Tool
 
             // Start speed tester program and get its output or error and handle it
             var (stdout, stderr) = Utils.StartProcess(sInfo);
-
+            if (stderr == null)
+            {
+                return null;
+            }
             // Parse json result
             dynamic testerResult = JObject.Parse(ConvertJsonListToObject(stdout.Trim()));
 
@@ -86,7 +89,10 @@ namespace HiddifyN.Tool
 
             // Start speed tester program and get its output or error and handle it
             var (stdout, stderr) = Utils.StartProcess(sInfo);
-
+            if (stderr == null)
+            {
+                return null;
+            }
             // Parse json result
             dynamic testerResult = JObject.Parse(ConvertJsonListToObject(stdout.Trim()));
 
