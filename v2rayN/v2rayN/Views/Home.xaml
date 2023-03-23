@@ -12,7 +12,7 @@
         AutomationProperties.Name="{Binding Title, RelativeSource={RelativeSource Self}}"
 
         WindowStartupLocation="CenterScreen"
-        Height="600" Width="400">
+        Height="800" Width="400">
     <Window.CommandBindings>
         <CommandBinding Command="Copy" Executed="OnCopy" />
     </Window.CommandBindings>
@@ -212,14 +212,54 @@
                     <Image Source="/v2rayN.ico" Width="36" Height="36" />
 
                 </Button>
-                <Label HorizontalAlignment="Center" Grid.Row="1"
-                       
-                Foreground="Black"                
-                VerticalAlignment="Top" Height="61" Width="auto" 
-                       FontSize="36" Margin="0,320,0,0" >
-                    اتصال
+                <Label Name="connectlbl" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"               
+                Height="61" Width="auto" FontSize="18" Margin="0,150,0,0">
+                    Connect
                 </Label>
 
+                <materialDesign:Card  Grid.Row="1"
+                VerticalAlignment="Bottom" >
+                    <StackPanel>
+                        <Expander HorizontalAlignment="Stretch" Header="Advanced">
+                            <StackPanel Margin="24,8,24,16" Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" >
+                                    Routing
+                                </TextBlock>
+                                <ListBox HorizontalAlignment="Stretch" SelectedIndex="0" Style="{StaticResource MaterialDesignToolToggleListBox}">
+                                    <ListBox.ToolTip>
+                                        <StackPanel>
+                                            <TextBlock Text="MaterialDesignToolToggleListBox" />
+                                            <TextBlock Text="Exclusive selection" />
+                                            <TextBlock Text="ListBoxAssist.IsToggle allows more natural toggle behaviour" />
+                                        </StackPanel>
+                                    </ListBox.ToolTip>
+                                    <ListBoxItem Content="Blocked Sites" HorizontalAlignment="Stretch" />
+                                    <ListBoxItem Content="Forign Sites" HorizontalAlignment="Stretch"/>
+                                    <ListBoxItem Content="All Sites" HorizontalAlignment="Stretch"/>
+                                </ListBox>
+                                <TextBlock Style="{StaticResource MaterialDesignDataGridTextColumnStyle}" />
+
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" >
+                                    Selection Mode
+                                </TextBlock>
+                                <ListBox HorizontalAlignment="Stretch" SelectedIndex="0" Style="{StaticResource MaterialDesignToolToggleListBox}">
+                                    <ListBox.ToolTip>
+                                        <StackPanel>
+                                            <TextBlock Text="MaterialDesignToolToggleListBox" />
+                                            <TextBlock Text="Exclusive selection" />
+                                            <TextBlock Text="ListBoxAssist.IsToggle allows more natural toggle behaviour" />
+                                        </StackPanel>
+                                    </ListBox.ToolTip>
+                                    <ListBoxItem Content="Auto" />
+                                    <ListBoxItem Content="Load Balance" />
+                                    <ListBoxItem Content="Manual" />
+                                </ListBox>
+                                <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" />
+                            </StackPanel>
+                        </Expander>
+
+                    </StackPanel>
+                </materialDesign:Card>
             </Grid>
 
         </materialDesign:DrawerHost>

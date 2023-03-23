@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using v2rayN.ViewModels;
+using static QRCoder.PayloadGenerator.SwissQrCode;
 
 namespace v2rayN.Views
 {
@@ -35,7 +36,7 @@ namespace v2rayN.Views
                 MainSnackbar.MessageQueue?.Enqueue("Welcome to Hiddify");
             }, TaskScheduler.FromCurrentSynchronizationContext());
             DataContext = new HomeWindowViewModel(MainSnackbar.MessageQueue!);
-
+            ModifyTheme(false);
         }
         private void OnCopy(object sender, ExecutedRoutedEventArgs e)
         {
@@ -89,10 +90,12 @@ namespace v2rayN.Views
         {
             ConnectVPN.Background= new SolidColorBrush(Color.FromRgb(0xFF,0xF2,0x67));
             ((HomeWindowViewModel)DataContext).ConnectProgress = true;
+            connectlbl.Content = "Connecting...";
             Task.Factory.StartNew(() => Thread.Sleep(2500)).ContinueWith(t =>
             {
                 ((HomeWindowViewModel)DataContext).ConnectProgress = false;
                 ConnectVPN.Background = new SolidColorBrush(Colors.LightGreen);
+                connectlbl.Content = "Connected Successfully";
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
     }
