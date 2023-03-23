@@ -60,13 +60,14 @@
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" Orientation="Horizontal">
-                            <ToggleButton x:Name="MenuToggleButton"
+                            <ToggleButton x:Name="MenuToggleDarkButton"
                             Margin="5,0,24,0"
                             AutomationProperties.Name="HamburgerToggleButton"
                             Click="MenuToggleButton_Click"
                             IsChecked="False"
                             Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
                         </StackPanel>
+                        
 
 
                         <TextBlock Grid.Column="1"
@@ -75,8 +76,13 @@
                        AutomationProperties.Name="Hiddify"
                        FontSize="22"
                        Text="Hiddify" />
-
-                        <materialDesign:PopupBox Grid.Column="2"
+                        <StackPanel Orientation="Horizontal" Grid.Column="2">
+                        <ToggleButton 
+  materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=WhiteBalanceSunny}"
+  Content="{materialDesign:PackIcon Kind=NightSky}"
+  Style="{StaticResource MaterialDesignActionToggleButton}"
+  ToolTip="MaterialDesignActionLightToggleButton" />
+                        <materialDesign:PopupBox 
                                      PlacementMode="BottomAndAlignRightEdges"
                                      StaysOpen="False">
                             <StackPanel>
@@ -104,11 +110,19 @@
 
                                     <Separator />
 
+                                        <ComboBox
+                                        x:Name="cmbCurrentLanguage"
+                                        Grid.Row="3"
+                                        Grid.Column="1"
+                                        Width="100"
+                                        Margin="8"
+                                        materialDesign:HintAssist.Hint="Language"
+                                        Style="{StaticResource DefComboBox}" />
 
-                                </Grid>
+                                    </Grid>
                             </StackPanel>
                         </materialDesign:PopupBox>
-
+                        </StackPanel>
 
 
 
@@ -143,16 +157,19 @@
                 materialDesign:ButtonProgressAssist.IsIndeterminate="{Binding ConnectProgress}"
                 materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding ConnectProgress}"
                 
-                materialDesign:ButtonAssist.CornerRadius="48"
+                
                 Background="#FFE0E0E0"
-                BorderThickness="0"
+                
                 Click="ConnectVPN_Click"
-                Foreground="{DynamicResource SecondaryHueMidBrushForeground}">
+                 Style="{StaticResource MaterialDesignFloatingActionButton}" 
+                Foreground="{DynamicResource SecondaryHueMidBrushForeground}" BorderBrush="{x:Null}">
 
                     <Image Source="/v2rayN.ico" Width="36" Height="36" />
 
                 </Button>
-                <StackPanel Name="speedpanel" Visibility="Collapsed" Grid.Row="1"
+                <StackPanel Name="speedpanel" 
+                            Visibility="Visible" 
+                            Grid.Row="1"
                         HorizontalAlignment="Left"
                             Margin="31,0,0,0"
                 VerticalAlignment="Center"
@@ -161,6 +178,7 @@
                     HorizontalAlignment="Center"
                     Padding="0"
                 Width="36" 
+                    Style="{StaticResource MaterialDesignFloatingActionButton}"
                         Background="White"
                         BorderBrush="White"
                         Foreground="black"
@@ -204,6 +222,7 @@
                                         <materialDesign:PackIcon Kind="OpenInNew" />
                                     </TextBlock>
                                     <Button Name="NewProfile" Grid.Column="1"
+                                            Padding="0"
                                                 VerticalAlignment="Center"  Height="36" materialDesign:ButtonAssist.CornerRadius="8" 
                                                 Background="{x:Null}"
                                                 Command="{Binding NewProfileCommand}"
