@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PacLib", "PacLib\PacLib.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HiddifyUpgradeN", "HiddifyUpgradeN\HiddifyUpgradeN.csproj", "{3CD0B9E8-331B-42C6-A395-4DA0FD4BC8EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HiddifyRestartN", "HiddifyRestartN\HiddifyRestartN.csproj", "{89185DF9-A4F2-4A1E-A290-EA02959C37DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HiddifyRestartN", "HiddifyRestartN\HiddifyRestartN.csproj", "{89185DF9-A4F2-4A1E-A290-EA02959C37DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

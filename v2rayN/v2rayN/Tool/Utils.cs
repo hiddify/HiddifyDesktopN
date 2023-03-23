@@ -1431,7 +1431,7 @@ namespace v2rayN
             //   https://domain.com/first/two/all.txt?parameter=value
             // Will be:
             //   https://domain.com/first/two/
-            
+
             Uri uri = new Uri(url);
             string[] splitted = uri.AbsolutePath.TrimStart('/').Split('/', 3);
             if (splitted.Length < 3)
@@ -1442,7 +1442,43 @@ namespace v2rayN
 
         }
 
+        // First return value is for stdout and second one is for stderr
+        public static (string?,string?) StartProcess(ProcessStartInfo sInfo)
+        {
+            var errors = new StringBuilder();
+            var output = new StringBuilder();
 
+            var hadError = false;
+
+            var p = Process.Start(sInfo);
+            p.EnableRaisingEvents = true;
+
+            p.OutputDataReceived += (s, d) =>
+            {
+                output.Append(d.Data);
+            };
+
+            p.ErrorDataReceived += (s, d) =>
+            {
+                if (!hadError)
+                {
+                    hadError = !String.IsNullOrEmpty(d.Data);
+                }
+                errors.Append(d.Data);
+            };
+
+            p.BeginErrorReadLine();
+            p.BeginOutputReadLine();
+            p.WaitForExit();
+
+            string stdout = output.ToString();
+            string stderr = errors.ToString();
+            if (p.ExitCode != 0 || hadError)
+            {
+                return (null,stderr);
+            }
+            return (stdout,null);
+        }
         #region Clash Subscription Info
         public static ClashSubscriptionInfo? GetClashSubscriptionInfoAsDict(HttpResponseHeaders headers)
         {
@@ -1464,11 +1500,12 @@ namespace v2rayN
                 if (key == "upload")
                 {
                     long longValue;
-                    if (long.TryParse(value,out longValue))
+                    if (long.TryParse(value, out longValue))
                     {
                         clashSubscriptionInfo.Upload = longValue;
                     }
-                }else if (key == "download")
+                }
+                else if (key == "download")
                 {
                     long longValue;
                     if (long.TryParse(value, out longValue))
@@ -1491,7 +1528,7 @@ namespace v2rayN
                     {
                         clashSubscriptionInfo.ExpireDate = longValue;
                     }
-                    
+
                 }
             }
             return clashSubscriptionInfo;
@@ -1543,7 +1580,7 @@ namespace v2rayN
             {
                 return this.ExpireToDate().Subtract(DateTime.Now).Days;
             }
-            
+
             private double GetJustThreeDigitOfaNumber(double num)
             {
                 string strNum = "";

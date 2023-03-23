@@ -137,6 +137,7 @@ namespace v2rayN
         public static string MainFormReloadFilePath { get; set; } = Utils.GetTempPath("mainPageReloadLockFile.txt");
         public static readonly string RestartProgramExePath = Path.GetFullPath(Path.Combine(Utils.StartupPath(), "bin", "hiddifyRestartN", "HiddifyRestartN.exe"));
         public static readonly string UpgradeProgramExePath = Path.GetFullPath(Path.Combine(Utils.StartupPath(), "bin", "hiddifyUpgradeN", "HiddifyUpgradeN.exe"));
+        public static readonly string SpeedTestProgramExePath = Path.GetFullPath(Path.Combine(Utils.StartupPath(), "bin", "speedTest", "librespeed-cli.exe"));
         #endregion
 
     }

@@ -4,6 +4,10 @@ using v2rayN.Handler;
 using v2rayN.Mode;
 using v2rayN.Tool;
 using v2rayN.ViewModels;
+using v2rayN.Tool;
+using ByteSizeLib;
+using System.Net;
+using HiddifyN.Tool;
 
 namespace v2rayN
 {
@@ -32,7 +36,6 @@ namespace v2rayN
         protected override void OnStartup(StartupEventArgs e)
         {
 
-            // Register URI scheme for application
             DeepLinking.RegisterSchemes();
             
             Global.ExePathKey = Utils.GetMD5(Utils.GetExePath());
@@ -51,6 +54,9 @@ namespace v2rayN
             Logging.ClearLogs();
 
             Init();
+            //var t = new TestSpeed();
+            //var res = t.DownloadSpeed(false);
+            //var p = (WebProxy)Utils.GetAppProxyAddress();
 
             Thread.CurrentThread.CurrentUICulture = new(_config.uiItem.currentLanguage);
 

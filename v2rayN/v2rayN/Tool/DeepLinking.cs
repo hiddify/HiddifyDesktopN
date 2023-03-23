@@ -139,7 +139,7 @@ namespace v2rayN.Tool
             //        var downloader = new DownloadHandle();
 
             //        // Download through proxy
-            //        string url_res = await downloader.TryDownloadString(subscription.Url, false, "");
+            //        string url_res = await downloader.TryDownloadString(subscription.Url, true, "");
             //        if (Utils.IsNullOrEmpty(url_res.Trim()))
             //        {
             //            // Download without proxy
