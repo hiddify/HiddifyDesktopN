@@ -18,12 +18,13 @@ using v2rayN.Views;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using v2rayN.ViewModels;
 using v2rayN.Converters;
+using v2rayN.Mode;
 
 namespace v2rayN.ViewModels
 {
     public class HomeWindowViewModel : ViewModelBase
     {
-        
+
         public HomeWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue)
         {
             _snackbarMessageQueue = snackbarMessageQueue;
@@ -36,15 +37,15 @@ namespace v2rayN.ViewModels
                     unselectedIcon: PackIconKind.HomeOutline)
             };
 
-            
+
             MainDemoItems = new ObservableCollection<DemoItem>
             {
             };
 
             _demoItemsView = CollectionViewSource.GetDefaultView(DemoItems);
-            
 
-            
+
+
             DismissAllNotificationsCommand = new AnotherCommandImplementation(
                 _ => DemoItems[0].DismissAllNotifications(),
                 _ => DemoItems[0].Notifications != null);
@@ -67,8 +68,30 @@ namespace v2rayN.ViewModels
             _snackbarMessageQueue.Enqueue("Nothing find in the Clipboard");
 
             //check the result...
-            
+
         }
+        public ObservableCollection<SubItem> Items1 { get; } = new ObservableCollection<SubItem>()
+            {
+                new SubItem
+                {
+                    id = "A",
+                    remarks = "Profile2",
+                    url= "XAML Toolkit"
+                },
+                new SubItem
+                {
+                    id = "B",
+                    remarks = "Profile3",
+                    url= "Material Design in XAML Toolkit"
+                },
+                new SubItem
+                {
+                    id = "C",
+                    remarks = "Profile4",
+                    url= "Material "
+                },
+            };
+    
         private readonly ICollectionView _demoItemsView;
         private DemoItem? _selectedItem;
         private int _selectedIndex;

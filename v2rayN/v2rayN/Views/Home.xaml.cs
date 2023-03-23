@@ -29,6 +29,7 @@ namespace v2rayN.Views
         public Home()
         {
             InitializeComponent();
+            //FlowDirection = FlowDirection.RightToLeft;
             Task.Factory.StartNew(() => Thread.Sleep(2500)).ContinueWith(t =>
             {
                 //note you can use the message queue from any thread, but just for the demo here we 
