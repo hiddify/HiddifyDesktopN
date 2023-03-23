@@ -26,14 +26,15 @@ namespace v2rayN.Views
             InitializeComponent();
         }
 
-        private void ActiveProfile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            MessageBox.Show("Going to User Page");
-        }
 
         private void UpdateUsage_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Updateing Usage");
+        }
+
+        private void GotoProfile_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Going to User Page");
         }
     }
 }

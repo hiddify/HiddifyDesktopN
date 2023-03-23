@@ -13,12 +13,19 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <TextBlock  UIElement.PreviewMouseDown="ActiveProfile_PreviewMouseDown"
+            <StackPanel Orientation="Horizontal">
+            <TextBlock  
                                             VerticalAlignment="Center" 
                                             Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="{Binding remarks}" >
                                         
-                                        <materialDesign:PackIcon Kind="OpenInNew" />
             </TextBlock>
+            <Button Name="GotoProfile" Click="GotoProfile_Click" 
+                    Margin="10,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}"
+                    Foreground="Black"
+                    >
+                <materialDesign:PackIcon Kind="OpenInNew"  />
+            </Button>
+            </StackPanel>
             <Button Name="NewProfile" Grid.Column="1"
                                             Padding="0"
                                                 VerticalAlignment="Center"  Height="36" materialDesign:ButtonAssist.CornerRadius="8" 
