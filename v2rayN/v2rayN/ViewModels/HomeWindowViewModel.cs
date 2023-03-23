@@ -70,6 +70,12 @@ namespace v2rayN.ViewModels
             //check the result...
 
         }
+        public SubItem SelectedProfile { get; } = new SubItem
+        {
+            id = "A",
+            remarks = "Profile Selected",
+            url = "XAML Toolkit"
+        };
         public ObservableCollection<SubItem> Items1 { get; } = new ObservableCollection<SubItem>()
             {
                 new SubItem

@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="v2rayN.Views.SubInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:v2rayN.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel  HorizontalAlignment="Stretch" >
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock  UIElement.PreviewMouseDown="ActiveProfile_PreviewMouseDown"
+                                            VerticalAlignment="Center" 
+                                            Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="{Binding remarks}" >
+                                        
+                                        <materialDesign:PackIcon Kind="OpenInNew" />
+            </TextBlock>
+            <Button Name="NewProfile" Grid.Column="1"
+                                            Padding="0"
+                                                VerticalAlignment="Center"  Height="36" materialDesign:ButtonAssist.CornerRadius="8" 
+                                                Background="{x:Null}"
+                                                Command="{Binding NewProfileCommand}"
+                                                BorderBrush="{x:Null}" Foreground="#FF0E0808">
+                <StackPanel Orientation="Horizontal" >
+                    <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center"  />
+                    <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" >
+                                    New
+                    </TextBlock>
+
+                </StackPanel>
+            </Button>
+        </Grid>
+
+
+        <Grid >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Margin="0,0,20,0">
+                <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}">26 days</TextBlock>
+                <Label HorizontalAlignment="Center">Remaining</Label>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+
+                <Grid >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+
+                    <Button Name="UpdateUsage" Grid.Column="0" HorizontalAlignment="Left"
+                                                VerticalAlignment="Bottom"  Padding="0" materialDesign:ButtonAssist.CornerRadius="8" 
+                                                Background="{x:Null}"
+                                                Click="UpdateUsage_Click"
+                                                BorderBrush="{x:Null}" Foreground="#FF0E0808">
+                        <StackPanel Orientation="Horizontal" >
+                            <TextBlock  >
+                                    Usage
+                            </TextBlock>
+                            <materialDesign:PackIcon Kind="Refresh" VerticalAlignment="Center"  />
+
+                        </StackPanel>
+                    </Button>
+
+                    <Label Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">10/100GB</Label>
+                </Grid>
+                <ProgressBar Height="10" Value="25" HorizontalAlignment="Stretch" />
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</UserControl>
