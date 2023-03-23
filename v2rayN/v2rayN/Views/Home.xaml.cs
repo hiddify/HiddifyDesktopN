@@ -93,10 +93,27 @@ namespace v2rayN.Views
             connectlbl.Content = "Connecting...";
             Task.Factory.StartNew(() => Thread.Sleep(2500)).ContinueWith(t =>
             {
+                speedpanel.Visibility = Visibility.Visible;
                 ((HomeWindowViewModel)DataContext).ConnectProgress = false;
                 ConnectVPN.Background = new SolidColorBrush(Colors.LightGreen);
                 connectlbl.Content = "Connected Successfully";
             }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        private void NewProfile_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Going to User Page");
+        }
+
+
+        private void ActiveProfile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBox.Show("Going to User Page");
+        }
+
+        private void UpdateUsage_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Updateing Usage");
         }
     }
 }

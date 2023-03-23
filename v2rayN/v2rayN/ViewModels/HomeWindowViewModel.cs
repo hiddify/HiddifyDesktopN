@@ -17,7 +17,7 @@ using System.Windows.Documents;
 using v2rayN.Views;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 using v2rayN.ViewModels;
-
+using v2rayN.Converters;
 
 namespace v2rayN.ViewModels
 {
@@ -26,7 +26,7 @@ namespace v2rayN.ViewModels
         
         public HomeWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue)
         {
-
+            _snackbarMessageQueue = snackbarMessageQueue;
             DemoItems = new ObservableCollection<DemoItem>
             {
               new DemoItem(
@@ -53,13 +53,28 @@ namespace v2rayN.ViewModels
                 _ => DemoItems[0].AddNewNotification());
 
             AddNewNotificationCommand.Execute(new object());
+
+            NewProfileCommand = new AnotherCommandImplementation(ExecuteNewProfileDialog);
+
+
+        }
+        private async void ExecuteNewProfileDialog(object? _)
+        {
+            //let's set up a little MVVM, cos that's what the cool kids are doing:
+
+
+            //show the dialog
+            _snackbarMessageQueue.Enqueue("Nothing find in the Clipboard");
+
+            //check the result...
+            
         }
         private readonly ICollectionView _demoItemsView;
         private DemoItem? _selectedItem;
         private int _selectedIndex;
         private string? _searchKeyword;
         private bool _controlsEnabled = true;
-
+        private ISnackbarMessageQueue _snackbarMessageQueue;
 
         public ObservableCollection<DemoItem> DemoItems { get; }
         public ObservableCollection<DemoItem> MainDemoItems { get; }
@@ -89,6 +104,7 @@ namespace v2rayN.ViewModels
         
         public AnotherCommandImplementation DismissAllNotificationsCommand { get; }
         public AnotherCommandImplementation AddNewNotificationCommand { get; }
+        public AnotherCommandImplementation NewProfileCommand { get; }
 
         private static IEnumerable<DemoItem> GenerateDemoItems(ISnackbarMessageQueue snackbarMessageQueue)
         {
