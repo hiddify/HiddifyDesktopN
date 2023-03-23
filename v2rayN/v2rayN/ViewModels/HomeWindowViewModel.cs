@@ -56,28 +56,9 @@ namespace v2rayN.ViewModels
             AddNewNotificationCommand.Execute(new object());
 
             NewProfileCommand = new AnotherCommandImplementation(ExecuteNewProfileDialog);
-
-
-        }
-        private async void ExecuteNewProfileDialog(object? _)
-        {
-            //let's set up a little MVVM, cos that's what the cool kids are doing:
-
-
-            //show the dialog
-            _snackbarMessageQueue.Enqueue("Nothing find in the Clipboard");
-
-            //check the result...
-
-        }
-        public SubItem SelectedProfile { get; } = new SubItem
-        {
-            id = "A",
-            remarks = "Profile Selected",
-            url = "XAML Toolkit"
-        };
-        public ObservableCollection<SubItem> Items1 { get; } = new ObservableCollection<SubItem>()
+            Items1 = new ObservableCollection<SubItem>()
             {
+                _selectedProfile,
                 new SubItem
                 {
                     id = "A",
@@ -97,6 +78,27 @@ namespace v2rayN.ViewModels
                     url= "Material "
                 },
             };
+
+        }
+        private async void ExecuteNewProfileDialog(object? _)
+        {
+            //let's set up a little MVVM, cos that's what the cool kids are doing:
+
+
+            //show the dialog
+            _snackbarMessageQueue.Enqueue("Nothing find in the Clipboard");
+
+            //check the result...
+
+        }
+        private SubItem _selectedProfile = new SubItem
+        {
+            id = "A",
+            remarks = "Profile 1",
+            url = "XAML Toolkit"
+        };
+    public SubItem SelectedProfile { get => _selectedProfile; set => SetProperty(ref _selectedProfile, value); } 
+    public ObservableCollection<SubItem> Items1 { get; } 
     
         private readonly ICollectionView _demoItemsView;
         private DemoItem? _selectedItem;
