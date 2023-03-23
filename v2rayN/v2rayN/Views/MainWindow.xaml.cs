@@ -278,7 +278,7 @@ namespace v2rayN.Views
             {
                 WindowState = WindowState.Minimized;
             }
-            
+
             if (!_config.guiItem.enableHWA)
             {
                 RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
@@ -555,8 +555,15 @@ namespace v2rayN.Views
                     var item2 = (MyDGTextColumn)lstProfiles.Columns[k];
                     if (item2.ExName == item.Name)
                     {
-                        item2.Width = item.Width;
-                        item2.DisplayIndex = i + 1;
+                        if (item.Width <= 0)
+                        {
+                            item2.Visibility = Visibility.Hidden;
+                        }
+                        else
+                        {
+                            item2.Width = item.Width;
+                            item2.DisplayIndex = i + 1;
+                        }
                     }
                 }
             }
@@ -581,7 +588,7 @@ namespace v2rayN.Views
                 lvColumnItem.Add(new()
                 {
                     Name = item2.ExName,
-                    Width = Convert.ToInt32(item2.ActualWidth),
+                    Width = item2.Visibility == Visibility.Visible ? Convert.ToInt32(item2.ActualWidth) : 0,
                     Index = item2.DisplayIndex
                 });
             }

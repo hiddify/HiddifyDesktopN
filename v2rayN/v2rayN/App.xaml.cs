@@ -50,10 +50,11 @@ namespace v2rayN
             Global.processJob = new Job();
 
             Logging.Setup();
+            Init();
+            Logging.LoggingEnabled(_config.guiItem.enableLog);
             Utils.SaveLog($"v2rayN start up | {Utils.GetVersion()} | {Utils.GetExePath()}");
             Logging.ClearLogs();
 
-            Init();
             //var t = new TestSpeed();
             //var res = t.DownloadSpeed(false);
             //var p = (WebProxy)Utils.GetAppProxyAddress();
