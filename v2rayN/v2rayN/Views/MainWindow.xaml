@@ -207,7 +207,7 @@
                                         <MenuItem
                                     x:Name="menuCheckUpdateXrayCore"
                                     Height="{StaticResource MenuItemHeight}"
-                                    Header="Xray Core" />
+                                    Header="Hiddify Xray Core" />
                                         <Separator Margin="-40,5" />
                                         <MenuItem
                                     x:Name="menuCheckUpdateClashCore"

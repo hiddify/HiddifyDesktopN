@@ -240,9 +240,16 @@
                         <Expander HorizontalAlignment="Stretch" Header="Advanced">
                             <StackPanel Margin="24,8,24,16" Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                                 <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" >
-                                    Routing
+                                    Use For
                                 </TextBlock>
-                                <ListBox HorizontalAlignment="Stretch" SelectedIndex="0" Style="{StaticResource MaterialDesignToolToggleListBox}">
+                                <ListBox Grid.IsSharedSizeScope="True"  HorizontalContentAlignment="Center"
+                                         HorizontalAlignment="Stretch" 
+                                         Style="{StaticResource MaterialDesignToolToggleListBox}">
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Columns="3"/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
                                     <ListBox.ToolTip>
                                         <StackPanel>
                                             <TextBlock Text="MaterialDesignToolToggleListBox" />
@@ -250,16 +257,16 @@
                                             <TextBlock Text="ListBoxAssist.IsToggle allows more natural toggle behaviour" />
                                         </StackPanel>
                                     </ListBox.ToolTip>
-                                    <ListBoxItem Content="Blocked Sites" HorizontalAlignment="Stretch" />
-                                    <ListBoxItem Content="Forign Sites" HorizontalAlignment="Stretch"/>
-                                    <ListBoxItem Content="All Sites" HorizontalAlignment="Stretch"/>
+                                    <ListBoxItem Content="Blocked Sites"/>
+                                    <ListBoxItem Content="Forign Sites"/>
+                                    <ListBoxItem Content="All Sites"/>
                                 </ListBox>
                                 <TextBlock Style="{StaticResource MaterialDesignDataGridTextColumnStyle}" />
 
                                 <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" >
-                                    Selection Mode
+                                    Proxy Selection Mode
                                 </TextBlock>
-                                <ListBox HorizontalAlignment="Stretch" SelectedIndex="0" Style="{StaticResource MaterialDesignToolToggleListBox}">
+                                <ListBox HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Style="{StaticResource MaterialDesignToolToggleListBox}">
                                     <ListBox.ToolTip>
                                         <StackPanel>
                                             <TextBlock Text="MaterialDesignToolToggleListBox" />
@@ -267,7 +274,12 @@
                                             <TextBlock Text="ListBoxAssist.IsToggle allows more natural toggle behaviour" />
                                         </StackPanel>
                                     </ListBox.ToolTip>
-                                    <ListBoxItem Content="Auto" />
+                                    <ListBox.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Columns="3"/>
+                                        </ItemsPanelTemplate>
+                                    </ListBox.ItemsPanel>
+                                    <ListBoxItem Content="Auto"  />
                                     <ListBoxItem Content="Load Balance" />
                                     <ListBoxItem Content="Manual" />
                                 </ListBox>

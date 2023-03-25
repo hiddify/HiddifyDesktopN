@@ -11,7 +11,7 @@ namespace v2rayN
         public const string AboutUrl = @"https://github.com/hiddify/HiddifyDesktopN";
         public const string UpdateUrl = AboutUrl + @"/releases";
         public const string v2flyCoreUrl = "https://github.com/v2fly/v2ray-core/releases";
-        public const string xrayCoreUrl = "https://github.com/XTLS/Xray-core/releases";
+        public const string xrayCoreUrl = "https://github.com/hiddify/hiddify-Xray-core/releases";
         public const string SagerNetCoreUrl = "https://github.com/SagerNet/v2ray-core/releases";
         public const string NUrl = @"https://github.com/hiddify/HiddifyDesktopN/releases";
         public const string clashCoreUrl = "https://github.com/Dreamacro/clash/releases";
