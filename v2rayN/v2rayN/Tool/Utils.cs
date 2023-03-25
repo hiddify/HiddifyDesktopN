@@ -1488,7 +1488,7 @@ namespace v2rayN
             return (stdout,null);
         }
         #region Clash Subscription Info
-        public static ClashSubscriptionInfo? GetClashSubscriptionInfoAsDict(HttpResponseHeaders headers)
+        public static SubscriptionInfo? GetSubscriptionInfoFromHeaderAsDict(HttpResponseHeaders headers)
         {
             IEnumerable<string> userSubInfoValues;
             if (!headers.TryGetValues("Subscription-Userinfo", out userSubInfoValues))
@@ -1496,7 +1496,7 @@ namespace v2rayN
                 return null;
             }
 
-            ClashSubscriptionInfo clashSubscriptionInfo = new ClashSubscriptionInfo();
+            SubscriptionInfo clashSubscriptionInfo = new SubscriptionInfo();
             // Split values
             foreach (var item in userSubInfoValues.FirstOrDefault().Split(";"))
             {
@@ -1539,73 +1539,20 @@ namespace v2rayN
 
                 }
             }
+
+            // Get profile web page url from header
+            IEnumerable<string> profileWebPageValue;
+            if (!headers.TryGetValues("Profile-Web-Page-Url",out profileWebPageValue))
+            {
+                return null;
+            }
+
+            string profileWebPageUrl = profileWebPageValue.FirstOrDefault();
+            if (profileWebPageUrl != null)
+            {
+                clashSubscriptionInfo.ProfileWebPageUrl = profileWebPageUrl;
+            }
             return clashSubscriptionInfo;
-        }
-
-        public class ClashSubscriptionInfo
-        {
-            public long Upload { get; set; }
-            public long Download { get; set; }
-            public long Total { get; set; }
-            public long ExpireDate { get; set; }
-
-            public double UploadMegaBytes()
-            {
-                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Upload).MegaBytes);
-            }
-            public double DownloadMegaBytes()
-            {
-                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Download).MegaBytes);
-            }
-            public double TotalMegaBytes()
-            {
-                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Total).MegaBytes);
-            }
-
-            public double UploadGigaBytes()
-            {
-                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Upload).GigaBytes);
-            }
-            public double DownloadGigaBytes()
-            {
-                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Download).GigaBytes);
-            }
-            public double TotalGigaBytes()
-            {
-                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Total).GigaBytes);
-            }
-
-            public double DownloadAndUploadTotalGigaBytes()
-            {
-                return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.Download + this.Upload).GigaBytes);
-            }
-            public DateTime ExpireToDate()
-            {
-                return Utils.EpochToDate(this.ExpireDate);
-            }
-
-            public int DaysLeftToExpire()
-            {
-                return this.ExpireToDate().Subtract(DateTime.Now).Days;
-            }
-
-            private double GetJustThreeDigitOfaNumber(double num)
-            {
-                string strNum = "";
-                int counter = 0;
-                foreach (var n in num.ToString().ToCharArray())
-                {
-                    if (counter == 3)
-                    {
-                        break;
-                    }
-                    strNum += n;
-                    counter++;
-                }
-
-                return double.Parse(strNum);
-            }
-
         }
         #endregion
     }
