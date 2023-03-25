@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Windows.Documents;
 
 namespace v2rayN.Mode
 {
@@ -360,7 +361,7 @@ namespace v2rayN.Mode
         /// <summary>
         /// 
         /// </summary>
-        public List<BalancerItem> balancers { get; set; }
+        public List<BalancerItem> balancers { get; set; }=new List<BalancerItem>();
     }
 
 

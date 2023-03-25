@@ -378,6 +378,7 @@ namespace v2rayN.Views
                 if (((int)ViewModel?.SelectedProfile?.configType) >100 ) return;
                 ViewModel?.EditServer(false, EConfigType.Custom);
             }
+            ViewModel?.ServerSpeedtest(ESpeedActionType.Realping);
         }
 
         private void LstProfiles_ColumnHeader_Click(object sender, RoutedEventArgs e)

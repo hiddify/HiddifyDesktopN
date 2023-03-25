@@ -15,7 +15,7 @@
     Title="HiddifyN"
     Width="1200"
     Height="700"
-    MinWidth="800"
+    MinWidth="1000"
     MinHeight="600"
     x:TypeArguments="vms:MainWindowViewModel"
     Background="{DynamicResource MaterialDesignPaper}"
@@ -695,31 +695,7 @@
                                 Binding="{Binding address}"
                                 ExName="address"
                                 Header="{x:Static resx:ResUI.LvAddress}" />
-                            <base:MyDGTextColumn
-                                Width="60"
-                                Binding="{Binding port}"
-                                ExName="port"
-                                Header="{x:Static resx:ResUI.LvPort}" />
-                            <base:MyDGTextColumn
-                                Width="100"
-                                Binding="{Binding security}"
-                                ExName="security"
-                                Header="{x:Static resx:ResUI.LvEncryptionMethod}" />
-                            <base:MyDGTextColumn
-                                Width="100"
-                                Binding="{Binding network}"
-                                ExName="network"
-                                Header="{x:Static resx:ResUI.LvTransportProtocol}" />
-                            <base:MyDGTextColumn
-                                Width="100"
-                                Binding="{Binding streamSecurity}"
-                                ExName="streamSecurity"
-                                Header="{x:Static resx:ResUI.LvTLS}" />
-                            <base:MyDGTextColumn
-                                Width="100"
-                                Binding="{Binding subRemarks}"
-                                ExName="subRemarks"
-                                Header="{x:Static resx:ResUI.LvSubscription}" />
+                            
                             <base:MyDGTextColumn
                                 Width="100"
                                 Binding="{Binding delayVal}"
@@ -743,7 +719,12 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </base:MyDGTextColumn>
-
+                            <base:MyDGTextColumn
+                                Width="60"
+                                Binding="{Binding port}"
+                                ExName="port"
+                                Header="{x:Static resx:ResUI.LvPort}" />
+                            
                             <base:MyDGTextColumn
                                 x:Name="colTodayUp"
                                 Width="100"
@@ -768,7 +749,26 @@
                                 Binding="{Binding totalDown}"
                                 ExName="totalDown"
                                 Header="{x:Static resx:ResUI.LvTotalDownloadDataAmount}" />
-
+                            <base:MyDGTextColumn
+                                Width="100"
+                                Binding="{Binding security}"
+                                ExName="security"
+                                Header="{x:Static resx:ResUI.LvEncryptionMethod}" />
+                            <base:MyDGTextColumn
+                                Width="100"
+                                Binding="{Binding network}"
+                                ExName="network"
+                                Header="{x:Static resx:ResUI.LvTransportProtocol}" />
+                            <base:MyDGTextColumn
+                                Width="100"
+                                Binding="{Binding streamSecurity}"
+                                ExName="streamSecurity"
+                                Header="{x:Static resx:ResUI.LvTLS}" />
+                            <base:MyDGTextColumn
+                                Width="100"
+                                Binding="{Binding subRemarks}"
+                                ExName="subRemarks"
+                                Header="{x:Static resx:ResUI.LvSubscription}" />
                         </DataGrid.Columns>
                     </DataGrid>
                     <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />

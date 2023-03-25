@@ -32,11 +32,11 @@ namespace v2rayN.Handler
             {
                 if (it.configType == EConfigType.Custom)
                 {
-                    continue;
+                   // continue;
                 }
                 if (it.port <= 0)
                 {
-                    continue;
+                 //   continue;
                 }
                 _selecteds.Add(new ServerTestItem()
                 {

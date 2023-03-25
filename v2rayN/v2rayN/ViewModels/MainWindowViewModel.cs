@@ -1477,6 +1477,7 @@ namespace v2rayN.ViewModels
             {
                 BlReloadEnabled = true;
             }));
+            ServerSpeedtest(ESpeedActionType.Realping);
         }
 
         private void CloseV2ray()

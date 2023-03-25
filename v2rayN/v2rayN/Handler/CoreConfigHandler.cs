@@ -1048,8 +1048,11 @@ namespace v2rayN.Handler
                 BalancerItem balancer = new BalancerItem();
                 balancer.tag = "balancer";
                 balancer.strategy = new BalancerStrategyItem();
-                if (node.configType==EConfigType.LowestPing)
-                    balancer.strategy.type = "leastPing";
+                if (node.configType == EConfigType.LowestPing)
+                {
+                    balancer.strategy.type = "optimal";
+                    balancer.optimalSettings = new OptimalBalancerStrategySetting();
+                }
                 balancer.selector = LazyConfig.Instance.ProfileItems(node.subid).Where(p=>((int)p.configType)<100).Select(p => "p" + p.indexId).ToArray();
 
                 routing(config, ref v2rayConfig, balancer);
@@ -1515,7 +1518,7 @@ namespace v2rayN.Handler
                     {
                         continue;
                     }
-                    if (it.port <= 0)
+                    if (it.port <= 0 && (int)it.configType < 100)
                     {
                         continue;
                     }
@@ -1577,18 +1580,53 @@ namespace v2rayN.Handler
                         continue;
                     }
 
-                    outbound(item, ref v2rayConfigCopy);
-                    v2rayConfigCopy.outbounds[0].tag = Global.agentTag + inbound.port.ToString();
-                    v2rayConfig.outbounds.Add(v2rayConfigCopy.outbounds[0]);
-
-                    //rule
-                    RulesItem rule = new()
+                    if (item.configType == EConfigType.LowestPing || item.configType == EConfigType.LoadBalance)
                     {
-                        inboundTag = new List<string> { inbound.tag },
-                        outboundTag = v2rayConfigCopy.outbounds[0].tag,
-                        type = "field"
-                    };
-                    v2rayConfig.routing.rules.Add(rule);
+                        var balancer = new BalancerItem();
+                        balancer.tag = "balancer" + inbound.port.ToString();
+                        balancer.strategy = new BalancerStrategyItem();
+                        if (item.configType == EConfigType.LowestPing)
+                        {
+                            balancer.strategy.type = "optimal";
+                            balancer.optimalSettings = new OptimalBalancerStrategySetting();
+                        }
+                        balancer.selector = LazyConfig.Instance.ProfileItems(item.subid).Where(p => ((int)p.configType) < 100).Select(p => "p" + p.indexId).ToArray();
+
+
+                        v2rayConfig.routing.balancers.Add(balancer);
+
+                        if (v2rayConfig.routing.balancers.Count == 1)
+                        {
+                            foreach (var p in LazyConfig.Instance.ProfileItems(item.subid))
+                            {
+                                outbound(p, ref v2rayConfig, "p" + p.indexId, true);
+                            }
+                        }
+
+                        //rule
+                        RulesItem rule = new()
+                        {
+                            inboundTag = new List<string> { inbound.tag },
+                            balancerTag = balancer.tag,
+                            type = "field"
+                        };
+                        v2rayConfig.routing.rules.Add(rule);
+                    }
+                    else 
+                    { 
+                        outbound(item, ref v2rayConfigCopy);
+                        v2rayConfigCopy.outbounds[0].tag = Global.agentTag + inbound.port.ToString();
+                        v2rayConfig.outbounds.Add(v2rayConfigCopy.outbounds[0]);
+
+                        //rule
+                        RulesItem rule = new()
+                        {
+                            inboundTag = new List<string> { inbound.tag },
+                            outboundTag = v2rayConfigCopy.outbounds[0].tag,
+                            type = "field"
+                        };
+                        v2rayConfig.routing.rules.Add(rule);
+                    }
                 }
 
                 //msg = string.Format(ResUI.SuccessfulConfiguration"), node.getSummary());
