@@ -36,12 +36,21 @@
             <conv:DelayColorConverter x:Key="DelayColorConverter" />
         </ResourceDictionary>
     </Window.Resources>
-
+    
     <materialDesign:DialogHost
         Identifier="RootDialog"
         SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}"
         Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
         <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400" />
+                <ColumnDefinition Width="*" />
+                
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
+                <local:HiddifyUI/>
+            </Grid>
+            <Grid Grid.Column="1">
             <DockPanel>
                 <ToolBarTray DockPanel.Dock="Top">
                     <ToolBar
@@ -900,6 +909,6 @@
             </tb:TaskbarIcon>
             <materialDesign:Snackbar x:Name="MainSnackbar" MessageQueue="{materialDesign:MessageQueue}" />
         </Grid>
-
+        </Grid>
     </materialDesign:DialogHost>
 </reactiveui:ReactiveWindow>
