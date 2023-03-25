@@ -48,7 +48,7 @@
                 
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
-                <local:HiddifyUI/>
+                <local:HiddifyUI DataContext="{Binding}"/>
             </Grid>
             <Grid Grid.Column="1">
             <DockPanel>

@@ -35,7 +35,8 @@ namespace v2rayN.Views
                 //need to get the message queue from the snackbar, so need to be on the dispatcher
                 MainSnackbar.MessageQueue?.Enqueue("Welcome to Hiddify");
             }, TaskScheduler.FromCurrentSynchronizationContext());
-            DataContext = new HomeWindowViewModel(MainSnackbar.MessageQueue!);
+            //DataContext = new HomeWindowViewModel(MainSnackbar.MessageQueue!);
+
             ModifyTheme(false);
         }
         private void OnCopy(object sender, ExecutedRoutedEventArgs e)

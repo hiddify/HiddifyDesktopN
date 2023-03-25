@@ -190,7 +190,7 @@
 
                 <Expander HorizontalAlignment="Stretch" materialDesign:ExpanderAssist.HorizontalHeaderPadding="10,2,0,2" >
                     <Expander.Header >
-                        <views:SubInfoView DataContext="{Binding SelectedProfile}"/>
+                        <views:SubInfoView DataContext="{Binding SelectedSub}"/>
                     </Expander.Header>
                     <StackPanel Margin="24,8,24,16" Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                         <ScrollViewer x:Name="MainScrollViewer"
@@ -198,7 +198,7 @@
                           materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
                           HorizontalScrollBarVisibility="{Binding SelectedItem.HorizontalScrollBarVisibilityRequirement, FallbackValue=Disabled}"
                           VerticalScrollBarVisibility="{Binding SelectedItem.VerticalScrollBarVisibilityRequirement, FallbackValue=Disabled}">
-                            <ListView Margin="12,0,12,0" Grid.IsSharedSizeScope="True" ItemsSource="{Binding Items1}" SelectedItem="{Binding SelectedProfile}">
+                            <ListView Margin="12,0,12,0" Grid.IsSharedSizeScope="True" ItemsSource="{Binding SubItems}" SelectedItem="{Binding SelectedSub}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <views:SubInfoView HorizontalAlignment="Stretch" />

@@ -16,6 +16,8 @@
             <StackPanel Orientation="Horizontal">
             <TextBlock  
                                             VerticalAlignment="Center" 
+                TextTrimming="CharacterEllipsis" 
+           MaxWidth="200"
                                             Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="{Binding remarks}" >
                                         
             </TextBlock>

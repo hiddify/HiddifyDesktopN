@@ -47,6 +47,7 @@ namespace v2rayN.Views
             }
 
             ViewModel = new MainWindowViewModel(MainSnackbar.MessageQueue!, UpdateViewHandler);
+            DataContext = ViewModel;
 
             // Handle URI scheme(Deep link), If there is any
             string[] Args = Environment.GetCommandLineArgs();
