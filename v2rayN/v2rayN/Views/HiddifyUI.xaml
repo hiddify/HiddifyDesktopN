@@ -59,11 +59,11 @@
                        Text="Hiddify" />
                     <StackPanel Orientation="Horizontal" Grid.Column="2">
                         <ToggleButton 
-  materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=WhiteBalanceSunny}"
-  Content="{materialDesign:PackIcon Kind=NightSky}"
+                            materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=WhiteBalanceSunny}"
+                            Content="{materialDesign:PackIcon Kind=NightSky}"
                             IsChecked="{Binding ColorModeDark}"
-  Style="{StaticResource MaterialDesignActionToggleButton}"
-  ToolTip="MaterialDesignActionLightToggleButton" />
+                            Style="{StaticResource MaterialDesignActionToggleButton}"
+                            ToolTip="MaterialDesignActionLightToggleButton" />
                         <materialDesign:PopupBox 
                                      PlacementMode="BottomAndAlignRightEdges"
                                      StaysOpen="False">
@@ -79,15 +79,6 @@
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
 
-
-
-                                    <TextBlock Margin="0,0,10,0" Text="Light" />
-                                    <ToggleButton x:Name="DarkModeToggleButton"
-                                Grid.Column="1"
-                                Click="DarkModeToggleButton_Click" />
-                                    <TextBlock Grid.Column="2"
-                             Margin="10,0,0,0"
-                             Text="Dark" />
 
 
                                     <Separator />
