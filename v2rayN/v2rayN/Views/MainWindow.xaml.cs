@@ -744,5 +744,25 @@ namespace v2rayN.Views
             cmbSystemProxy.SelectedIndex = togEnableProxy.IsChecked==true ? 1 : 0;
         }
 
+
+        private void ResizeWindowToFirstColumn()
+        {
+            // Get the actual width of the first column
+            double firstColumnWidth = HiddifyUI.ActualWidth;
+
+            // Add some padding to the width (optional)
+            double padding = 20;
+            double newWidth = firstColumnWidth + padding;
+
+            // Set the new window size
+            this.Width = newWidth;
+        }
+
+        // Example usage: resize the window to fit the first column
+        private void HideBtn_Click(object sender, RoutedEventArgs e)
+        {
+            V2rayNPanel.Visibility=Visibility.Collapsed;
+            ResizeWindowToFirstColumn();
+        }
     }
 }

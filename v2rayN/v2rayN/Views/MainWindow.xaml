@@ -13,9 +13,9 @@
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:vms="clr-namespace:v2rayN.ViewModels"
     Title="HiddifyN"
-    Width="1200"
+    Width="auto"
     Height="700"
-    MinWidth="1000"
+    
     MinHeight="600"
     x:TypeArguments="vms:MainWindowViewModel"
     Background="{DynamicResource MaterialDesignPaper}"
@@ -44,14 +44,19 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="400" />
+                <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
                 
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <local:HiddifyUI DataContext="{Binding}"/>
-            </Grid>
-            <Grid Grid.Column="1">
-            <DockPanel>
+            
+            <local:HiddifyUI DataContext="{Binding}" x:Name="HiddifyUI" Grid.Column="0"/>
+            
+            <GridSplitter Grid.Column="1" ResizeDirection="Columns" 
+                  Width="5" 
+                  VerticalAlignment="Stretch" 
+                  HorizontalAlignment="Center" />
+            <Grid Grid.Column="2" >
+            <DockPanel Name="V2rayNPanel">
                 <ToolBarTray DockPanel.Dock="Top">
                     <ToolBar
                         HorizontalAlignment="Center"
@@ -76,7 +81,11 @@
                                 </MenuItem.Header>
                             </MenuItem>
                         </Menu>
-                        <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
+
+                            <Button Click="HideBtn_Click">
+                                <TextBlock Text="Hide Panel" />
+                            </Button>
+                            <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                     <TextBlock Text="{x:Static resx:ResUI.TbEnableProxy}" />
                                 
