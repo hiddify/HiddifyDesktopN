@@ -159,6 +159,7 @@
                     HorizontalAlignment="Center"
                     Padding="0"
                 Width="36" 
+                    Command="{Binding ToggleV2rayNPanelCmd}"
                     Style="{StaticResource MaterialDesignFloatingActionButton}"
                         Background="White"
                         BorderBrush="White"

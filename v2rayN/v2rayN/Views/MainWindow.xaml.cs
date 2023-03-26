@@ -761,8 +761,9 @@ namespace v2rayN.Views
         // Example usage: resize the window to fit the first column
         private void HideBtn_Click(object sender, RoutedEventArgs e)
         {
-            V2rayNPanel.Visibility=Visibility.Collapsed;
-            ResizeWindowToFirstColumn();
+            //V2rayNPanel.Visibility=Visibility.Collapsed;
+            //ResizeWindowToFirstColumn();
+            
         }
     }
 }

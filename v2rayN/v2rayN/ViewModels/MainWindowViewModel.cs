@@ -6,6 +6,7 @@ using MaterialDesignThemes.Wpf;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Reactive;
@@ -29,7 +30,7 @@ namespace v2rayN.ViewModels
     public class MainWindowViewModel : ReactiveObject
     {
         #region private prop
-
+        
         private CoreHandler _coreHandler;
         private StatisticsHandler _statistics;
         private List<ProfileItem> _lstProfile;
@@ -57,6 +58,15 @@ namespace v2rayN.ViewModels
 
         private IObservableCollection<ComboItem> _servers = new ObservableCollectionExtended<ComboItem>();
         public IObservableCollection<ComboItem> Servers => _servers;
+
+
+
+        [Reactive]
+        public bool V2RayNPanelVisible { get; set; } = false;
+
+
+        [Reactive]
+        public double WindowWidth { get; set; }
 
         [Reactive]
         public ProfileItemModel SelectedProfile { get; set; }
@@ -136,7 +146,7 @@ namespace v2rayN.ViewModels
         public ReactiveCommand<Unit, Unit> CheckUpdateClashMetaCoreCmd { get; }
         public ReactiveCommand<Unit, Unit> CheckUpdateGeoCmd { get; }
 
-
+        public ReactiveCommand<Unit, Unit> ToggleV2rayNPanelCmd { get; }
 
         public ReactiveCommand<Unit, Unit> ReloadCmd { get; }
         [Reactive]
@@ -507,7 +517,12 @@ namespace v2rayN.ViewModels
                 SetListenerType(ESysProxyType.Pac);
             });
 
+            ToggleV2rayNPanelCmd= ReactiveCommand.Create(() =>
+            {
+                V2RayNPanelVisible = !V2RayNPanelVisible;
+                WindowWidth = V2RayNPanelVisible ? 1100 : 400;
 
+            });
             Global.ShowInTaskbar = true;
         }
 
