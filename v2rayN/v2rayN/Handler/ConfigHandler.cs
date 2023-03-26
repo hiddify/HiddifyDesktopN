@@ -743,7 +743,6 @@ namespace v2rayN.Handler
 
             var items = lstProfile.AsQueryable();
 
-            
 
             if (asc)
             {
@@ -755,7 +754,8 @@ namespace v2rayN.Handler
                 lstProfile = items.OrderByDescending(propertyName).ToList();
             }
             var lbi = lstProfile.FirstOrDefault(p => p.configType == EConfigType.LoadBalance);
-            if (lbi != null) {
+            if (lbi != null)
+            {
                 lstProfile.Remove(lbi);
                 lstProfile.Insert(0, lbi);
             }
@@ -808,12 +808,12 @@ namespace v2rayN.Handler
             }
             public int Compare(ProfileItem a, ProfileItem b)
             {
-                if ((int)a.configType>100 && (int)b.configType<100)
+                if ((int)a.configType > 100 && (int)b.configType < 100)
                     return -1;
                 if ((int)a.configType < 100 && (int)b.configType > 100)
                     return 1;
                 if ((int)a.configType > 100 && (int)b.configType > 100)
-                    return (int)a.configType-(int)b.configType;
+                    return (int)a.configType - (int)b.configType;
                 return 0;
                 //return positive if a should be higher, return negative if b should be higher
             }
@@ -973,6 +973,7 @@ namespace v2rayN.Handler
             {
                 RemoveServerViaSubid(ref config, subid, isSub);
                 subFilter = LazyConfig.Instance.GetSubItem(subid)?.filter ?? "";
+                var subitem = LazyConfig.Instance.GetSubItem(subid);
             }
 
             int countServers = 0;
@@ -984,37 +985,26 @@ namespace v2rayN.Handler
                 //maybe sub
                 if (Utils.IsNullOrEmpty(subid) && (str.StartsWith(Global.httpsProtocol) || str.StartsWith(Global.httpProtocol)))
                 {
-                    // If it's sub we get remaining day to expire & used data & total remained data
-                    // We add this information as a Server but these's just for display to user for their information
+                    //// It's a custom feature for this app (probably none of your business)
+                    //string? panelAddress = Utils.GetHostAndFirstTwoPathInUri(str);
+                    //// If we can't get panel address we just put host address in there
+                    //if (panelAddress == null)
+                    //{
+                    //    panelAddress = new Uri(str).Host;
+                    //}
 
-                    // Get user subscription info (like donwloaded/uploaded/total usage and expire date)
-                    // Get expire epoch date
-                    var headers = Utils.GetUrlResponseHeader(str);
-                    var userSubInfo = Utils.GetClashSubscriptionInfoAsDict(headers);
-                    if (userSubInfo == null)
-                    {
-                        // Handle error
-                    }
-
-                    // It's a custom feature for this app (probably none of your business)
-                    string? panelAddress = Utils.GetHostAndFirstTwoPathInUri(str);
-                    // If we can't get panel address we just put host address in there
-                    if (panelAddress == null)
-                    {
-                        panelAddress = new Uri(str).Host;
-                    }
-
-                    var usageItem = new ProfileItem()
-                    {
-                        configType = EConfigType.Usage,
-                        remarks = $"{userSubInfo.DownloadAndUploadTotalGigaBytes()}GB/{userSubInfo.TotalGigaBytes()}GB ",
-                        security = $"Expire in {userSubInfo.DaysLeftToExpire()} days",
-                        // Direct panel address
-                        address = panelAddress,
-                        coreType = ECoreType.Xray,
-                        subid = subid
-                    };
-                    AddServerCommon(ref config, usageItem, false);
+                    // WE SAVE THIS INFORMATION IN SubItem ITSELF (NOT AS ROW/SERVER)
+                    //var usageItem = new ProfileItem()
+                    //{
+                    //    configType = EConfigType.Usage,
+                    //    remarks = $"{userSubInfo.DownloadAndUploadTotalGigaBytes()}GB/{userSubInfo.TotalGigaBytes()}GB ",
+                    //    security = $"Expire in {userSubInfo.DaysLeftToExpire()} days",
+                    //    // Direct panel address
+                    //    address = panelAddress,
+                    //    coreType = ECoreType.Xray,
+                    //    subid = subid
+                    //};
+                    //AddServerCommon(ref config, usageItem, false);
 
                     var LowestPingItem = new ProfileItem()
                     {
@@ -1037,18 +1027,51 @@ namespace v2rayN.Handler
 
 
                     var subName = Utils.ExtractNameParameterFromUri(str);
-                    
+
+                    // If it's sub, We get remaining day to expire & used data & total remained data & profile web page url
+                    // We add this information as a Server but these's just for display to user for their information
+
+                    // Get user subscription info (like donwloaded/uploaded/total usage and expire date)
+                    // Get expire epoch date
+                    var headers = Utils.GetUrlResponseHeader(str);
+                    var subInfo = Utils.GetSubscriptionInfoFromHeaderAsDict(headers);
+                    //if (subInfo == null)
+                    //{
+                    //    // Handle error
+                    //}
+
                     if (subName == null)
                     {
-                        if (AddSubItem(ref config, str) == 0)
+                        if (subInfo != null)
                         {
-                            countServers++;
+                            if (AddSubItem(ref config, str, null, subInfo) == 0)
+                            {
+                                countServers++;
+                            }
                         }
-                    }else
-                    {
-                        if (AddSubItem(ref config, str, subName) == 0)
+                        else
                         {
-                            countServers++;
+                            if (AddSubItem(ref config, str, null, null) == 0)
+                            {
+                                countServers++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (subInfo != null)
+                        {
+                            if (AddSubItem(ref config, str, subName, subInfo) == 0)
+                            {
+                                countServers++;
+                            }
+                        }
+                        else
+                        {
+                            if (AddSubItem(ref config, str, subName, null) == 0)
+                            {
+                                countServers++;
+                            }
                         }
                     }
                     continue;
@@ -1107,27 +1130,27 @@ namespace v2rayN.Handler
                 {
                     if (countServers == 0)
                     {
-//                        lstAdd.Add(usageItem);
-                  var LowestPingItem = new ProfileItem()
-                    {
-                        configType = EConfigType.LowestPing,
-                        remarks = "Lowest Ping",
-                        address = "All",
-                        coreType = ECoreType.Xray,
-                        subid = subid,
-                      indexId = "0"+ new Random().Next(0, 10000000)
-                  };
-                    AddServerCommon(ref config, LowestPingItem, false);
-                    var loadBalanceItem = new ProfileItem()
-                    {
-                        configType = EConfigType.LoadBalance,
-                        remarks = "Load Balance",
-                        address = "All",
-                        coreType = ECoreType.Xray,
-                        subid = subid,
-                        indexId="1"+new Random().Next(0, 10000000)
-                    };
-                    AddServerCommon(ref config, loadBalanceItem, false);
+                        //                        lstAdd.Add(usageItem);
+                        var LowestPingItem = new ProfileItem()
+                        {
+                            configType = EConfigType.LowestPing,
+                            remarks = "Lowest Ping",
+                            address = "All",
+                            coreType = ECoreType.Xray,
+                            subid = subid,
+                            indexId = "0" + new Random().Next(0, 10000000)
+                        };
+                        AddServerCommon(ref config, LowestPingItem, false);
+                        var loadBalanceItem = new ProfileItem()
+                        {
+                            configType = EConfigType.LoadBalance,
+                            remarks = "Load Balance",
+                            address = "All",
+                            coreType = ECoreType.Xray,
+                            subid = subid,
+                            indexId = "1" + new Random().Next(0, 10000000)
+                        };
+                        AddServerCommon(ref config, loadBalanceItem, false);
                         lstAdd.Add(LowestPingItem);
                         lstAdd.Add(loadBalanceItem);
                     }
@@ -1333,7 +1356,7 @@ namespace v2rayN.Handler
         /// <param name="config"></param>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static int AddSubItem(ref Config config, string url,string sub_name = "Imported Sub")
+        public static int AddSubItem(ref Config config, string url, string? subName, SubscriptionInfo? subInfo)
         {
             //already exists
             if (SqliteHelper.Instance.Table<SubItem>().Where(e => e.url == url).Count() > 0)
@@ -1341,12 +1364,25 @@ namespace v2rayN.Handler
                 return 0;
             }
 
+            if (subName == null)
+            {
+                subName = "Imported Sub";
+            }
             SubItem subItem = new()
             {
                 id = string.Empty,
-                remarks = sub_name,
+                remarks = subName,
                 url = url
             };
+
+            if (subInfo != null)
+            {
+                subItem.upload = subInfo.Upload;
+                subItem.download = subInfo.Download;
+                subItem.total = subInfo.Total;
+                subItem.expireDate = subInfo.ExpireDate;
+                subItem.profileWebPageUrl = subInfo.ProfileWebPageUrl;
+            }
 
             return AddSubItem(ref config, subItem);
         }
