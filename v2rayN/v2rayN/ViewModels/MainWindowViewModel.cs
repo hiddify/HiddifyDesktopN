@@ -67,6 +67,8 @@ namespace v2rayN.ViewModels
 
         [Reactive]
         public double WindowWidth { get; set; }
+        [Reactive]
+        public double MaxWindowWidth { get; set; }
 
         [Reactive]
         public ProfileItemModel SelectedProfile { get; set; }
@@ -520,7 +522,8 @@ namespace v2rayN.ViewModels
             ToggleV2rayNPanelCmd= ReactiveCommand.Create(() =>
             {
                 V2RayNPanelVisible = !V2RayNPanelVisible;
-                WindowWidth = V2RayNPanelVisible ? 1100 : 400;
+                MaxWindowWidth = V2RayNPanelVisible ? 2100 : 420;
+                WindowWidth = V2RayNPanelVisible ? 1300 : 420;
 
             });
             Global.ShowInTaskbar = true;

@@ -61,6 +61,7 @@
                         <ToggleButton 
   materialDesign:ToggleButtonAssist.OnContent="{materialDesign:PackIcon Kind=WhiteBalanceSunny}"
   Content="{materialDesign:PackIcon Kind=NightSky}"
+                            IsChecked="{Binding ColorModeDark}"
   Style="{StaticResource MaterialDesignActionToggleButton}"
   ToolTip="MaterialDesignActionLightToggleButton" />
                         <materialDesign:PopupBox 

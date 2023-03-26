@@ -15,7 +15,8 @@
     Title="HiddifyN"
     Width="{Binding WindowWidth, Mode=TwoWay}"
     Height="700"
-    MinWidth="400"
+    MinWidth="420"
+    MaxWidth="{Binding MaxWindowWidth, Mode=TwoWay}"
     MinHeight="600"
     x:TypeArguments="vms:MainWindowViewModel"
     Background="{DynamicResource MaterialDesignPaper}"
@@ -52,11 +53,11 @@
             <local:HiddifyUI DataContext="{Binding}" x:Name="HiddifyUI" Grid.Column="0"/>
             
             <GridSplitter Grid.Column="1" ResizeDirection="Columns" 
-                  Width="5" 
+                  Width="5" Visibility="Collapsed"
                   VerticalAlignment="Stretch" 
                   HorizontalAlignment="Center" />
             <Grid Grid.Column="2" >
-            <DockPanel Name="V2rayNPanel">
+                <DockPanel Name="V2rayNPanel" Visibility="{Binding V2RayNPanelVisible, Converter={StaticResource BoolToVisConverter}}">
                 <ToolBarTray DockPanel.Dock="Top">
                     <ToolBar
                         HorizontalAlignment="Center"
@@ -82,9 +83,6 @@
                             </MenuItem>
                         </Menu>
 
-                            <Button Click="HideBtn_Click">
-                                <TextBlock Text="Hide Panel" />
-                            </Button>
                             <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                     <TextBlock Text="{x:Static resx:ResUI.TbEnableProxy}" />
