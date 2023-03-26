@@ -76,6 +76,15 @@ namespace v2rayN.Handler
             }
             return null;
         }
+        public int GetLastSubItemSortNumber()
+        {
+            var lastSortNumber = 0;
+            if (SqliteHelper.Instance.Table<SubItem>().Count() > 0)
+            {
+                lastSortNumber = SqliteHelper.Instance.Table<SubItem>().Max(t => t == null ? 0 : t.sort);
+            }
+            return lastSortNumber;
+        }
         public SubItem GetSubItem(string subid)
         {
             return SqliteHelper.Instance.Table<SubItem>().FirstOrDefault(t => t.id == subid);

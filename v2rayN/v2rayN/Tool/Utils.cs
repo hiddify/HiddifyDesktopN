@@ -1490,6 +1490,10 @@ namespace v2rayN
         #region Clash Subscription Info
         public static SubscriptionInfo? GetSubscriptionInfoFromHeaderAsDict(HttpResponseHeaders headers)
         {
+            if (headers == null)
+            {
+                return null;
+            }
             IEnumerable<string> userSubInfoValues;
             if (!headers.TryGetValues("Subscription-Userinfo", out userSubInfoValues))
             {

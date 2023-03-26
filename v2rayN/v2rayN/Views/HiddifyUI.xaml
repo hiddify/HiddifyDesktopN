@@ -123,7 +123,7 @@
 
             <Button x:Name="ConnectVPN"
                 Grid.Row="1"
-                        HorizontalAlignment="Center"
+                HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Width="96"
                 Height="96"
@@ -132,8 +132,8 @@
                 
                 
                 Background="#FFE0E0E0"
-                
-                Click="ConnectVPN_Click"
+
+                Command="{Binding HomeConnectCmd}"
                  Style="{StaticResource MaterialDesignFloatingActionButton}" 
                 Foreground="{DynamicResource SecondaryHueMidBrushForeground}" BorderBrush="{x:Null}">
 
@@ -183,7 +183,7 @@
 
                 <Expander HorizontalAlignment="Stretch" materialDesign:ExpanderAssist.HorizontalHeaderPadding="10,2,0,2" >
                     <Expander.Header >
-                        <views:SubInfoView DataContext="{Binding SelectedSub}"/>
+                        <views:SubInfoView x:Name="SubInfoView" DataContext="{Binding}"/>
                     </Expander.Header>
                     <StackPanel Margin="24,8,24,16" Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                         <ScrollViewer x:Name="MainScrollViewer"

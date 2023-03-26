@@ -1,4 +1,5 @@
 ﻿using Splat;
+using System.Collections.Specialized;
 using System.Data;
 using System.IO;
 using System.Security.Policy;
@@ -1039,39 +1040,23 @@ namespace v2rayN.Handler
                     //{
                     //    // Handle error
                     //}
-
-                    if (subName == null)
+                    SubItem subscriptionItem = new SubItem();
+                    subscriptionItem.id = Utils.GetGUID(false);
+                    subscriptionItem.remarks = subName;
+                    if (subInfo != null)
                     {
-                        if (subInfo != null)
-                        {
-                            if (AddSubItem(ref config, str, null, subInfo) == 0)
-                            {
-                                countServers++;
-                            }
-                        }
-                        else
-                        {
-                            if (AddSubItem(ref config, str, null, null) == 0)
-                            {
-                                countServers++;
-                            }
-                        }
+                        subscriptionItem.upload = subInfo.Upload;
+                        subscriptionItem.download = subInfo.Download;
+                        subscriptionItem.total = subInfo.Total;
+                        subscriptionItem.expireDate = subInfo.ExpireDate;
+                        subscriptionItem.profileWebPageUrl = subInfo.ProfileWebPageUrl;
                     }
-                    else
+
+                    if (subscriptionItem.remarks != null)
                     {
-                        if (subInfo != null)
+                        if (AddSubItem(ref config, subscriptionItem) == 0)
                         {
-                            if (AddSubItem(ref config, str, subName, subInfo) == 0)
-                            {
-                                countServers++;
-                            }
-                        }
-                        else
-                        {
-                            if (AddSubItem(ref config, str, subName, null) == 0)
-                            {
-                                countServers++;
-                            }
+                            countServers++;
                         }
                     }
                     continue;
@@ -1166,6 +1151,244 @@ namespace v2rayN.Handler
 
             ToJsonFile(config);
             return countServers;
+        }
+
+        public static (int,List<string>) HomeAddBatchServers(ref Config config, string clipboardData, string subid, bool isSub, List<ProfileItem> lstOriSub)
+        {
+            List<string> addedSubIds = new();
+
+            if (Utils.IsNullOrEmpty(clipboardData))
+            {
+                return (-1, addedSubIds);
+            }
+
+            string subFilter = string.Empty;
+            //remove sub items
+            if (isSub && !Utils.IsNullOrEmpty(subid))
+            {
+                RemoveServerViaSubid(ref config, subid, isSub);
+                subFilter = LazyConfig.Instance.GetSubItem(subid)?.filter ?? "";
+                var subitem = LazyConfig.Instance.GetSubItem(subid);
+            }
+
+            int countServers = 0;
+
+            // We keep servers in this variable to add and join them to new sub
+            List<ProfileItem> servers = new();
+
+            string[] arrData = clipboardData.Split(Environment.NewLine.ToCharArray());
+            foreach (string str in arrData)
+            {
+                if (Utils.IsNullOrEmpty(str))
+                {
+                    continue;
+                }
+                // If it's sub we just add a sub
+                //maybe sub
+                if (Utils.IsNullOrEmpty(subid) && (str.StartsWith(Global.httpsProtocol) || str.StartsWith(Global.httpProtocol)))
+                {
+                    //// It's a custom feature for this app (probably none of your business)
+                    //string? panelAddress = Utils.GetHostAndFirstTwoPathInUri(str);
+                    //// If we can't get panel address we just put host address in there
+                    //if (panelAddress == null)
+                    //{
+                    //    panelAddress = new Uri(str).Host;
+                    //}
+
+                    // WE SAVE THIS INFORMATION IN SubItem ITSELF (NOT AS ROW/SERVER)
+                    //var usageItem = new ProfileItem()
+                    //{
+                    //    configType = EConfigType.Usage,
+                    //    remarks = $"{userSubInfo.DownloadAndUploadTotalGigaBytes()}GB/{userSubInfo.TotalGigaBytes()}GB ",
+                    //    security = $"Expire in {userSubInfo.DaysLeftToExpire()} days",
+                    //    // Direct panel address
+                    //    address = panelAddress,
+                    //    coreType = ECoreType.Xray,
+                    //    subid = subid
+                    //};
+                    //AddServerCommon(ref config, usageItem, false);
+
+                    var LowestPingItem = new ProfileItem()
+                    {
+                        configType = EConfigType.LowestPing,
+                        remarks = "Lowest Ping",
+                        address = "All",
+                        coreType = ECoreType.Xray,
+                        subid = subid
+                    };
+                    AddServerCommon(ref config, LowestPingItem, false);
+                    var loadBalanceItem = new ProfileItem()
+                    {
+                        configType = EConfigType.LoadBalance,
+                        remarks = "Load Balance",
+                        address = "All",
+                        coreType = ECoreType.Xray,
+                        subid = subid
+                    };
+                    AddServerCommon(ref config, loadBalanceItem, false);
+
+
+
+                    // If it's sub, We get remaining day to expire & used data & total remained data & profile web page url
+                    // We add this information as a Server but these's just for display to user for their information
+
+                    // Get user subscription info (like donwloaded/uploaded/total usage and expire date)
+                    // Get expire epoch date
+                    var headers = Utils.GetUrlResponseHeader(str);
+                    var subInfo = Utils.GetSubscriptionInfoFromHeaderAsDict(headers);
+                    //if (subInfo == null)
+                    //{
+                    //    // Handle error
+                    //}
+
+                    var subName = Utils.ExtractNameParameterFromUri(str);
+
+                    SubItem subscriptionItem = new SubItem();
+                    subscriptionItem.id = Utils.GetGUID(false);
+                    if (subName == null)
+                    {
+                        int lastSortNumber = LazyConfig.Instance.GetLastSubItemSortNumber();
+                        subscriptionItem.remarks = $"Subscription {lastSortNumber + 1}";
+                    }
+                    else
+                    {
+                        subscriptionItem.remarks = subName;
+                    }
+
+                    if (subInfo != null)
+                    {
+                        subscriptionItem.upload = subInfo.Upload;
+                        subscriptionItem.download = subInfo.Download;
+                        subscriptionItem.total = subInfo.Total;
+                        subscriptionItem.expireDate = subInfo.ExpireDate;
+                        subscriptionItem.profileWebPageUrl = subInfo.ProfileWebPageUrl;
+                    }
+                    
+                    if (subscriptionItem.remarks != null)
+                    {
+                        if (AddSubItem(ref config, subscriptionItem) == 0)
+                        {
+                            countServers++;
+                        }
+                    }
+                    addedSubIds.Add(subscriptionItem.id);
+                    continue;
+                }
+
+
+                // It's server, So we collect all servers and create a new sub and we'll make the servers the subscription member
+                ProfileItem profileItem = ShareHandler.ImportFromClipboardConfig(str, out string msg);
+                if (profileItem == null)
+                {
+                    continue;
+                }
+
+                //exist sub items
+                if (isSub && !Utils.IsNullOrEmpty(subid))
+                {
+                    var existItem = lstOriSub?.FirstOrDefault(t => t.isSub == isSub && CompareProfileItem(t, profileItem, true));
+                    if (existItem != null)
+                    {
+                        profileItem.indexId = existItem.indexId;
+                    }
+                    //filter
+                    if (!Utils.IsNullOrEmpty(subFilter))
+                    {
+                        if (!Regex.IsMatch(profileItem.remarks, subFilter))
+                        {
+                            continue;
+                        }
+                    }
+                }
+                profileItem.subid = subid;
+                profileItem.isSub = isSub;
+
+                servers.Add(profileItem);
+            }
+
+            if (servers.Count < 1)
+            {
+                return (0,addedSubIds);
+            }
+
+            // We create a sub and add the servers to it
+            SubItem subItem = new SubItem();
+            subItem.id = Utils.GetGUID(false);
+            subItem.remarks = $"Profile {subItem.sort}";
+
+            // Add sub
+            if (AddSubItem(ref config, subItem) != 0)
+            {
+                // Handle error
+            }
+
+            // Add servers to the sub
+            int addStatus = -1;
+            foreach (ProfileItem item in servers)
+            {
+                item.subid = subItem.id;
+
+                if (item.configType == EConfigType.VMess)
+                {
+                    addStatus = AddServer(ref config, item, false);
+                }
+                else if (item.configType == EConfigType.Shadowsocks)
+                {
+                    addStatus = AddShadowsocksServer(ref config, item, false);
+                }
+                else if (item.configType == EConfigType.Socks)
+                {
+                    addStatus = AddSocksServer(ref config, item, false);
+                }
+                else if (item.configType == EConfigType.Trojan)
+                {
+                    addStatus = AddTrojanServer(ref config, item, false);
+                }
+                else if (item.configType == EConfigType.VLESS)
+                {
+                    addStatus = AddVlessServer(ref config, item, false);
+                }
+                if (addStatus == 0)
+                {
+                    countServers++;
+                }
+            }
+
+            if (countServers != 0)
+            {
+                // lstAdd.Add(usageItem);
+                var LowestPingItem = new ProfileItem()
+                {
+                    configType = EConfigType.LowestPing,
+                    remarks = "Lowest Ping",
+                    address = "All",
+                    coreType = ECoreType.Xray,
+                    subid = subItem.id,
+                    indexId = "0" + new Random().Next(0, 10000000)
+                };
+                AddServerCommon(ref config, LowestPingItem, false);
+                countServers++;
+                var loadBalanceItem = new ProfileItem()
+                {
+                    configType = EConfigType.LoadBalance,
+                    remarks = "Load Balance",
+                    address = "All",
+                    coreType = ECoreType.Xray,
+                    subid = subItem.id,
+                    indexId = "1" + new Random().Next(0, 10000000)
+                };
+                AddServerCommon(ref config, loadBalanceItem, false);
+                countServers++;
+                servers.Add(LowestPingItem);
+                servers.Add(loadBalanceItem);
+            }
+            if (servers.Count > 0)
+            {
+                SqliteHelper.Instance.InsertAll(servers);
+            }
+
+            ToJsonFile(config);
+            return (countServers,addedSubIds);
         }
 
         private static int AddBatchServers4Custom(ref Config config, string clipboardData, string subid, bool isSub, List<ProfileItem> lstOriSub)

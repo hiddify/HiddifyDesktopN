@@ -7,6 +7,7 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
 using System.ComponentModel;
+using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.IO;
 using System.Reactive;
@@ -88,6 +89,14 @@ namespace v2rayN.ViewModels
         #endregion
 
         #region Menu
+        //home
+        public ReactiveCommand<Unit, Unit> HomeNewProfileCmd { get; }
+        public ReactiveCommand<Unit, Unit> HomeConnectCmd { get; }
+        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
+        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
+        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
+        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
+        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
 
         //servers
         public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
@@ -289,6 +298,15 @@ namespace v2rayN.ViewModels
             RestoreUI();
             //AutoHideStartup();
 
+            //home
+            HomeNewProfileCmd = ReactiveCommand.Create(() =>
+            {
+                HomeNewProfile();
+            });
+            HomeConnectCmd = ReactiveCommand.Create(() =>
+            {
+                HomeConnect();
+            });
             //servers
             AddVmessServerCmd = ReactiveCommand.Create(() =>
             {
@@ -936,7 +954,25 @@ namespace v2rayN.ViewModels
                 }
             }
         }
-
+        public (int,List<string>) HomeAddServerOrSubViaClipboard(string cData)
+        {
+            var (addedServersCount,addedSubIds) = ConfigHandler.HomeAddBatchServers(ref _config, cData, _subId, false,null);
+            if (addedSubIds.Count > 0)
+            {
+                foreach (string id in addedSubIds)
+                {
+                    if (Utils.IsSystemProxyEnabled(_config.sysProxyType))
+                    {
+                        UpdateSubscriptionProcess(id, true);
+                    }
+                    else
+                    {
+                        UpdateSubscriptionProcess(id, false);
+                    }
+                }
+            }
+            return (addedServersCount,addedSubIds);
+        }
         public void AddServerOrSubViaClipboard()
         {
             string clipboardData = Utils.GetClipboardData();
@@ -1853,6 +1889,28 @@ namespace v2rayN.ViewModels
             }
         }
 
+        #endregion
+
+        #region Home
+        public void HomeNewProfile()
+        {
+            // Get clipboard data
+            string? cData = Utils.GetClipboardData();
+            if (cData == null)
+            {
+                // Pop up to user that they should copy some address first
+            }
+            else
+            {
+                var (addedServersCount,addedSubsIds) = HomeAddServerOrSubViaClipboard(cData);
+                _noticeHandler.SendMessage($"{addedServersCount} addded\n{addedSubsIds.Count} sub added");
+                Console.WriteLine();
+            }
+        }
+        public void HomeConnect()
+        {
+            Console.WriteLine();
+        }
         #endregion
     }
 }

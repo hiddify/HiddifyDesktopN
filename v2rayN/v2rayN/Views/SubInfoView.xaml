@@ -32,7 +32,7 @@
                                             Padding="0"
                                                 VerticalAlignment="Center"  Height="36" materialDesign:ButtonAssist.CornerRadius="8" 
                                                 Background="{x:Null}"
-                                                Command="{Binding NewProfileCommand}"
+                                                Command="{Binding HomeNewProfileCmd}"
                                                 BorderBrush="{x:Null}" Foreground="#FF0E0808">
                 <StackPanel Orientation="Horizontal" >
                     <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center"  />

@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -35,8 +36,10 @@ namespace v2rayN.Views
                 //need to get the message queue from the snackbar, so need to be on the dispatcher
                 MainSnackbar.MessageQueue?.Enqueue("Welcome to Hiddify");
             }, TaskScheduler.FromCurrentSynchronizationContext());
-            //DataContext = new HomeWindowViewModel(MainSnackbar.MessageQueue!);
+            //var ViewModel = new HiddifyUIViewModel(MainSnackbar.MessageQueue!);
 
+           
+            //this.BindCommand(ViewModel, vm => vm.NewProfileCommand, v => v.SubInfoView.NewProfile;
             ModifyTheme(false);
         }
         private void OnCopy(object sender, ExecutedRoutedEventArgs e)
@@ -59,7 +62,11 @@ namespace v2rayN.Views
 
         }
 
-        
+        private void MenuDarkModeButton_Click(object sender, RoutedEventArgs e)
+        {
+
+                   // => ModifyTheme(DarkModeToggleButton.IsChecked == true);
+        }
 
         private static void ModifyTheme(bool isDarkTheme)
         {
@@ -89,15 +96,18 @@ namespace v2rayN.Views
         private void ConnectVPN_Click(object sender, RoutedEventArgs e)
         {
             ConnectVPN.Background = new SolidColorBrush(Color.FromRgb(0xFF, 0xF2, 0x67));
-            ((HomeWindowViewModel)DataContext).ConnectProgress = true;
+            //((HomeWindowViewModel)DataContext).ConnectProgress = true;
             connectlbl.Content = "Connecting...";
             Task.Factory.StartNew(() => Thread.Sleep(2500)).ContinueWith(t =>
             {
                 speedpanel.Visibility = Visibility.Visible;
-                ((HomeWindowViewModel)DataContext).ConnectProgress = false;
+                //((ViewModels.HiddifyUIViewModel)DataContext).ConnectProgress = false;
                 ConnectVPN.Background = new SolidColorBrush(Colors.LightGreen);
                 connectlbl.Content = "Connected Successfully";
             }, TaskScheduler.FromCurrentSynchronizationContext());
+
+            //var xx = this.DataContext as MainWindowViewModel;
+            //Console.WriteLine();
         }
 
         private void NewProfile_Click(object sender, RoutedEventArgs e)
