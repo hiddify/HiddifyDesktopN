@@ -84,8 +84,8 @@
                         </Menu>
 
                             <Menu Margin="0,1" Style="{StaticResource ToolbarMenu}">
-                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                    <TextBlock Text="{x:Static resx:ResUI.TbEnableProxy}" />
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                                    <TextBlock Text="{x:Static resx:ResUI.TbEnableProxy}" VerticalAlignment="Center" />
                                 
                                 
                                     <ToggleButton Margin="8,3,0,0"

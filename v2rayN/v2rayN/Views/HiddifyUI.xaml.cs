@@ -59,8 +59,7 @@ namespace v2rayN.Views
 
         }
 
-        private void MenuDarkModeButton_Click(object sender, RoutedEventArgs e)
-                    => ModifyTheme(DarkModeToggleButton.IsChecked == true);
+        
 
         private static void ModifyTheme(bool isDarkTheme)
         {

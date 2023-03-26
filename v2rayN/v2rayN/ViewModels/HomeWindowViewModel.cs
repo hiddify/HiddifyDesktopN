@@ -32,7 +32,7 @@ namespace v2rayN.ViewModels
             {
               new DemoItem(
                     "Home",
-                    typeof(Home),
+                    typeof(MainWindow),
                     selectedIcon: PackIconKind.Home,
                     unselectedIcon: PackIconKind.HomeOutline)
             };
