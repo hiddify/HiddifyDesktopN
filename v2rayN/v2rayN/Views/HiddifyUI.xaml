@@ -183,7 +183,7 @@
 
                 <Expander HorizontalAlignment="Stretch" materialDesign:ExpanderAssist.HorizontalHeaderPadding="10,2,0,2" >
                     <Expander.Header >
-                        <views:SubInfoView x:Name="SubInfoView" DataContext="{Binding}"/>
+                        <views:SubInfoView x:Name="SubInfoView" DataContext="{Binding SelectedSub}"/>
                     </Expander.Header>
                     <StackPanel Margin="24,8,24,16" Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                         <ScrollViewer x:Name="MainScrollViewer"

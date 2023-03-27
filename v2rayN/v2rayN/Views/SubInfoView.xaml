@@ -15,13 +15,14 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
             <TextBlock  
-                                            VerticalAlignment="Center" 
+                VerticalAlignment="Center" 
                 TextTrimming="CharacterEllipsis" 
-           MaxWidth="200"
-                                            Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="{Binding remarks}" >
+                MaxWidth="200"
+                Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="{Binding remarks}" >
                                         
             </TextBlock>
-            <Button Name="GotoProfile" Click="GotoProfile_Click" 
+            <Button Name="GotoProfile"
+                    Command="{Binding HomeGotoProfileCmd}"
                     Margin="10,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}"
                     Foreground="Black"
                     >
@@ -68,7 +69,7 @@
                     <Button Name="UpdateUsage" Grid.Column="0" HorizontalAlignment="Left"
                                                 VerticalAlignment="Bottom"  Padding="0" materialDesign:ButtonAssist.CornerRadius="8" 
                                                 Background="{x:Null}"
-                                                Click="UpdateUsage_Click"
+                                                Command="{Binding HomeUpdateUsageCmd}"
                                                 BorderBrush="{x:Null}" Foreground="#FF0E0808">
                         <StackPanel Orientation="Horizontal" >
                             <TextBlock  >
