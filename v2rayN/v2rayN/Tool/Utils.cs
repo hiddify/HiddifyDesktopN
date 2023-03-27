@@ -1488,74 +1488,74 @@ namespace v2rayN
             return (stdout,null);
         }
         #region Clash Subscription Info
-        public static SubscriptionInfo? GetSubscriptionInfoFromHeaderAsDict(HttpResponseHeaders headers)
+        public static SubscriptionInfo? GetSubscriptionInfoFromHeaders(HttpResponseHeaders headers)
         {
             if (headers == null)
             {
                 return null;
             }
-            IEnumerable<string> userSubInfoValues;
-            if (!headers.TryGetValues("Subscription-Userinfo", out userSubInfoValues))
-            {
-                return null;
-            }
-
             SubscriptionInfo clashSubscriptionInfo = new SubscriptionInfo();
-            // Split values
-            foreach (var item in userSubInfoValues.FirstOrDefault().Split(";"))
+
+            IEnumerable<string> userSubInfoValues;
+            if (headers.TryGetValues("Subscription-Userinfo", out userSubInfoValues))
             {
-                // Split key and values
-                int equalsSignIndex = item.IndexOf("=");
-                string key = item.Substring(0, equalsSignIndex);
-                string value = item.Substring(equalsSignIndex + 1);
+                // Split values
+                foreach (var item in userSubInfoValues.FirstOrDefault().Split(";"))
+                {
+                    // Split key and values
+                    int equalsSignIndex = item.IndexOf("=");
+                    string key = item.Substring(0, equalsSignIndex);
+                    string value = item.Substring(equalsSignIndex + 1);
 
-                if (key == "upload")
-                {
-                    long longValue;
-                    if (long.TryParse(value, out longValue))
+                    if (key == "upload")
                     {
-                        clashSubscriptionInfo.Upload = longValue;
+                        long longValue;
+                        if (long.TryParse(value, out longValue))
+                        {
+                            clashSubscriptionInfo.Upload = longValue;
+                        }
                     }
-                }
-                else if (key == "download")
-                {
-                    long longValue;
-                    if (long.TryParse(value, out longValue))
+                    else if (key == "download")
                     {
-                        clashSubscriptionInfo.Download = longValue;
+                        long longValue;
+                        if (long.TryParse(value, out longValue))
+                        {
+                            clashSubscriptionInfo.Download = longValue;
+                        }
                     }
-                }
-                else if (key == "total")
-                {
-                    long longValue;
-                    if (long.TryParse(value, out longValue))
+                    else if (key == "total")
                     {
-                        clashSubscriptionInfo.Total = longValue;
+                        long longValue;
+                        if (long.TryParse(value, out longValue))
+                        {
+                            clashSubscriptionInfo.Total = longValue;
+                        }
                     }
-                }
-                else if (key == "expire")
-                {
-                    long longValue;
-                    if (long.TryParse(value, out longValue))
+                    else if (key == "expire")
                     {
-                        clashSubscriptionInfo.ExpireDate = longValue;
-                    }
+                        long longValue;
+                        if (long.TryParse(value, out longValue))
+                        {
+                            clashSubscriptionInfo.ExpireDate = longValue;
+                        }
 
+                    }
                 }
+                
             }
+
 
             // Get profile web page url from header
             IEnumerable<string> profileWebPageValue;
-            if (!headers.TryGetValues("Profile-Web-Page-Url",out profileWebPageValue))
+            if (headers.TryGetValues("Profile-Web-Page-Url",out profileWebPageValue))
             {
-                return null;
+                string profileWebPageUrl = profileWebPageValue.FirstOrDefault();
+                if (profileWebPageUrl != null)
+                {
+                    clashSubscriptionInfo.ProfileWebPageUrl = profileWebPageUrl;
+                }
             }
 
-            string profileWebPageUrl = profileWebPageValue.FirstOrDefault();
-            if (profileWebPageUrl != null)
-            {
-                clashSubscriptionInfo.ProfileWebPageUrl = profileWebPageUrl;
-            }
             return clashSubscriptionInfo;
         }
         #endregion

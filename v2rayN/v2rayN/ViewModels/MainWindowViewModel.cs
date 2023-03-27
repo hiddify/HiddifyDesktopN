@@ -92,8 +92,8 @@ namespace v2rayN.ViewModels
         //home
         public ReactiveCommand<Unit, Unit> HomeNewProfileCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeConnectCmd { get; }
-        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
-        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
+        public ReactiveCommand<Unit, Unit> HomeUpdateUsageCmd { get; }
+        public ReactiveCommand<Unit, Unit> HomeGotoProfileCmd { get; }
         //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
         //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
         //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
@@ -307,6 +307,16 @@ namespace v2rayN.ViewModels
             {
                 HomeConnect();
             });
+            HomeUpdateUsageCmd = ReactiveCommand.Create(() =>
+            {
+                HomeUpdateUsage(this.SelectedSub.id);
+            });
+            HomeGotoProfileCmd = ReactiveCommand.Create(() =>
+            {
+                HomeGotoProfile();
+            });
+
+
             //servers
             AddVmessServerCmd = ReactiveCommand.Create(() =>
             {
@@ -1902,14 +1912,48 @@ namespace v2rayN.ViewModels
             }
             else
             {
-                var (addedServersCount,addedSubsIds) = HomeAddServerOrSubViaClipboard(cData);
+                var (addedServersCount, addedSubsIds) = HomeAddServerOrSubViaClipboard(cData);
                 _noticeHandler.SendMessage($"{addedServersCount} addded\n{addedSubsIds.Count} sub added");
                 Console.WriteLine();
+            }
+        }
+        public void HomeUpdateUsage(string subId)
+        {
+            SubItem sub = LazyConfig.Instance.GetSubItem(subId);
+            if (sub != null)
+            {
+                var headers = Utils.GetUrlResponseHeader(sub.url);
+                if (headers != null)
+                {
+                    var subInfo = Utils.GetSubscriptionInfoFromHeaders(headers);
+                    if (subInfo != null)
+                    {
+                        sub.upload = subInfo.Upload;
+                        sub.download = subInfo.Download;
+                        sub.total = subInfo.Total;
+                        sub.expireDate = subInfo.ExpireDate;
+                        sub.profileWebPageUrl = subInfo.ProfileWebPageUrl;
+
+                        // Replace the sub with new information
+                        if (ConfigHandler.AddSubItem(ref _config, sub) == 0)
+                        {
+                            //successed
+                        }
+                        else
+                        {
+                            //failed
+                        }
+                    }
+                }
             }
         }
         public void HomeConnect()
         {
             Console.WriteLine();
+        }
+        public void HomeGotoProfile()
+        {
+
         }
         #endregion
     }
