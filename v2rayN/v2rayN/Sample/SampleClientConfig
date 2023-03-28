@@ -115,12 +115,11 @@
 			}
 		],
 		"balancers": []
-	},
-	"observatory": {
-		"subjectSelector": [
-			"balancer"
-		],
-		"probeURL": "http://www.google.com/generate_204",
-		"probeInterval": "1m"
 	}
+	//,
+	//"observatory": {
+		//"subjectSelector": ["balancer"],
+		//"probeURL": "http://www.google.com/generate_204",
+		//"probeInterval": "1m"
+	//}
 }
