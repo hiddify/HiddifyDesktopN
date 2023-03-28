@@ -33,7 +33,7 @@ namespace v2rayN.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         #region private prop
-        
+
         private CoreHandler _coreHandler;
         private StatisticsHandler _statistics;
         private List<ProfileItem> _lstProfile;
@@ -62,19 +62,11 @@ namespace v2rayN.ViewModels
         private IObservableCollection<ComboItem> _servers = new ObservableCollectionExtended<ComboItem>();
         public IObservableCollection<ComboItem> Servers => _servers;
 
-        private IObservableCollection<RoutingItem> _homeRoutingItems = new ObservableCollectionExtended<RoutingItem>();
-
-        public IObservableCollection<RoutingItem> HomeRoutingItems => _homeRoutingItems;
-
-        private IObservableCollection<ProxyMode> _homeProxyModes = new ObservableCollectionExtended<ProxyMode>();
-
-        public IObservableCollection<ProxyMode> HomeProxyModes => _homeProxyModes;
-
-        
-
         private ListBoxItem _homeSelectedRoutingItem;
-        
-        public ListBoxItem HomeSelectedRoutingItem { get =>_homeSelectedRoutingItem;
+
+        public ListBoxItem HomeSelectedRoutingItem
+        {
+            get => _homeSelectedRoutingItem;
             set
             {
                 SetProperty(ref _homeSelectedRoutingItem, value);
@@ -82,8 +74,16 @@ namespace v2rayN.ViewModels
             }
         }
 
-        [Reactive]
-        public ProxyMode HomeSelectedProxyMode { get; set; }
+        private ListBoxItem _homeSelectedProxyItem;
+        public ListBoxItem HomeSelectedProxyMode
+        {
+            get => _homeSelectedProxyItem;
+            set
+            {
+                SetProperty(ref _homeSelectedProxyItem, value);
+                HomeSelectedProxyChanged();
+            }
+        }
 
         [Reactive]
         public bool V2RayNPanelVisible { get; set; } = false;
@@ -114,20 +114,11 @@ namespace v2rayN.ViewModels
         #region Menu
         //home
         public ReactiveCommand<Unit, Unit> HomeNewProfileCmd { get; }
-        
-        
+
+
         public ReactiveCommand<Unit, Unit> HomeConnectCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeUpdateUsageCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeGotoProfileCmd { get; }
-        public ReactiveCommand<Unit, Unit> HomeSetLoadBalanceCmd { get; }
-        public ReactiveCommand<Unit, Unit> HomeSetAutoCmd { get; }
-        public ReactiveCommand<Unit, Unit> HomeSetBlockedSitesCmd { get; }
-        public ReactiveCommand<Unit, Unit> HomeSetForignSitesCmd { get; }
-        public ReactiveCommand<Unit, Unit> HomeSetAllSitesCmd { get; }
-
-        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
-        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
-        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
 
         //servers
         public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
@@ -223,7 +214,7 @@ namespace v2rayN.ViewModels
 
         #region UI
 
-        
+
         [Reactive]
         public bool ConnectProgress { get; set; }
         [Reactive]
@@ -293,13 +284,7 @@ namespace v2rayN.ViewModels
             RefreshRoutingsMenu();
             RefreshServers();
 
-            RefreshHomeRouting();
-            RefreshHomeProxyMode();
 
-            //this.WhenAnyValue(x => x.HomeSelectedRoutingItem).Subscribe(c => HomeSelectedRouteChanged());
-
-            this.WhenAnyValue(
-                x => x.HomeSelectedProxyMode).Subscribe(c => HomeSelectedProxyChanged());
             var canEditRemove = this.WhenAnyValue(
                x => x.SelectedProfile,
                selectedSource => selectedSource != null && !selectedSource.indexId.IsNullOrEmpty());
@@ -359,27 +344,6 @@ namespace v2rayN.ViewModels
             HomeGotoProfileCmd = ReactiveCommand.Create(() =>
             {
                 HomeGotoProfile();
-            });
-
-            HomeSetLoadBalanceCmd = ReactiveCommand.Create(() =>
-            {
-                HomeSetLoadBalance();
-            });
-            HomeSetAutoCmd = ReactiveCommand.Create(() =>
-            {
-                HomeSetAuto();
-            });
-            HomeSetBlockedSitesCmd = ReactiveCommand.Create(() =>
-            {
-                HomeSetBlockedSites();
-            });
-            HomeSetForignSitesCmd = ReactiveCommand.Create(() =>
-            {
-                HomeSetForignSites();
-            });
-            HomeSetAllSitesCmd = ReactiveCommand.Create(() =>
-            {
-                HomeSetAllSites();
             });
             //servers
             AddVmessServerCmd = ReactiveCommand.Create(() =>
@@ -611,7 +575,7 @@ namespace v2rayN.ViewModels
                 SetListenerType(ESysProxyType.Pac);
             });
 
-            ToggleV2rayNPanelCmd= ReactiveCommand.Create(() =>
+            ToggleV2rayNPanelCmd = ReactiveCommand.Create(() =>
             {
                 V2RayNPanelVisible = !V2RayNPanelVisible;
                 MaxWindowWidth = V2RayNPanelVisible ? 2100 : 420;
@@ -1030,9 +994,9 @@ namespace v2rayN.ViewModels
                 }
             }
         }
-        public (int,List<string>) HomeAddServerOrSubViaClipboard(string cData)
+        public (int, List<string>) HomeAddServerOrSubViaClipboard(string cData)
         {
-            var (addedServersCount,addedSubIds) = ConfigHandler.HomeAddBatchServers(ref _config, cData, _subId, false,null);
+            var (addedServersCount, addedSubIds) = ConfigHandler.HomeAddBatchServers(ref _config, cData, _subId, false, null);
             if (addedSubIds.Count > 0)
             {
                 foreach (string id in addedSubIds)
@@ -1047,7 +1011,7 @@ namespace v2rayN.ViewModels
                     }
                 }
             }
-            return (addedServersCount,addedSubIds);
+            return (addedServersCount, addedSubIds);
         }
         public void AddServerOrSubViaClipboard()
         {
@@ -1444,8 +1408,8 @@ namespace v2rayN.ViewModels
 
                 // Update Subscription after add
                 SubItem latestSubItem = LazyConfig.Instance.GetLastSubItem();
-                if (latestSubItem != null ) 
-                { 
+                if (latestSubItem != null)
+                {
                     UpdateSubscriptionProcess(latestSubItem.id, true);
                 }
             }
@@ -1678,29 +1642,6 @@ namespace v2rayN.ViewModels
                 }
             }
         }
-
-        private void RefreshHomeRouting()
-        {
-            _homeRoutingItems.Clear();
-            var routing = new List<RoutingItem>()
-            {
-                new RoutingItem(){ remarks = "All Sites"},
-                new RoutingItem(){ remarks = "Blocked Sites"},
-                new RoutingItem(){ remarks = "Forign Sites"},
-            };
-            _homeRoutingItems.AddRange(routing);
-        }
-        public void RefreshHomeProxyMode()
-        {
-            _homeProxyModes.Clear();
-            var proxies = new List<ProxyMode>()
-            {
-                new ProxyMode(){id = 1,remark = "Auto"},
-                new ProxyMode(){id = 2,remark = "Load Balance"},
-                new ProxyMode(){id = 3,remark = "Manual"},
-            };
-            _homeProxyModes.AddRange(proxies);
-        }
         private void RoutingSelectedChanged(bool c)
         {
             if (!c)
@@ -1760,7 +1701,7 @@ namespace v2rayN.ViewModels
                 }
                 TunModeSwitch();
             }
-          
+
         }
 
         void TunModeSwitch()
@@ -2043,7 +1984,7 @@ namespace v2rayN.ViewModels
             ConnectProgress = true;
             ConnectColor = "#FFFF0000";
 
-            
+
             //ConnectVPN.Background = new SolidColorBrush(Color.FromRgb(0xFF, 0xF2, 0x67));
             ////((HomeWindowViewModel)DataContext).ConnectProgress = true;
             //connectlbl.Content = "Connecting...";
@@ -2078,28 +2019,6 @@ namespace v2rayN.ViewModels
         public void HomeGotoProfile()
         {
 
-        }
-
-        public void HomeSetAuto()
-        {
-
-        }
-        public void HomeSetLoadBalance()
-        {
-
-        }
-
-        public void HomeSetBlockedSites()
-        {
-            Console.WriteLine();
-        }
-        public void HomeSetForignSites()
-        {
-            Console.WriteLine();
-        }
-        public void HomeSetAllSites()
-        {
-            Console.WriteLine();
         }
 
         public void HomeSelectedRouteChanged()
