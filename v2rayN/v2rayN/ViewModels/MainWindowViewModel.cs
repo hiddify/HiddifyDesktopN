@@ -70,9 +70,11 @@ namespace v2rayN.ViewModels
 
         public IObservableCollection<ProxyMode> HomeProxyModes => _homeProxyModes;
 
-        
 
-        private ListBoxItem _homeSelectedRoutingItem;
+        [Reactive]
+        public ListBoxItem HomeSelectedRoutingItem { get; set; }
+        
+        /*private ListBoxItem _homeSelectedRoutingItem;
         
         public ListBoxItem HomeSelectedRoutingItem { get =>_homeSelectedRoutingItem;
             set
@@ -80,7 +82,7 @@ namespace v2rayN.ViewModels
                 SetProperty(ref _homeSelectedRoutingItem, value);
                 HomeSelectedRouteChanged();
             }
-        }
+        }*/
 
         [Reactive]
         public ProxyMode HomeSelectedProxyMode { get; set; }
@@ -296,7 +298,7 @@ namespace v2rayN.ViewModels
             RefreshHomeRouting();
             RefreshHomeProxyMode();
 
-            //this.WhenAnyValue(x => x.HomeSelectedRoutingItem).Subscribe(c => HomeSelectedRouteChanged());
+            this.WhenAnyValue(x => x.HomeSelectedRoutingItem).Subscribe(c => HomeSelectedRouteChanged());
 
             this.WhenAnyValue(
                 x => x.HomeSelectedProxyMode).Subscribe(c => HomeSelectedProxyChanged());
