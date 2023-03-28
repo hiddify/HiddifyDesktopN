@@ -14,6 +14,7 @@
     public class BalancerStrategyItem
     {
         public string type { get; set; }
+        public BalancerStrategySettings settings { get; set; }
     }
 
     
@@ -26,5 +27,9 @@
         public int interval { get; set; } = 30000;
         public string url { get; set; } = "https://about.google";
         public int count { get; set; } = 3;
+        public bool accept_little_diff { get; set; } = true;
+        public bool load_balancing { get; set; } = false;
+        public double diff_percent { get; set; } = 0.5;
+
     }
 }

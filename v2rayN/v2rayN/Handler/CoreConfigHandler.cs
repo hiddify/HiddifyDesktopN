@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DynamicData;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -1048,13 +1049,14 @@ namespace v2rayN.Handler
                 BalancerItem balancer = new BalancerItem();
                 balancer.tag = "balancer";
                 balancer.strategy = new BalancerStrategyItem();
-                if (node.configType == EConfigType.LowestPing)
+                if (node.configType == EConfigType.LowestPing || node.configType == EConfigType.LoadBalance)
                 {
                     balancer.strategy.type = "optimal";
-                    balancer.optimalSettings = new OptimalBalancerStrategySetting();
+                    var balancerSettings = new OptimalBalancerStrategySetting();
+                    balancerSettings.load_balancing = node.configType == EConfigType.LoadBalance;
+                    balancer.strategy.settings = balancerSettings;
+                    balancer.selector = LazyConfig.Instance.ProfileItems(node.subid).Where(p => ((int)p.configType) < 100).Select(p => "p" + p.indexId).ToArray();
                 }
-                balancer.selector = LazyConfig.Instance.ProfileItems(node.subid).Where(p=>((int)p.configType)<100).Select(p => "p" + p.indexId).ToArray();
-
                 routing(config, ref v2rayConfig, balancer);
 
                 
@@ -1585,13 +1587,14 @@ namespace v2rayN.Handler
                         var balancer = new BalancerItem();
                         balancer.tag = "balancer" + inbound.port.ToString();
                         balancer.strategy = new BalancerStrategyItem();
-                        if (item.configType == EConfigType.LowestPing)
+                        if (item.configType == EConfigType.LowestPing || item.configType == EConfigType.LoadBalance)
                         {
                             balancer.strategy.type = "optimal";
-                            balancer.optimalSettings = new OptimalBalancerStrategySetting();
+                            var balancerSettings = new OptimalBalancerStrategySetting();
+                            balancerSettings.load_balancing = item.configType == EConfigType.LoadBalance;
+                            balancer.strategy.settings = balancerSettings;
+                            balancer.selector = LazyConfig.Instance.ProfileItems(item.subid).Where(p => ((int)p.configType) < 100).Select(p => "p" + p.indexId).ToArray();
                         }
-                        balancer.selector = LazyConfig.Instance.ProfileItems(item.subid).Where(p => ((int)p.configType) < 100).Select(p => "p" + p.indexId).ToArray();
-
 
                         v2rayConfig.routing.balancers.Add(balancer);
 
