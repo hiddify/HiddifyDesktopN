@@ -1159,6 +1159,9 @@
   <data name="SpeedtestingWait" xml:space="preserve">
     <value>等待测试中...</value>
   </data>
+  <data name="TipDisplayLog" xml:space="preserve">
+    <value>当有异常断流时请关闭</value>
+  </data>
   <data name="TbEnableProxy" xml:space="preserve">
     <value>Active Proxy</value>
   </data>

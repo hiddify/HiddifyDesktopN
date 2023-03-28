@@ -1504,7 +1504,7 @@ namespace v2rayN.Handler
                     Utils.SaveLog(ex.Message, ex);
                 }
 
-                log(configCopy, ref v2rayConfig, false);
+                log(configCopy, ref v2rayConfig, true);
                 //routing(config, ref v2rayConfig);
                 //dns(configCopy, ref v2rayConfig);
 
