@@ -66,6 +66,12 @@ namespace v2rayN.ViewModels
 
         public IObservableCollection<RoutingItem> HomeRoutingItems => _homeRoutingItems;
 
+        private IObservableCollection<ProxyMode> _homeProxyModes = new ObservableCollectionExtended<ProxyMode>();
+
+        public IObservableCollection<ProxyMode> HomeProxyModes => _homeProxyModes;
+
+        [Reactive]
+        public RoutingItem HomeSelectedRoutingItem { get; set; }
 
         private ListBoxItem _homeSelectedRoutingItem;
         
@@ -77,6 +83,8 @@ namespace v2rayN.ViewModels
             }
         }
 
+        [Reactive]
+        public ProxyMode HomeSelectedProxyMode { get; set; }
 
         [Reactive]
         public bool V2RayNPanelVisible { get; set; } = false;
@@ -287,9 +295,12 @@ namespace v2rayN.ViewModels
             RefreshServers();
 
             RefreshHomeRouting();
+            RefreshHomeProxyMode();
 
             //this.WhenAnyValue(x => x.HomeSelectedRoutingItem).Subscribe(c => HomeSelectedRouteChanged());
 
+            this.WhenAnyValue(
+                x => x.HomeSelectedProxyMode).Subscribe(c => HomeSelectedProxyChanged());
             var canEditRemove = this.WhenAnyValue(
                x => x.SelectedProfile,
                selectedSource => selectedSource != null && !selectedSource.indexId.IsNullOrEmpty());
@@ -1680,6 +1691,17 @@ namespace v2rayN.ViewModels
             };
             _homeRoutingItems.AddRange(routing);
         }
+        public void RefreshHomeProxyMode()
+        {
+            _homeProxyModes.Clear();
+            var proxies = new List<ProxyMode>()
+            {
+                new ProxyMode(){id = 1,remark = "Auto"},
+                new ProxyMode(){id = 2,remark = "Load Balance"},
+                new ProxyMode(){id = 3,remark = "Manual"},
+            };
+            _homeProxyModes.AddRange(proxies);
+        }
         private void RoutingSelectedChanged(bool c)
         {
             if (!c)
@@ -2084,6 +2106,10 @@ namespace v2rayN.ViewModels
         public void HomeSelectedRouteChanged()
         {
             Console.WriteLine(HomeSelectedRoutingItem);
+        }
+        public void HomeSelectedProxyChanged()
+        {
+            Console.WriteLine();
         }
         #endregion
     }

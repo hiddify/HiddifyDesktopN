@@ -260,32 +260,14 @@
                                 <ListBoxItem Name="ForignSites" Content="Forign Sites"/>
                                 <ListBoxItem Name="AllSites" Content="All Sites"/>-->
                             </ListBox>
-
-                            <!--<StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Stretch">
-                                <StackPanel.Resources>
-                                    <Style TargetType="{x:Type Button}">
-                                        <Setter Property="Margin" Value="0,10,0,0"/>
-                                    </Style>
-                                </StackPanel.Resources>
-                                
-                                <Button Command="{Binding HomeSetBlockedSitesCmd}" >
-                                    Blocked Sites
-                                </Button>
-                                <Button Command="{Binding HomeSetForignSitesCmd}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="155">
-                                    Forign Sites
-                                </Button>
-                                <Button Command="{Binding HomeSetAllSitesCmd}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="94.2">
-                                    All Sites
-                                </Button>
-                            </StackPanel>-->
                             
                             <TextBlock Style="{StaticResource MaterialDesignDataGridTextColumnStyle}" />
 
                             <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" >
                                     Proxy Selection Mode
                             </TextBlock>
-                            <ListBox HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Style="{StaticResource MaterialDesignToolToggleListBox}">
+                            
+                            <ListBox Name="lstProxyModes" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Style="{StaticResource MaterialDesignToolToggleListBox}">
                                 <ListBox.ToolTip>
                                     <StackPanel>
                                         <TextBlock Text="MaterialDesignToolToggleListBox" />
@@ -298,9 +280,10 @@
                                         <UniformGrid Columns="3"/>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
-                                <ListBoxItem Content="Auto" />
+                                
+                                <!--<ListBoxItem Content="Auto" />
                                 <ListBoxItem Content="Load Balance"/>
-                                <ListBoxItem Content="Manual" />
+                                <ListBoxItem Content="Manual" />-->
                             </ListBox>
                             <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" />
                         </StackPanel>
