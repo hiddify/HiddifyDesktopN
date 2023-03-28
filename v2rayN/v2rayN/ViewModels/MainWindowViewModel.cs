@@ -192,6 +192,12 @@ namespace v2rayN.ViewModels
 
         #region UI
 
+        
+        [Reactive]
+        public bool ConnectProgress { get; set; }
+        [Reactive]
+        public string ConnectColor { get; set; } = "#FFE0E0E0";
+
         [Reactive]
         public string InboundDisplay { get; set; }
         [Reactive]
@@ -229,6 +235,7 @@ namespace v2rayN.ViewModels
         // We will ignore that change, so we just consider user changes
         private bool ForInitiationLanguage = true;
         private bool ForInitiationTun = true;
+
         public MainWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue, Action<string> updateView)
         {
             _updateView = updateView;
@@ -1950,6 +1957,8 @@ namespace v2rayN.ViewModels
         public void HomeConnect()
         {
             Console.WriteLine();
+            ConnectProgress = true;
+            ConnectColor = "#FFFF0000";
         }
         public void HomeGotoProfile()
         {

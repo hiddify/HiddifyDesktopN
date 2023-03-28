@@ -131,7 +131,7 @@
                 materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding ConnectProgress}"
                 
                 
-                Background="#FFE0E0E0"
+                Background="{Binding ConnectColor}"
 
                 Command="{Binding HomeConnectCmd}"
                 Style="{StaticResource MaterialDesignFloatingActionButton}" 
