@@ -12,6 +12,7 @@ using System.Drawing;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.RightsManagement;
 using System.Text;
 using System.Windows;
@@ -60,6 +61,12 @@ namespace v2rayN.ViewModels
         private IObservableCollection<ComboItem> _servers = new ObservableCollectionExtended<ComboItem>();
         public IObservableCollection<ComboItem> Servers => _servers;
 
+        private IObservableCollection<RoutingItem> _homeRoutingItems = new ObservableCollectionExtended<RoutingItem>();
+
+        public IObservableCollection<RoutingItem> HomeRoutingItems => _homeRoutingItems;
+
+        [Reactive]
+        public RoutingItem HomeSelectedRoutingItem { get; set; }
 
 
         [Reactive]
@@ -94,6 +101,12 @@ namespace v2rayN.ViewModels
         public ReactiveCommand<Unit, Unit> HomeConnectCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeUpdateUsageCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeGotoProfileCmd { get; }
+        public ReactiveCommand<Unit, Unit> HomeSetLoadBalanceCmd { get; }
+        public ReactiveCommand<Unit, Unit> HomeSetAutoCmd { get; }
+        public ReactiveCommand<Unit, Unit> HomeSetBlockedSitesCmd { get; }
+        public ReactiveCommand<Unit, Unit> HomeSetForignSitesCmd { get; }
+        public ReactiveCommand<Unit, Unit> HomeSetAllSitesCmd { get; }
+
         //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
         //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
         //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
@@ -262,6 +275,11 @@ namespace v2rayN.ViewModels
             RefreshRoutingsMenu();
             RefreshServers();
 
+            RefreshHomeRouting();
+
+            this.WhenAnyValue(
+                x => x.HomeSelectedRoutingItem).Subscribe(c => HomeSelectedRouteChanged());
+
             var canEditRemove = this.WhenAnyValue(
                x => x.SelectedProfile,
                selectedSource => selectedSource != null && !selectedSource.indexId.IsNullOrEmpty());
@@ -316,14 +334,33 @@ namespace v2rayN.ViewModels
             });
             HomeUpdateUsageCmd = ReactiveCommand.Create(() =>
             {
-                HomeUpdateUsage(this.SelectedSub.id);
+                HomeUpdateUsage(SelectedSub.id);
             });
             HomeGotoProfileCmd = ReactiveCommand.Create(() =>
             {
                 HomeGotoProfile();
             });
 
-
+            HomeSetLoadBalanceCmd = ReactiveCommand.Create(() =>
+            {
+                HomeSetLoadBalance();
+            });
+            HomeSetAutoCmd = ReactiveCommand.Create(() =>
+            {
+                HomeSetAuto();
+            });
+            HomeSetBlockedSitesCmd = ReactiveCommand.Create(() =>
+            {
+                HomeSetBlockedSites();
+            });
+            HomeSetForignSitesCmd = ReactiveCommand.Create(() =>
+            {
+                HomeSetForignSites();
+            });
+            HomeSetAllSitesCmd = ReactiveCommand.Create(() =>
+            {
+                HomeSetAllSites();
+            });
             //servers
             AddVmessServerCmd = ReactiveCommand.Create(() =>
             {
@@ -1620,6 +1657,17 @@ namespace v2rayN.ViewModels
             }
         }
 
+        private void RefreshHomeRouting()
+        {
+            _homeRoutingItems.Clear();
+            var routing = new List<RoutingItem>()
+            {
+                new RoutingItem(){ remarks = "All Sites"},
+                new RoutingItem(){ remarks = "Blocked Sites"},
+                new RoutingItem(){ remarks = "Forign Sites"},
+            };
+            _homeRoutingItems.AddRange(routing);
+        }
         private void RoutingSelectedChanged(bool c)
         {
             if (!c)
@@ -1915,6 +1963,7 @@ namespace v2rayN.ViewModels
             string? cData = Utils.GetClipboardData();
             if (cData == null)
             {
+                _noticeHandler.Enqueue("Please copy servers or subscriptions");
                 // Pop up to user that they should copy some address first
             }
             else
@@ -1956,13 +2005,69 @@ namespace v2rayN.ViewModels
         }
         public void HomeConnect()
         {
-            Console.WriteLine();
-            ConnectProgress = true;
-            ConnectColor = "#FFFF0000";
+            
+            //ConnectVPN.Background = new SolidColorBrush(Color.FromRgb(0xFF, 0xF2, 0x67));
+            ////((HomeWindowViewModel)DataContext).ConnectProgress = true;
+            //connectlbl.Content = "Connecting...";
+            //Task.Factory.StartNew(() => Thread.Sleep(2500)).ContinueWith(t =>
+            //{
+            //    speedpanel.Visibility = Visibility.Visible;
+            //    //((ViewModels.HiddifyUIViewModel)DataContext).ConnectProgress = false;
+            //    ConnectVPN.Background = new SolidColorBrush(Colors.LightGreen);
+            //    connectlbl.Content = "Connected Successfully";
+            //}, TaskScheduler.FromCurrentSynchronizationContext());
+
+            // Get selected sub items
+            if (SelectedSub == null)
+            {
+
+            }
+            var subItems = LazyConfig.Instance.ProfileItems(SelectedSub.id);
+            // Select default server (it's like you select a proxy and press enter)
+
+            // For now we just select load balance server from the selected sub
+            // But it should be selected based on Load Balance or Auto option in home ui
+            var profile = subItems.First(i => i.remarks == "Load Balance");
+
+            // Check if the profile is already selected
+            if (_config.indexId != profile.indexId)
+            {
+                SetDefaultServer(profile.indexId);
+            }
+
         }
         public void HomeGotoProfile()
         {
 
+        }
+
+        public void HomeSetAuto()
+        {
+
+        }
+        public void HomeSetLoadBalance()
+        {
+
+        }
+
+        public void HomeSetBlockedSites()
+        {
+            Console.WriteLine();
+        }
+        public void HomeSetForignSites()
+        {
+            Console.WriteLine();
+            ConnectProgress = true;
+            ConnectColor = "#FFFF0000";
+        }
+        public void HomeSetAllSites()
+        {
+            Console.WriteLine();
+        }
+
+        public void HomeSelectedRouteChanged()
+        {
+            Console.WriteLine();
         }
         #endregion
     }
