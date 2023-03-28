@@ -160,6 +160,7 @@
                     <materialDesign:PackIcon Kind="Speedometer" Width="26" Height="26" />
 
                 </Button>
+                
                 <Label  HorizontalAlignment="Center"                
                 Height="auto" Width="auto" FontSize="12" >
                     Delay: 200ms
@@ -216,9 +217,17 @@
                             <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" >
                                     Use For
                             </TextBlock>
-                            <ListBox Grid.IsSharedSizeScope="True"  HorizontalContentAlignment="Center"
-                                         HorizontalAlignment="Stretch" 
-                                         Style="{StaticResource MaterialDesignToolToggleListBox}">
+                            
+                            <ListBox Name="lstRouting" Grid.IsSharedSizeScope="True"
+                                     HorizontalContentAlignment="Center"
+                                     HorizontalAlignment="Stretch"
+                                     Style="{StaticResource MaterialDesignToolToggleListBox}">
+
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <UniformGrid Columns="3"/>
@@ -231,10 +240,44 @@
                                         <TextBlock Text="ListBoxAssist.IsToggle allows more natural toggle behaviour" />
                                     </StackPanel>
                                 </ListBox.ToolTip>
-                                <ListBoxItem Content="Blocked Sites"/>
-                                <ListBoxItem Content="Forign Sites"/>
-                                <ListBoxItem Content="All Sites"/>
+
+
+
+
+                                <!--<Button Command="{Binding HomeSetBlockedSitesCmd}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                                    Blocked Sites
+                                </Button>
+                                <Button Command="{Binding HomeSetForignSitesCmd}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                                    Forign Sites
+                                </Button>
+                                <Button Command="{Binding HomeSetAllSitesCmd}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                                    All Sites
+                                </Button>-->
+
+                                <!--<ListBoxItem Name="BlockedSites" Content="Blocked Sites"/>
+                                <ListBoxItem Name="ForignSites" Content="Forign Sites"/>
+                                <ListBoxItem Name="AllSites" Content="All Sites"/>-->
                             </ListBox>
+
+                            <!--<StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Stretch">
+                                <StackPanel.Resources>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Margin" Value="0,10,0,0"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                
+                                <Button Command="{Binding HomeSetBlockedSitesCmd}" >
+                                    Blocked Sites
+                                </Button>
+                                <Button Command="{Binding HomeSetForignSitesCmd}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="155">
+                                    Forign Sites
+                                </Button>
+                                <Button Command="{Binding HomeSetAllSitesCmd}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Width="94.2">
+                                    All Sites
+                                </Button>
+                            </StackPanel>-->
+                            
                             <TextBlock Style="{StaticResource MaterialDesignDataGridTextColumnStyle}" />
 
                             <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" >

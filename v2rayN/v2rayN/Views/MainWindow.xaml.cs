@@ -141,6 +141,7 @@ namespace v2rayN.Views
 
             this.WhenActivated(disposables =>
             {
+                //home
                 this.OneWayBind(ViewModel, vm => vm.ProfileItems, v => v.lstProfiles.ItemsSource).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.SelectedProfile, v => v.lstProfiles.SelectedItem).DisposeWith(disposables);
 
@@ -148,6 +149,9 @@ namespace v2rayN.Views
                 this.Bind(ViewModel, vm => vm.SelectedSub, v => v.lstGroup.SelectedItem).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.ServerFilter, v => v.txtServerFilter.Text).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.AddSubCmd, v => v.btnAddSub).DisposeWith(disposables);
+
+                this.OneWayBind(ViewModel, vm => vm.HomeRoutingItems, v => v.HiddifyUI.lstRouting.ItemsSource).DisposeWith(disposables);
+                this.Bind(ViewModel, vm => vm.HomeSelectedRoutingItem, v => v.HiddifyUI.lstRouting.SelectedItem).DisposeWith(disposables);
 
                 //servers
                 this.BindCommand(ViewModel, vm => vm.AddVmessServerCmd, v => v.menuAddVmessServer).DisposeWith(disposables);
