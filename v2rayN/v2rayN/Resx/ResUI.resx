@@ -1165,4 +1165,13 @@
   <data name="TbEnableProxy" xml:space="preserve">
     <value>Use Proxy</value>
   </data>
+  <data name="RoutingAllSites" xml:space="preserve">
+    <value>All Sites</value>
+  </data>
+  <data name="RoutingBlockedSites" xml:space="preserve">
+    <value>Blocked Sites</value>
+  </data>
+  <data name="RoutingForeignSites" xml:space="preserve">
+    <value>Foreign Sites</value>
+  </data>
 </root>

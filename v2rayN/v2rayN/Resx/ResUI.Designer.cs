@@ -1744,6 +1744,33 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All Sites.
+        /// </summary>
+        public static string RoutingAllSites {
+            get {
+                return ResourceManager.GetString("RoutingAllSites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blocked Sites.
+        /// </summary>
+        public static string RoutingBlockedSites {
+            get {
+                return ResourceManager.GetString("RoutingBlockedSites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Foreign Sites.
+        /// </summary>
+        public static string RoutingForeignSites {
+            get {
+                return ResourceManager.GetString("RoutingForeignSites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0},One of the required..
         /// </summary>
         public static string RoutingRuleDetailRequiredTips {
@@ -3041,7 +3068,7 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   查找类似 Please turn off when there is an abnormal disconnection 的本地化字符串。
+        ///   Looks up a localized string similar to Please turn off when there is an abnormal disconnection.
         /// </summary>
         public static string TipDisplayLog {
             get {
@@ -3050,7 +3077,7 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   查找类似 *Default value tcp 的本地化字符串。
+        ///   Looks up a localized string similar to *Default value tcp.
         /// </summary>
         public static string TipNetwork {
             get {

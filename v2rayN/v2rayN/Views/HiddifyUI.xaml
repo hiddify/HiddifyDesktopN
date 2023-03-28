@@ -6,7 +6,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        
+    xmlns:resx="clr-namespace:v2rayN.Resx"        
         
              d:DesignHeight="800" d:DesignWidth="400">
 
@@ -221,6 +221,7 @@
                             <ListBox Name="lstRouting" Grid.IsSharedSizeScope="True"
                                      HorizontalContentAlignment="Center"
                                      HorizontalAlignment="Stretch"
+                                     SelectedItem="{Binding HomeSelectedRoutingItem}"
                                      Style="{StaticResource MaterialDesignToolToggleListBox}">
 
                                 <ListBox.ItemContainerStyle>
@@ -233,19 +234,20 @@
                                         <UniformGrid Columns="3"/>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
-                                <ListBox.ToolTip>
+                                <ListBox.ToolTip >
                                     <StackPanel>
-                                        <TextBlock Text="MaterialDesignToolToggleListBox" />
-                                        <TextBlock Text="Exclusive selection" />
-                                        <TextBlock Text="ListBoxAssist.IsToggle allows more natural toggle behaviour" />
+                                        <TextBlock Text="{x:Static resx:ResUI.RoutingAllSites}"/>
+
                                     </StackPanel>
                                 </ListBox.ToolTip>
 
-
+                                <ListBoxItem Content="{x:Static resx:ResUI.RoutingBlockedSites}" />
+                                <ListBoxItem Content="{x:Static resx:ResUI.RoutingForeignSites}"/>
+                                <ListBoxItem Content="{x:Static resx:ResUI.RoutingAllSites}" />
 
 
                                 <!--<Button Command="{Binding HomeSetBlockedSitesCmd}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-                                    Blocked Sites
+                                    
                                 </Button>
                                 <Button Command="{Binding HomeSetForignSitesCmd}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
                                     Forign Sites

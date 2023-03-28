@@ -16,6 +16,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Security.RightsManagement;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
 using v2rayN.Base;
@@ -29,7 +30,7 @@ using Application = System.Windows.Application;
 
 namespace v2rayN.ViewModels
 {
-    public class MainWindowViewModel : ReactiveObject
+    public class MainWindowViewModel : ViewModelBase
     {
         #region private prop
         
@@ -65,8 +66,16 @@ namespace v2rayN.ViewModels
 
         public IObservableCollection<RoutingItem> HomeRoutingItems => _homeRoutingItems;
 
-        [Reactive]
-        public RoutingItem HomeSelectedRoutingItem { get; set; }
+
+        private ListBoxItem _homeSelectedRoutingItem;
+        
+        public ListBoxItem HomeSelectedRoutingItem { get =>_homeSelectedRoutingItem;
+            set
+            {
+                SetProperty(ref _homeSelectedRoutingItem, value);
+                HomeSelectedRouteChanged();
+            }
+        }
 
 
         [Reactive]
@@ -98,6 +107,8 @@ namespace v2rayN.ViewModels
         #region Menu
         //home
         public ReactiveCommand<Unit, Unit> HomeNewProfileCmd { get; }
+        
+        
         public ReactiveCommand<Unit, Unit> HomeConnectCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeUpdateUsageCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeGotoProfileCmd { get; }
@@ -277,8 +288,7 @@ namespace v2rayN.ViewModels
 
             RefreshHomeRouting();
 
-            this.WhenAnyValue(
-                x => x.HomeSelectedRoutingItem).Subscribe(c => HomeSelectedRouteChanged());
+            //this.WhenAnyValue(x => x.HomeSelectedRoutingItem).Subscribe(c => HomeSelectedRouteChanged());
 
             var canEditRemove = this.WhenAnyValue(
                x => x.SelectedProfile,
@@ -595,7 +605,9 @@ namespace v2rayN.ViewModels
             {
                 V2RayNPanelVisible = !V2RayNPanelVisible;
                 MaxWindowWidth = V2RayNPanelVisible ? 2100 : 420;
-                WindowWidth = V2RayNPanelVisible ? 1300 : 420;
+                WindowWidth = V2RayNPanelVisible ? 1200 : 420;
+                ColorModeDark = !ColorModeDark;
+                ColorModeDark = !ColorModeDark;
 
             });
             Global.ShowInTaskbar = true;
@@ -2071,7 +2083,7 @@ namespace v2rayN.ViewModels
 
         public void HomeSelectedRouteChanged()
         {
-            Console.WriteLine();
+            Console.WriteLine(HomeSelectedRoutingItem);
         }
         #endregion
     }

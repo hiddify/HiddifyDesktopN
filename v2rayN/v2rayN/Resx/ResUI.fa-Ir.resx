@@ -1084,4 +1084,13 @@
   <data name="TbEnableProxy" xml:space="preserve">
     <value>فعال کردن پروکسی</value>
   </data>
+  <data name="RoutingAllSites" xml:space="preserve">
+    <value>همه سایت‌ها</value>
+  </data>
+  <data name="RoutingBlockedSites" xml:space="preserve">
+    <value>سایت‌های فیلترشده</value>
+  </data>
+  <data name="RoutingForeignSites" xml:space="preserve">
+    <value>سایت‌های خارجی</value>
+  </data>
 </root>
