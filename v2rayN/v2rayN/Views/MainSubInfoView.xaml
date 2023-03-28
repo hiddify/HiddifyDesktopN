@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="v2rayN.Views.SubInfoView"
+﻿<UserControl x:Class="v2rayN.Views.MainSubInfoView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -18,7 +18,7 @@
                 VerticalAlignment="Center" 
                 TextTrimming="CharacterEllipsis" 
                 MaxWidth="200"
-                Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="{Binding remarks}" >
+                Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="{Binding SelectedSub.remarks}" >
 
                 </TextBlock>
                 <Button Name="GotoProfile"

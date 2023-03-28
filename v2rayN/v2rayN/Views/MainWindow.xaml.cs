@@ -28,9 +28,10 @@ namespace v2rayN.Views
 
         public MainWindow()
         {
+
             InitializeComponent();
             _config = LazyConfig.Instance.GetConfig();
-
+            
             App.Current.SessionEnding += Current_SessionEnding;
             this.Closing += MainWindow_Closing;
             this.PreviewKeyDown += MainWindow_PreviewKeyDown;

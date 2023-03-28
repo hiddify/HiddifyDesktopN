@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace v2rayN.Views
 {
     /// <summary>
-    /// Interaction logic for SubInfoView.xaml
+    /// Interaction logic for MainSubInfoView.xaml
     /// </summary>
-    public partial class SubInfoView : UserControl
+    public partial class MainSubInfoView : UserControl
     {
-        public SubInfoView()
+        public MainSubInfoView()
         {
             InitializeComponent();
         }

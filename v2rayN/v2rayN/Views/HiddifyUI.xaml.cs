@@ -95,6 +95,7 @@ namespace v2rayN.Views
 
         private void ConnectVPN_Click(object sender, RoutedEventArgs e)
         {
+
             ConnectVPN.Background = new SolidColorBrush(Color.FromRgb(0xFF, 0xF2, 0x67));
             //((HomeWindowViewModel)DataContext).ConnectProgress = true;
             connectlbl.Content = "Connecting...";

@@ -134,23 +134,23 @@
                 Background="#FFE0E0E0"
 
                 Command="{Binding HomeConnectCmd}"
-                 Style="{StaticResource MaterialDesignFloatingActionButton}" 
+                Style="{StaticResource MaterialDesignFloatingActionButton}" 
                 Foreground="{DynamicResource SecondaryHueMidBrushForeground}" BorderBrush="{x:Null}">
 
                 <Image Source="/v2rayN.ico" Width="36" Height="36" />
 
             </Button>
             <StackPanel Name="speedpanel" 
-                            Visibility="Visible" 
-                            Grid.Row="1"
-                        HorizontalAlignment="Left"
-                            Margin="31,0,0,0"
+                Visibility="Visible" 
+                Grid.Row="1"
+                HorizontalAlignment="Left"
+                Margin="31,0,0,0"
                 VerticalAlignment="Center"
                         >
                 <Button 
                     HorizontalAlignment="Center"
                     Padding="0"
-                Width="36" 
+                    Width="36" 
                     Command="{Binding ToggleV2rayNPanelCmd}"
                     Style="{StaticResource MaterialDesignFloatingActionButton}"
                         Background="White"
@@ -183,7 +183,7 @@
 
                 <Expander HorizontalAlignment="Stretch" materialDesign:ExpanderAssist.HorizontalHeaderPadding="10,2,0,2" >
                     <Expander.Header >
-                        <views:SubInfoView x:Name="SubInfoView" DataContext="{Binding SelectedSub}"/>
+                        <views:MainSubInfoView x:Name="SubInfoView" DataContext="{Binding}"/>
                     </Expander.Header>
                     <StackPanel Margin="24,8,24,16" Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
                         <ScrollViewer x:Name="MainScrollViewer"
@@ -194,7 +194,7 @@
                             <ListView Margin="12,0,12,0" Grid.IsSharedSizeScope="True" ItemsSource="{Binding SubItems}" SelectedItem="{Binding SelectedSub}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <views:SubInfoView HorizontalAlignment="Stretch" />
+                                        <views:SubInfoView HorizontalAlignment="Stretch"  />
 
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -253,8 +253,8 @@
                                         <UniformGrid Columns="3"/>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
-                                <ListBoxItem Content="Auto"  />
-                                <ListBoxItem Content="Load Balance" />
+                                <ListBoxItem Content="Auto" />
+                                <ListBoxItem Content="Load Balance"/>
                                 <ListBoxItem Content="Manual" />
                             </ListBox>
                             <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" />
