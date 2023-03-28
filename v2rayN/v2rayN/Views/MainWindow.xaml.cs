@@ -153,6 +153,9 @@ namespace v2rayN.Views
                 this.OneWayBind(ViewModel, vm => vm.HomeRoutingItems, v => v.HiddifyUI.lstRouting.ItemsSource).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.HomeSelectedRoutingItem, v => v.HiddifyUI.lstRouting.SelectedItem).DisposeWith(disposables);
 
+                this.OneWayBind(ViewModel, vm => vm.HomeProxyModes, v => v.HiddifyUI.lstProxyModes.ItemsSource).DisposeWith(disposables);
+                this.Bind(ViewModel, vm => vm.HomeSelectedProxyMode, v => v.HiddifyUI.lstProxyModes.SelectedItem).DisposeWith(disposables);
+
                 //servers
                 this.BindCommand(ViewModel, vm => vm.AddVmessServerCmd, v => v.menuAddVmessServer).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.AddVlessServerCmd, v => v.menuAddVlessServer).DisposeWith(disposables);
