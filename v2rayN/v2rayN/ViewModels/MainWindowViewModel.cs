@@ -2005,6 +2005,11 @@ namespace v2rayN.ViewModels
         }
         public void HomeConnect()
         {
+
+            Console.WriteLine();
+            ConnectProgress = true;
+            ConnectColor = "#FFFF0000";
+
             
             //ConnectVPN.Background = new SolidColorBrush(Color.FromRgb(0xFF, 0xF2, 0x67));
             ////((HomeWindowViewModel)DataContext).ConnectProgress = true;
@@ -2035,6 +2040,7 @@ namespace v2rayN.ViewModels
                 SetDefaultServer(profile.indexId);
             }
 
+
         }
         public void HomeGotoProfile()
         {
@@ -2057,8 +2063,6 @@ namespace v2rayN.ViewModels
         public void HomeSetForignSites()
         {
             Console.WriteLine();
-            ConnectProgress = true;
-            ConnectColor = "#FFFF0000";
         }
         public void HomeSetAllSites()
         {
