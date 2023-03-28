@@ -70,8 +70,7 @@ namespace v2rayN.ViewModels
 
         public IObservableCollection<ProxyMode> HomeProxyModes => _homeProxyModes;
 
-        [Reactive]
-        public RoutingItem HomeSelectedRoutingItem { get; set; }
+        
 
         private ListBoxItem _homeSelectedRoutingItem;
         
