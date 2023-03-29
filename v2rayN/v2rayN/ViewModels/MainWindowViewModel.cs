@@ -65,28 +65,12 @@ namespace v2rayN.ViewModels
         private IObservableCollection<ComboItem> _servers = new ObservableCollectionExtended<ComboItem>();
         public IObservableCollection<ComboItem> Servers => _servers;
 
-        private ListBoxItem _homeSelectedRoutingItem;
+        [Reactive]
+        public ListBoxItem HomeSelectedRoutingItem { get; set; }
 
-        public ListBoxItem HomeSelectedRoutingItem
-        {
-            get => _homeSelectedRoutingItem;
-            set
-            {
-                SetProperty(ref _homeSelectedRoutingItem, value);
-                HomeSelectedRouteChanged();
-            }
-        }*/
-
-        private ListBoxItem _homeSelectedProxyItem;
-        public ListBoxItem HomeSelectedProxyMode
-        {
-            get => _homeSelectedProxyItem;
-            set
-            {
-                SetProperty(ref _homeSelectedProxyItem, value);
-                HomeSelectedProxyChanged();
-            }
-        }
+        [Reactive]
+        public ListBoxItem HomeSelectedProxyMode { get; set; }
+        
 
         [Reactive]
         public bool V2RayNPanelVisible { get; set; } = false;
@@ -288,7 +272,7 @@ namespace v2rayN.ViewModels
             RefreshServers();
 
 
-            //this.WhenAnyValue(x => x.HomeSelectedRoutingItem).Subscribe(c => HomeSelectedRouteChanged());
+            this.WhenAnyValue(x => x.HomeSelectedRoutingItem).Subscribe(c => HomeSelectedRouteChanged());
 
             this.WhenAnyValue(
                 x => x.HomeSelectedProxyMode).Subscribe(c => HomeSelectedProxyChanged());
@@ -2101,7 +2085,7 @@ namespace v2rayN.ViewModels
         }
         public void HomeSelectedProxyChanged()
         {
-            if (HomeSelectedProxyMode.Content.ToString() == "Manual")
+            if (HomeSelectedProxyMode?.Content?.ToString() == "Manual")
             {
                 ToggleV2rayNPanelCmd.Execute();
                 return;

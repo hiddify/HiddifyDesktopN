@@ -222,7 +222,7 @@
                             <ListBox Name="lstRouting" Grid.IsSharedSizeScope="True"
                                      HorizontalContentAlignment="Center"
                                      HorizontalAlignment="Stretch"
-                                     SelectedItem="{Binding HomeSelectedRouting}"
+                                     SelectedItem="{Binding HomeSelectedRoutingItem}"
                                      Style="{StaticResource MaterialDesignToolToggleListBox}">
 
                                 <ListBox.ItemContainerStyle>
