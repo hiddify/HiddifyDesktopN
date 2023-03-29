@@ -30,7 +30,7 @@ using Application = System.Windows.Application;
 
 namespace v2rayN.ViewModels
 {
-    public class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ReactiveObject
     {
         #region private prop
         
@@ -616,6 +616,7 @@ namespace v2rayN.ViewModels
             ToggleV2rayNPanelCmd= ReactiveCommand.Create(() =>
             {
                 V2RayNPanelVisible = !V2RayNPanelVisible;
+                
                 MaxWindowWidth = V2RayNPanelVisible ? 2100 : 420;
                 WindowWidth = V2RayNPanelVisible ? 1200 : 420;
                 ColorModeDark = !ColorModeDark;

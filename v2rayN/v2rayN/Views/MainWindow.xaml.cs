@@ -773,5 +773,10 @@ namespace v2rayN.Views
             //ResizeWindowToFirstColumn();
             
         }
+
+        private void HiddifyUI_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
