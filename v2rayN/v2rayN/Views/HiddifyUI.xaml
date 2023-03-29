@@ -90,6 +90,7 @@
                                         Width="100"
                                         Margin="8"
                                         materialDesign:HintAssist.Hint="Language"
+                                        SelectedItem="{Binding CurrentLanguage}"
                                         Style="{StaticResource DefComboBox}" />
 
                                 </Grid>

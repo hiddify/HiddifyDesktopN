@@ -36,10 +36,13 @@ namespace v2rayN.Views
                 //need to get the message queue from the snackbar, so need to be on the dispatcher
                 MainSnackbar.MessageQueue?.Enqueue("Welcome to Hiddify");
             }, TaskScheduler.FromCurrentSynchronizationContext());
-            //var ViewModel = new HiddifyUIViewModel(MainSnackbar.MessageQueue!);
 
-           
-            //this.BindCommand(ViewModel, vm => vm.NewProfileCommand, v => v.SubInfoView.NewProfile;
+
+            Global.Languages.ForEach(it =>
+            {
+                cmbCurrentLanguage.Items.Add(it);
+            });
+            
             ModifyTheme(false);
         }
         private void OnCopy(object sender, ExecutedRoutedEventArgs e)

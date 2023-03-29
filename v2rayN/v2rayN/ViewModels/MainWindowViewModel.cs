@@ -1852,6 +1852,10 @@ namespace v2rayN.ViewModels
                                 Utils.RestartProgram();
 
                             }
+                            else
+                            {
+                                CurrentLanguage = _config.uiItem.currentLanguage;
+                            }
                         }
 
                     }
