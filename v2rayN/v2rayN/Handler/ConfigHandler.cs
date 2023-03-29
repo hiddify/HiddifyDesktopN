@@ -1049,6 +1049,9 @@ namespace v2rayN.Handler
                         subscriptionItem.download = subInfo.Download;
                         subscriptionItem.total = subInfo.Total;
                         subscriptionItem.expireDate = subInfo.ExpireDate;
+                        subscriptionItem.remaningExpireDays = subscriptionItem.DaysLeftToExpire();
+                        subscriptionItem.UsedDataGB = subscriptionItem.UsedDataGigaBytes();
+                        subscriptionItem.TotalDataGB = subscriptionItem.TotalDataGigaBytes();
                         subscriptionItem.profileWebPageUrl = subInfo.ProfileWebPageUrl;
                     }
 
@@ -1261,6 +1264,9 @@ namespace v2rayN.Handler
                         subscriptionItem.download = subInfo.Download;
                         subscriptionItem.total = subInfo.Total;
                         subscriptionItem.expireDate = subInfo.ExpireDate;
+                        subscriptionItem.remaningExpireDays = subscriptionItem.DaysLeftToExpire();
+                        subscriptionItem.UsedDataGB = subscriptionItem.UsedDataGigaBytes();
+                        subscriptionItem.TotalDataGB = subscriptionItem.TotalDataGigaBytes();
                         subscriptionItem.profileWebPageUrl = subInfo.ProfileWebPageUrl;
                     }
                     

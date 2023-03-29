@@ -90,6 +90,7 @@
                                         Width="100"
                                         Margin="8"
                                         materialDesign:HintAssist.Hint="Language"
+                                        SelectedItem="{Binding CurrentLanguage}"
                                         Style="{StaticResource DefComboBox}" />
 
                                 </Grid>
@@ -221,7 +222,7 @@
                             <ListBox Name="lstRouting" Grid.IsSharedSizeScope="True"
                                      HorizontalContentAlignment="Center"
                                      HorizontalAlignment="Stretch"
-                                     SelectedItem="{Binding HomeSelectedRoutingItem}"
+                                     SelectedItem="{Binding HomeSelectedRouting}"
                                      Style="{StaticResource MaterialDesignToolToggleListBox}">
 
                                 <ListBox.ItemContainerStyle>
@@ -244,21 +245,6 @@
                                 <ListBoxItem Content="{x:Static resx:ResUI.RoutingBlockedSites}" />
                                 <ListBoxItem Content="{x:Static resx:ResUI.RoutingForeignSites}"/>
                                 <ListBoxItem Content="{x:Static resx:ResUI.RoutingAllSites}" />
-
-
-                                <!--<Button Command="{Binding HomeSetBlockedSitesCmd}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-                                    
-                                </Button>
-                                <Button Command="{Binding HomeSetForignSitesCmd}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-                                    Forign Sites
-                                </Button>
-                                <Button Command="{Binding HomeSetAllSitesCmd}" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-                                    All Sites
-                                </Button>-->
-
-                                <!--<ListBoxItem Name="BlockedSites" Content="Blocked Sites"/>
-                                <ListBoxItem Name="ForignSites" Content="Forign Sites"/>
-                                <ListBoxItem Name="AllSites" Content="All Sites"/>-->
                             </ListBox>
                             
                             <TextBlock Style="{StaticResource MaterialDesignDataGridTextColumnStyle}" />
@@ -267,23 +253,32 @@
                                     Proxy Selection Mode
                             </TextBlock>
                             
-                            <ListBox Name="lstProxyModes" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Style="{StaticResource MaterialDesignToolToggleListBox}">
-                                <ListBox.ToolTip>
-                                    <StackPanel>
-                                        <TextBlock Text="MaterialDesignToolToggleListBox" />
-                                        <TextBlock Text="Exclusive selection" />
-                                        <TextBlock Text="ListBoxAssist.IsToggle allows more natural toggle behaviour" />
-                                    </StackPanel>
-                                </ListBox.ToolTip>
+                            <ListBox Name="lstProxyModes"
+                                     HorizontalAlignment="Stretch"
+                                     HorizontalContentAlignment="Center"
+                                     SelectedItem="{Binding HomeSelectedProxyMode}"
+                                     Style="{StaticResource MaterialDesignToolToggleListBox}">
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="ListBoxItem">
+                                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <UniformGrid Columns="3"/>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
+                                <ListBox.ToolTip >
+                                    <StackPanel>
+                                        <TextBlock Text="{x:Static resx:ResUI.RoutingAllSites}"/>
+
+                                    </StackPanel>
+                                </ListBox.ToolTip>
                                 
-                                <!--<ListBoxItem Content="Auto" />
+                                
+                                <ListBoxItem Content="Auto" />
                                 <ListBoxItem Content="Load Balance"/>
-                                <ListBoxItem Content="Manual" />-->
+                                <ListBoxItem Content="Manual" />
                             </ListBox>
                             <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" />
                         </StackPanel>

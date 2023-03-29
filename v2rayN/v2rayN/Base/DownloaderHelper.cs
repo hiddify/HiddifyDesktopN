@@ -44,8 +44,8 @@ namespace v2rayN.Base
             downloader.DownloadFileCompleted += (sender, value) =>
             {
                 if (value.Error != null)
-                {throw value.Error;
-                }
+                    throw value.Error;
+                
             };
             using var stream = await downloader.DownloadFileTaskAsync(address: url, cancellationToken: cancellationToken.Token);
             using StreamReader reader = new(stream);

@@ -33,7 +33,7 @@ namespace v2rayN.ViewModels
     public class MainWindowViewModel : ReactiveObject
     {
         #region private prop
-        
+
         private CoreHandler _coreHandler;
         private StatisticsHandler _statistics;
         private List<ProfileItem> _lstProfile;
@@ -43,6 +43,9 @@ namespace v2rayN.ViewModels
         private readonly PaletteHelper _paletteHelper = new();
         private Dictionary<string, bool> _dicHeaderSort = new();
         private Action<string> _updateView;
+        private bool IsConnected = false;
+        private string DefaultProxyMode = "Auto";
+        private bool IsForSettingBackLanguage = false;
 
         #endregion
         // It's public because we need it in MainWindow.xaml.cs
@@ -62,21 +65,11 @@ namespace v2rayN.ViewModels
         private IObservableCollection<ComboItem> _servers = new ObservableCollectionExtended<ComboItem>();
         public IObservableCollection<ComboItem> Servers => _servers;
 
-        private IObservableCollection<RoutingItem> _homeRoutingItems = new ObservableCollectionExtended<RoutingItem>();
+        private ListBoxItem _homeSelectedRoutingItem;
 
-        public IObservableCollection<RoutingItem> HomeRoutingItems => _homeRoutingItems;
-
-        private IObservableCollection<ProxyMode> _homeProxyModes = new ObservableCollectionExtended<ProxyMode>();
-
-        public IObservableCollection<ProxyMode> HomeProxyModes => _homeProxyModes;
-
-
-        [Reactive]
-        public ListBoxItem HomeSelectedRoutingItem { get; set; }
-        
-        /*private ListBoxItem _homeSelectedRoutingItem;
-        
-        public ListBoxItem HomeSelectedRoutingItem { get =>_homeSelectedRoutingItem;
+        public ListBoxItem HomeSelectedRoutingItem
+        {
+            get => _homeSelectedRoutingItem;
             set
             {
                 SetProperty(ref _homeSelectedRoutingItem, value);
@@ -84,8 +77,16 @@ namespace v2rayN.ViewModels
             }
         }*/
 
-        [Reactive]
-        public ProxyMode HomeSelectedProxyMode { get; set; }
+        private ListBoxItem _homeSelectedProxyItem;
+        public ListBoxItem HomeSelectedProxyMode
+        {
+            get => _homeSelectedProxyItem;
+            set
+            {
+                SetProperty(ref _homeSelectedProxyItem, value);
+                HomeSelectedProxyChanged();
+            }
+        }
 
         [Reactive]
         public bool V2RayNPanelVisible { get; set; } = false;
@@ -116,20 +117,11 @@ namespace v2rayN.ViewModels
         #region Menu
         //home
         public ReactiveCommand<Unit, Unit> HomeNewProfileCmd { get; }
-        
-        
+
+
         public ReactiveCommand<Unit, Unit> HomeConnectCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeUpdateUsageCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeGotoProfileCmd { get; }
-        public ReactiveCommand<Unit, Unit> HomeSetLoadBalanceCmd { get; }
-        public ReactiveCommand<Unit, Unit> HomeSetAutoCmd { get; }
-        public ReactiveCommand<Unit, Unit> HomeSetBlockedSitesCmd { get; }
-        public ReactiveCommand<Unit, Unit> HomeSetForignSitesCmd { get; }
-        public ReactiveCommand<Unit, Unit> HomeSetAllSitesCmd { get; }
-
-        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
-        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
-        //public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
 
         //servers
         public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
@@ -225,7 +217,7 @@ namespace v2rayN.ViewModels
 
         #region UI
 
-        
+
         [Reactive]
         public bool ConnectProgress { get; set; }
         [Reactive]
@@ -295,10 +287,8 @@ namespace v2rayN.ViewModels
             RefreshRoutingsMenu();
             RefreshServers();
 
-            RefreshHomeRouting();
-            RefreshHomeProxyMode();
 
-            this.WhenAnyValue(x => x.HomeSelectedRoutingItem).Subscribe(c => HomeSelectedRouteChanged());
+            //this.WhenAnyValue(x => x.HomeSelectedRoutingItem).Subscribe(c => HomeSelectedRouteChanged());
 
             this.WhenAnyValue(
                 x => x.HomeSelectedProxyMode).Subscribe(c => HomeSelectedProxyChanged());
@@ -360,28 +350,7 @@ namespace v2rayN.ViewModels
             });
             HomeGotoProfileCmd = ReactiveCommand.Create(() =>
             {
-                HomeGotoProfile();
-            });
-
-            HomeSetLoadBalanceCmd = ReactiveCommand.Create(() =>
-            {
-                HomeSetLoadBalance();
-            });
-            HomeSetAutoCmd = ReactiveCommand.Create(() =>
-            {
-                HomeSetAuto();
-            });
-            HomeSetBlockedSitesCmd = ReactiveCommand.Create(() =>
-            {
-                HomeSetBlockedSites();
-            });
-            HomeSetForignSitesCmd = ReactiveCommand.Create(() =>
-            {
-                HomeSetForignSites();
-            });
-            HomeSetAllSitesCmd = ReactiveCommand.Create(() =>
-            {
-                HomeSetAllSites();
+                HomeGotoProfile(SelectedSub.id);
             });
             //servers
             AddVmessServerCmd = ReactiveCommand.Create(() =>
@@ -613,7 +582,7 @@ namespace v2rayN.ViewModels
                 SetListenerType(ESysProxyType.Pac);
             });
 
-            ToggleV2rayNPanelCmd= ReactiveCommand.Create(() =>
+            ToggleV2rayNPanelCmd = ReactiveCommand.Create(() =>
             {
                 V2RayNPanelVisible = !V2RayNPanelVisible;
                 
@@ -1033,9 +1002,9 @@ namespace v2rayN.ViewModels
                 }
             }
         }
-        public (int,List<string>) HomeAddServerOrSubViaClipboard(string cData)
+        public (int, List<string>) HomeAddServerOrSubViaClipboard(string cData)
         {
-            var (addedServersCount,addedSubIds) = ConfigHandler.HomeAddBatchServers(ref _config, cData, _subId, false,null);
+            var (addedServersCount, addedSubIds) = ConfigHandler.HomeAddBatchServers(ref _config, cData, _subId, false, null);
             if (addedSubIds.Count > 0)
             {
                 foreach (string id in addedSubIds)
@@ -1050,7 +1019,7 @@ namespace v2rayN.ViewModels
                     }
                 }
             }
-            return (addedServersCount,addedSubIds);
+            return (addedServersCount, addedSubIds);
         }
         public void AddServerOrSubViaClipboard()
         {
@@ -1447,8 +1416,8 @@ namespace v2rayN.ViewModels
 
                 // Update Subscription after add
                 SubItem latestSubItem = LazyConfig.Instance.GetLastSubItem();
-                if (latestSubItem != null ) 
-                { 
+                if (latestSubItem != null)
+                {
                     UpdateSubscriptionProcess(latestSubItem.id, true);
                 }
             }
@@ -1681,29 +1650,6 @@ namespace v2rayN.ViewModels
                 }
             }
         }
-
-        private void RefreshHomeRouting()
-        {
-            _homeRoutingItems.Clear();
-            var routing = new List<RoutingItem>()
-            {
-                new RoutingItem(){ remarks = "All Sites"},
-                new RoutingItem(){ remarks = "Blocked Sites"},
-                new RoutingItem(){ remarks = "Forign Sites"},
-            };
-            _homeRoutingItems.AddRange(routing);
-        }
-        public void RefreshHomeProxyMode()
-        {
-            _homeProxyModes.Clear();
-            var proxies = new List<ProxyMode>()
-            {
-                new ProxyMode(){id = 1,remark = "Auto"},
-                new ProxyMode(){id = 2,remark = "Load Balance"},
-                new ProxyMode(){id = 3,remark = "Manual"},
-            };
-            _homeProxyModes.AddRange(proxies);
-        }
         private void RoutingSelectedChanged(bool c)
         {
             if (!c)
@@ -1763,7 +1709,7 @@ namespace v2rayN.ViewModels
                 }
                 TunModeSwitch();
             }
-          
+
         }
 
         void TunModeSwitch()
@@ -1894,16 +1840,22 @@ namespace v2rayN.ViewModels
                 {
                     if (!Utils.IsNullOrEmpty(CurrentLanguage))
                     {
-                        Thread.CurrentThread.CurrentUICulture = new(CurrentLanguage);
                         if (ForInitiationLanguage)
                         {
                             ForInitiationLanguage = false;
                         }
                         else
                         {
+                            if (IsForSettingBackLanguage)
+                            {
+                                IsForSettingBackLanguage = false;
+                                return;
+                            }
+
                             var userRes = UI.ShowYesNo(ResUI.MsgProgramNeedsRestarting);
                             if (userRes == DialogResult.Yes)
                             {
+                                Thread.CurrentThread.CurrentUICulture = new(CurrentLanguage);
                                 _config.uiItem.currentLanguage = CurrentLanguage;
                                 ConfigHandler.SaveConfig(ref _config);
 
@@ -1911,6 +1863,12 @@ namespace v2rayN.ViewModels
                                 PreExit(true);
                                 Utils.RestartProgram();
 
+                            }
+                            else
+                            {
+                                //TODO: it doesn't setting back language, in fact it does for variable but in ui doesn't
+                                IsForSettingBackLanguage = true;
+                                CurrentLanguage = _config.uiItem.currentLanguage;
                             }
                         }
 
@@ -2024,6 +1982,9 @@ namespace v2rayN.ViewModels
                         sub.download = subInfo.Download;
                         sub.total = subInfo.Total;
                         sub.expireDate = subInfo.ExpireDate;
+                        sub.remaningExpireDays = sub.DaysLeftToExpire();
+                        sub.UsedDataGB = sub.UsedDataGigaBytes();
+                        sub.TotalDataGB = sub.TotalDataGigaBytes();
                         sub.profileWebPageUrl = subInfo.ProfileWebPageUrl;
 
                         // Replace the sub with new information
@@ -2039,14 +2000,85 @@ namespace v2rayN.ViewModels
                 }
             }
         }
-        public void HomeConnect()
+        public void HomeConnect(bool forceConnect = false)
         {
+            if (SelectedSub == null)
+            {
+                _noticeHandler.Enqueue("Please select a sub");
+                return;
+            }
 
-            Console.WriteLine();
-            ConnectProgress = true;
-            ConnectColor = "#FFFF0000";
+            // It's disconnected or it should be connected again
+            if (forceConnect || !IsConnected)
+            {
+                ConnectProgress = true;
+                ConnectColor = "#FFFF0000";
 
-            
+                // User selected a proxy mode
+                if (HomeSelectedProxyMode != null)
+                {
+                    string proxyModeRemark = HomeSelectedProxyMode.Content.ToString();
+                    // Handle manual mode
+                    if (proxyModeRemark == "Manual")
+                    {
+                        if (SelectedServer == null)
+                        {
+                            _noticeHandler.Enqueue("Please select a server to connect");
+                            return;
+                        }
+
+                        ServerSelectedChanged(true);
+                        return;
+                    }
+
+                    // Now the selected proxy mode is auto either load balance
+
+                    // Get selected sub items proxies/servers
+                    var subServers = LazyConfig.Instance.ProfileItems(SelectedSub.id);
+                    if (subServers.Count < 1)
+                    {
+                        return;
+                    }
+
+                    // Final server
+                    ProfileItem? server = null;
+
+                    // Handle auto mode
+                    if (proxyModeRemark == "Auto")
+                        server = subServers.FirstOrDefault(s => s.remarks == "Lowest Ping");
+                    // Handle load balance mode
+                    else if (proxyModeRemark == "Load Balance")
+                        server = subServers.FirstOrDefault(s => s.remarks == "Load Balance");
+
+                    if (server == null)
+                        return;
+
+                    SetDefaultServer(server.indexId);
+                    IsConnected = true;
+                }
+                // There is no selected proxy mode (default is auto)
+                else
+                {
+                    ProfileItem? server = null;
+                    // Just set a default mode
+                    var subServers = LazyConfig.Instance.ProfileItems(SelectedSub.id);
+                    if (DefaultProxyMode == "Auto")
+                        server = subServers.FirstOrDefault(s => s.remarks == "Lowest Ping");
+                    else if (DefaultProxyMode == "Load Balance")
+                        server = subServers.FirstOrDefault(s => s.remarks == DefaultProxyMode);
+
+                    if (server == null)
+                        return;
+
+                    SetDefaultServer(server.indexId);
+                    IsConnected = true;
+                }
+                return;
+            }
+
+            // It's connected, should be disconnected
+
+
             //ConnectVPN.Background = new SolidColorBrush(Color.FromRgb(0xFF, 0xF2, 0x67));
             ////((HomeWindowViewModel)DataContext).ConnectProgress = true;
             //connectlbl.Content = "Connecting...";
@@ -2057,52 +2089,10 @@ namespace v2rayN.ViewModels
             //    ConnectVPN.Background = new SolidColorBrush(Colors.LightGreen);
             //    connectlbl.Content = "Connected Successfully";
             //}, TaskScheduler.FromCurrentSynchronizationContext());
-
-            // Get selected sub items
-            if (SelectedSub == null)
-            {
-
-            }
-            var subItems = LazyConfig.Instance.ProfileItems(SelectedSub.id);
-            // Select default server (it's like you select a proxy and press enter)
-
-            // For now we just select load balance server from the selected sub
-            // But it should be selected based on Load Balance or Auto option in home ui
-            var profile = subItems.First(i => i.remarks == "Load Balance");
-
-            // Check if the profile is already selected
-            if (_config.indexId != profile.indexId)
-            {
-                SetDefaultServer(profile.indexId);
-            }
-
-
         }
-        public void HomeGotoProfile()
+        public void HomeGotoProfile(string subId)
         {
 
-        }
-
-        public void HomeSetAuto()
-        {
-
-        }
-        public void HomeSetLoadBalance()
-        {
-
-        }
-
-        public void HomeSetBlockedSites()
-        {
-            Console.WriteLine();
-        }
-        public void HomeSetForignSites()
-        {
-            Console.WriteLine();
-        }
-        public void HomeSetAllSites()
-        {
-            Console.WriteLine();
         }
 
         public void HomeSelectedRouteChanged()
@@ -2111,7 +2101,16 @@ namespace v2rayN.ViewModels
         }
         public void HomeSelectedProxyChanged()
         {
-            Console.WriteLine();
+            if (HomeSelectedProxyMode.Content.ToString() == "Manual")
+            {
+                ToggleV2rayNPanelCmd.Execute();
+                return;
+            }
+
+            if (IsConnected)
+            {
+                HomeConnect(true);
+            }
         }
         #endregion
     }
