@@ -43,6 +43,8 @@ namespace v2rayN.ViewModels
         private readonly PaletteHelper _paletteHelper = new();
         private Dictionary<string, bool> _dicHeaderSort = new();
         private Action<string> _updateView;
+        private bool IsConnected = false;
+        private string DefaultProxyMode = "Auto";
 
         #endregion
         // It's public because we need it in MainWindow.xaml.cs
@@ -343,7 +345,7 @@ namespace v2rayN.ViewModels
             });
             HomeGotoProfileCmd = ReactiveCommand.Create(() =>
             {
-                HomeGotoProfile();
+                HomeGotoProfile(SelectedSub.id);
             });
             //servers
             AddVmessServerCmd = ReactiveCommand.Create(() =>
@@ -1977,12 +1979,83 @@ namespace v2rayN.ViewModels
                 }
             }
         }
-        public void HomeConnect()
+        public void HomeConnect(bool forceConnect = false)
         {
+            if (SelectedSub == null)
+            {
+                _noticeHandler.Enqueue("Please select a sub");
+                return;
+            }
 
-            Console.WriteLine();
-            ConnectProgress = true;
-            ConnectColor = "#FFFF0000";
+            // It's disconnected or it should be connected again
+            if (forceConnect || !IsConnected)
+            {
+                ConnectProgress = true;
+                ConnectColor = "#FFFF0000";
+
+                // User selected a proxy mode
+                if (HomeSelectedProxyMode != null)
+                {
+                    string proxyModeRemark = HomeSelectedProxyMode.Content.ToString();
+                    // Handle manual mode
+                    if (proxyModeRemark == "Manual")
+                    {
+                        if (SelectedServer == null)
+                        {
+                            _noticeHandler.Enqueue("Please select a server to connect");
+                            return;
+                        }
+
+                        ServerSelectedChanged(true);
+                        return;
+                    }
+
+                    // Now the selected proxy mode is auto either load balance
+
+                    // Get selected sub items proxies/servers
+                    var subServers = LazyConfig.Instance.ProfileItems(SelectedSub.id);
+                    if (subServers.Count < 1)
+                    {
+                        return;
+                    }
+
+                    // Final server
+                    ProfileItem? server = null;
+
+                    // Handle auto mode
+                    if (proxyModeRemark == "Auto")
+                        server = subServers.FirstOrDefault(s => s.remarks == "Lowest Ping");
+                    // Handle load balance mode
+                    else if (proxyModeRemark == "Load Balance")
+                        server = subServers.FirstOrDefault(s => s.remarks == "Load Balance");
+
+                    if (server == null)
+                        return;
+
+                    SetDefaultServer(server.indexId);
+                    IsConnected = true;
+                }
+                // There is no selected proxy mode (default is auto)
+                else
+                {
+                    ProfileItem? server = null;
+                    // Just set a default mode
+                    var subServers = LazyConfig.Instance.ProfileItems(SelectedSub.id);
+                    if (DefaultProxyMode == "Auto")
+                        server = subServers.FirstOrDefault(s => s.remarks == "Lowest Ping");
+                    else if (DefaultProxyMode == "Load Balance")
+                        server = subServers.FirstOrDefault(s => s.remarks == DefaultProxyMode);
+
+                    if (server == null)
+                        return;
+
+                    SetDefaultServer(server.indexId);
+                    IsConnected = true;
+                }
+                return;
+            }
+
+            // It's connected, should be disconnected
 
 
             //ConnectVPN.Background = new SolidColorBrush(Color.FromRgb(0xFF, 0xF2, 0x67));
@@ -1995,28 +2068,8 @@ namespace v2rayN.ViewModels
             //    ConnectVPN.Background = new SolidColorBrush(Colors.LightGreen);
             //    connectlbl.Content = "Connected Successfully";
             //}, TaskScheduler.FromCurrentSynchronizationContext());
-
-            // Get selected sub items
-            if (SelectedSub == null)
-            {
-
-            }
-            var subItems = LazyConfig.Instance.ProfileItems(SelectedSub.id);
-            // Select default server (it's like you select a proxy and press enter)
-
-            // For now we just select load balance server from the selected sub
-            // But it should be selected based on Load Balance or Auto option in home ui
-            var profile = subItems.First(i => i.remarks == "Load Balance");
-
-            // Check if the profile is already selected
-            if (_config.indexId != profile.indexId)
-            {
-                SetDefaultServer(profile.indexId);
-            }
-
-
         }
-        public void HomeGotoProfile()
+        public void HomeGotoProfile(string subId)
         {
 
         }
@@ -2027,7 +2080,16 @@ namespace v2rayN.ViewModels
         }
         public void HomeSelectedProxyChanged()
         {
-            Console.WriteLine();
+            if (HomeSelectedProxyMode.Content.ToString() == "Manual")
+            {
+                ToggleV2rayNPanelCmd.Execute();
+                return;
+            }
+
+            if (IsConnected)
+            {
+                HomeConnect(true);
+            }
         }
         #endregion
     }
