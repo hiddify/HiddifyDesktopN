@@ -35,13 +35,13 @@
                                                 Background="{x:Null}"
                                                 Command="{Binding HomeNewProfileCmd}"
                                                 BorderBrush="{x:Null}" Foreground="#FF0E0808">
-                <StackPanel Orientation="Horizontal" >
+                <!--<StackPanel Orientation="Horizontal" >
                     <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center"  />
                     <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" >
                                     New
                     </TextBlock>
 
-                </StackPanel>
+                </StackPanel>-->
             </Button>
         </Grid>
 
@@ -53,7 +53,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Margin="0,0,20,0">
-                <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}">26 days</TextBlock>
+                <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding remaningExpireDays,StringFormat={}{0} Days}"></TextBlock>
                 <Label HorizontalAlignment="Center">Remaining</Label>
             </StackPanel>
 
@@ -66,7 +66,7 @@
                     </Grid.ColumnDefinitions>
 
 
-                    <Button Name="UpdateUsage" Grid.Column="0" HorizontalAlignment="Left"
+                    <!--<Button Name="UpdateUsage" Grid.Column="0" HorizontalAlignment="Left"
                                                 VerticalAlignment="Bottom"  Padding="0" materialDesign:ButtonAssist.CornerRadius="8" 
                                                 Background="{x:Null}"
                                                 Command="{Binding HomeUpdateUsageCmd}"
@@ -78,9 +78,20 @@
                             <materialDesign:PackIcon Kind="Refresh" VerticalAlignment="Center"  />
 
                         </StackPanel>
-                    </Button>
+                    </Button>-->
 
-                    <Label Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">10/100GB</Label>
+                    <Label Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <Label.Content>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0}/{1}">
+                                        <Binding Path="UsedDataGB" />
+                                        <Binding Path="TotalDataGB" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Label.Content>
+                    </Label>
                 </Grid>
                 <ProgressBar Height="10" Value="25" HorizontalAlignment="Stretch" />
             </StackPanel>

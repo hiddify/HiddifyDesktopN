@@ -51,6 +51,9 @@ namespace v2rayN.Mode
         public long download { get; set; }
         public long total { get; set; }
         public long expireDate { get; set; }
+        public int remaningExpireDays { get; set; }
+        public int UsedDataGB { get; set; }
+        public int TotalDataGB { get; set; }
         public string? profileWebPageUrl { get; set; }
 
         public double UploadMegaBytes()
@@ -74,11 +77,23 @@ namespace v2rayN.Mode
         {
             return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.download).GigaBytes);
         }
-        public double TotalGigaBytes()
+        public int TotalDataGigaBytes()
         {
-            return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.total).GigaBytes);
+            return Convert.ToInt32(Math.Floor(ByteSize.FromBytes(this.total).GigaBytes));
         }
+        public int UsedDataGigaBytes()
+        {
+            string beforeDecimalPoint = "";
 
+            foreach (var c in ByteSize.FromBytes(this.download + this.upload).GigaBytes.ToString())
+            {
+                if (c != '.')
+                    beforeDecimalPoint += c;
+                else
+                    break;
+            }
+            return int.Parse(beforeDecimalPoint);
+        }
         public double DownloadAndUploadTotalGigaBytes()
         {
             return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.download + this.upload).GigaBytes);

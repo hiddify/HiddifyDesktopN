@@ -45,6 +45,7 @@ namespace v2rayN.ViewModels
         private Action<string> _updateView;
         private bool IsConnected = false;
         private string DefaultProxyMode = "Auto";
+        private bool IsForSettingBackLanguage = false;
 
         #endregion
         // It's public because we need it in MainWindow.xaml.cs
@@ -1834,16 +1835,22 @@ namespace v2rayN.ViewModels
                 {
                     if (!Utils.IsNullOrEmpty(CurrentLanguage))
                     {
-                        Thread.CurrentThread.CurrentUICulture = new(CurrentLanguage);
                         if (ForInitiationLanguage)
                         {
                             ForInitiationLanguage = false;
                         }
                         else
                         {
+                            if (IsForSettingBackLanguage)
+                            {
+                                IsForSettingBackLanguage = false;
+                                return;
+                            }
+
                             var userRes = UI.ShowYesNo(ResUI.MsgProgramNeedsRestarting);
                             if (userRes == DialogResult.Yes)
                             {
+                                Thread.CurrentThread.CurrentUICulture = new(CurrentLanguage);
                                 _config.uiItem.currentLanguage = CurrentLanguage;
                                 ConfigHandler.SaveConfig(ref _config);
 
@@ -1854,6 +1861,8 @@ namespace v2rayN.ViewModels
                             }
                             else
                             {
+                                //TODO: it doesn't setting back language, in fact it does for variable but in ui doesn't
+                                IsForSettingBackLanguage = true;
                                 CurrentLanguage = _config.uiItem.currentLanguage;
                             }
                         }
@@ -1968,6 +1977,9 @@ namespace v2rayN.ViewModels
                         sub.download = subInfo.Download;
                         sub.total = subInfo.Total;
                         sub.expireDate = subInfo.ExpireDate;
+                        sub.remaningExpireDays = sub.DaysLeftToExpire();
+                        sub.UsedDataGB = sub.UsedDataGigaBytes();
+                        sub.TotalDataGB = sub.TotalDataGigaBytes();
                         sub.profileWebPageUrl = subInfo.ProfileWebPageUrl;
 
                         // Replace the sub with new information

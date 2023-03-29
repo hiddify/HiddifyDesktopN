@@ -53,7 +53,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Margin="0,0,20,0">
-                <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}">26 days</TextBlock>
+                <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding SelectedSub.remaningExpireDays,StringFormat={}{0} Days}"></TextBlock>
                 <Label HorizontalAlignment="Center">Remaining</Label>
             </StackPanel>
 
@@ -80,8 +80,20 @@
                         </StackPanel>
                     </Button>
 
-                    <Label Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">10/100GB</Label>
+                    <Label Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <Label.Content>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0}/{1}">
+                                        <Binding Path="SelectedSub.UsedDataGB" />
+                                        <Binding Path="SelectedSub.TotalDataGB" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Label.Content>
+                    </Label>
                 </Grid>
+                <!--TODO: Fix this progress bar-->
                 <ProgressBar Height="10" Value="25" HorizontalAlignment="Stretch" />
             </StackPanel>
         </Grid>

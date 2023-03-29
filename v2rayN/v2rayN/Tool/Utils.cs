@@ -1558,6 +1558,11 @@ namespace v2rayN
 
             return clashSubscriptionInfo;
         }
+
+        public int CalculateRemaningExpireDays(DateTime dateTime)
+        {
+            return DateTime.Now.Subtract(dateTime).Days;
+        }
         #endregion
     }
 }
