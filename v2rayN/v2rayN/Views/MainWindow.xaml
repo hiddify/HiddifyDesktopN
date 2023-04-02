@@ -90,10 +90,10 @@
                                     <TextBlock Text="{x:Static resx:ResUI.TbEnableProxy}" VerticalAlignment="Center" />
                                 
                                 
-                                    <ToggleButton Margin="8,3,0,0"
+                                <ToggleButton Margin="8,3,0,0"
                                 x:Name="togEnableProxy"
-                                Click="togEnableProxy_Click"
-                                >
+                                IsChecked="{Binding SysProxyState}"
+                                Click="togEnableProxy_Click">
                                 </ToggleButton>
                             </StackPanel>
 

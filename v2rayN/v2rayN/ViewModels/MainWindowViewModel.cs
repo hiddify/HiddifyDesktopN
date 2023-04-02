@@ -48,6 +48,7 @@ namespace v2rayN.ViewModels
         private bool IsConnected = false;
         private string DefaultProxyMode = "Auto";
         private bool IsForSettingBackLanguage = false;
+        private bool IsDelayCalculationFinished = false;
 
         #endregion
         // It's public because we need it in MainWindow.xaml.cs
@@ -193,6 +194,7 @@ namespace v2rayN.ViewModels
         public bool BlSystemProxyPac { get; set; }
         public ReactiveCommand<Unit, Unit> SystemProxyClearCmd { get; }
         public ReactiveCommand<Unit, Unit> SystemProxySetCmd { get; }
+        public ReactiveCommand<Unit,Unit> SystemProxyToggleCmd { get; }
         public ReactiveCommand<Unit, Unit> SystemProxyNothingCmd { get; }
         public ReactiveCommand<Unit, Unit> SystemProxyPacCmd { get; }
 
@@ -226,6 +228,8 @@ namespace v2rayN.ViewModels
         public string SpeedDirectDisplay { get; set; }
         [Reactive]
         public bool EnableTun { get; set; }
+        [Reactive]
+        public bool SysProxyState { get; set; }
 
         [Reactive]
         public bool ColorModeDark { get; set; }
@@ -558,11 +562,15 @@ namespace v2rayN.ViewModels
             //System proxy
             SystemProxyClearCmd = ReactiveCommand.Create(() =>
             {
-                SetListenerType(ESysProxyType.ForcedClear);
+                UnsetSysProxy();
             });
             SystemProxySetCmd = ReactiveCommand.Create(() =>
             {
-                SetListenerType(ESysProxyType.ForcedChange);
+                SetSysProxy();
+            });
+            SystemProxyToggleCmd = ReactiveCommand.Create(() =>
+            {
+                ToggleSysProxy();
             });
             SystemProxyNothingCmd = ReactiveCommand.Create(() =>
             {
@@ -1676,6 +1684,29 @@ namespace v2rayN.ViewModels
             }
             SetListenerType((ESysProxyType)SystemProxySelected);
         }
+        private void SetSysProxy()
+        {
+            SetListenerType(ESysProxyType.ForcedChange);
+            SysProxyState = true;
+        }
+        private void UnsetSysProxy()
+        {
+            SetListenerType(ESysProxyType.ForcedClear);
+            SysProxyState = false;
+        }
+        public void ToggleSysProxy()
+        {
+            // The "SysProxyState" variable will be change in the UI
+            // that means when it's off and user clicks on that we will have "SysProxyState" true, cause it was changed when user clicked
+            if (SysProxyState)
+            {
+                SetSysProxy();
+            }
+            else
+            {
+                UnsetSysProxy();
+            }
+        }
 
         void DoEnableTun(bool c)
         {
@@ -2023,7 +2054,6 @@ namespace v2rayN.ViewModels
                         return;
 
                     SetDefaultServer(server.indexId);
-                    IsConnected = true;
                 }
                 // There is no selected proxy mode (default is auto)
                 else
@@ -2040,24 +2070,43 @@ namespace v2rayN.ViewModels
                         return;
 
                     SetDefaultServer(server.indexId);
-                    IsConnected = true;
                 }
+                // Till now, we start the server
+
+                // Now we calculate real ping of server to make sure, it's working
+                // Test server
+                HomeRealPingServer();
+                // Wait for delay calculation
+                while (!IsDelayCalculationFinished)
+                {
+                    Thread.Sleep(300);
+                }
+                // Check delay
+                if (SelectedProfileDelay > 0 && SelectedProfileDelay != -1)
+                {
+                    // The server works
+                    
+                    //TODO: @hiddify1; change the connectVPN color to whatever should be
+                }
+                else
+                {
+                    // The server doesn't work
+
+                    //TODO: @hiddify1; change the connectVPN color to whatever should be
+                }
+                SetSysProxy();
+                IsConnected = true;
                 return;
             }
 
             // It's connected, should be disconnected
 
+            UnsetSysProxy();
 
-            //ConnectVPN.Background = new SolidColorBrush(Color.FromRgb(0xFF, 0xF2, 0x67));
-            ////((HomeWindowViewModel)DataContext).ConnectProgress = true;
-            //connectlbl.Content = "Connecting...";
-            //Task.Factory.StartNew(() => Thread.Sleep(2500)).ContinueWith(t =>
-            //{
-            //    speedpanel.Visibility = Visibility.Visible;
-            //    //((ViewModels.HiddifyUIViewModel)DataContext).ConnectProgress = false;
-            //    ConnectVPN.Background = new SolidColorBrush(Colors.LightGreen);
-            //    connectlbl.Content = "Connected Successfully";
-            //}, TaskScheduler.FromCurrentSynchronizationContext());
+            //TODO: @hiddify1; the connectVPN color should be reset
+
+
+            SelectedProfile = null;
         }
         public void HomeGotoProfile(string subId)
         {
@@ -2144,11 +2193,16 @@ namespace v2rayN.ViewModels
         }
         private void UpdateHomeRealPingServer(string indexId, string delay, string speed)
         {
+            if (IsDelayCalculationFinished)
+                IsDelayCalculationFinished = false;
+
             bool isNumberic = int.TryParse(delay, out int res);
             if (isNumberic)
             {
                 SelectedProfileDelay = Convert.ToInt32(res);
+                IsDelayCalculationFinished = true;
             }
         }
+       
     }
 }

@@ -31,7 +31,7 @@ namespace v2rayN.Views
 
             InitializeComponent();
             _config = LazyConfig.Instance.GetConfig();
-            
+
             App.Current.SessionEnding += Current_SessionEnding;
             this.Closing += MainWindow_Closing;
             this.PreviewKeyDown += MainWindow_PreviewKeyDown;
@@ -51,43 +51,7 @@ namespace v2rayN.Views
             DataContext = ViewModel;
 
             // Handle URI scheme(Deep link), If there is any
-            string[] Args = Environment.GetCommandLineArgs();
-            if (Args.Length > 1)
-            {
-                var uri = Args[1];
-                var (isValidUri, scheme) = DeepLinking.IsUriForProgram(uri);
-                if (isValidUri)
-                {
-                    // Parse uri
-                    var item = DeepLinking.ParseUri(uri);
-                    // Error handling
-                    if (item.err != null && item.err != "" && item.res == null)
-                    {
-                        // Notice error
-                        ViewModel?._noticeHandler?.SendMessage(ResUI.MsgDeepLinkIsInvalid);
-                        
-                    }
-                    // Add server or subscription to the program
-                    else
-                    {
-                        if (item.res.protocol != null)
-                        {
-                            ViewModel?.AddServerOrSubViaDeepLink(item.res.protocol.Uri);
-                        
-                            Utils.SetMainPageReload();
-                        }
-                        else if (item.res.subscription != null)
-                        {
-                            ViewModel?.AddServerOrSubViaDeepLink(item.res.subscription.Url);
-                            Utils.SetMainPageReload();
-                        }
-                        else
-                        {
-                            // WTF is happening here !
-                        }
-                    }
-                }
-            }
+            HandleDeepLink();
 
             if (App.IsNewInstance)
             {
@@ -99,32 +63,7 @@ namespace v2rayN.Views
             // Declare and start a thread to handle reloading main page whenever need
             new Thread(delegate ()
             {
-                while (true)
-                {
-                    if (Utils.DoesMainPageNeedReload())
-                    {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            ViewModel?.InitSubscriptionView();
-                            ViewModel?.SubSelectedChanged(true);
-                            if (this.IsVisible)
-                            {
-                                this.Show();
-                            }
-                            if (this.WindowState == WindowState.Minimized)
-                            {
-                                this.WindowState = WindowState.Normal;
-                            }
-                            this.Activate();
-                            this.Topmost = true;
-                            this.Topmost = false;
-                            this.Focus();
-                            Utils.UnsetMainPageReload();
-
-                        });
-                    }
-                    Thread.Sleep(666);
-                }
+                HandlePageReloading();
             }).Start();
 
             Locator.CurrentMutable.RegisterLazySingleton(() => ViewModel, typeof(MainWindowViewModel));
@@ -293,8 +232,80 @@ namespace v2rayN.Views
                 Application.Current.MainWindow.WindowState = WindowState.Normal;
             }
             Application.Current.MainWindow.Activate();
+
+            
         }
 
+        private void HandlePageReloading()
+        {
+            while (true)
+            {
+                if (Utils.DoesMainPageNeedReload())
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        ViewModel?.InitSubscriptionView();
+                        ViewModel?.SubSelectedChanged(true);
+                        if (this.IsVisible)
+                        {
+                            this.Show();
+                        }
+                        if (this.WindowState == WindowState.Minimized)
+                        {
+                            this.WindowState = WindowState.Normal;
+                        }
+                        this.Activate();
+                        this.Topmost = true;
+                        this.Topmost = false;
+                        this.Focus();
+                        Utils.UnsetMainPageReload();
+
+                    });
+                }
+                Thread.Sleep(666);
+            }
+        }
+
+        private void HandleDeepLink()
+        {
+            string[] Args = Environment.GetCommandLineArgs();
+            if (Args.Length > 1)
+            {
+                var uri = Args[1];
+                var (isValidUri, scheme) = DeepLinking.IsUriForProgram(uri);
+                if (isValidUri)
+                {
+                    // Parse uri
+                    var item = DeepLinking.ParseUri(uri);
+                    // Error handling
+                    if (item.err != null && item.err != "" && item.res == null)
+                    {
+                        // Notice error
+                        ViewModel?._noticeHandler?.SendMessage(ResUI.MsgDeepLinkIsInvalid);
+
+                    }
+                    // Add server or subscription to the program
+                    else
+                    {
+                        if (item.res.protocol != null)
+                        {
+                            ViewModel?.AddServerOrSubViaDeepLink(item.res.protocol.Uri);
+
+                            Utils.SetMainPageReload();
+                        }
+                        else if (item.res.subscription != null)
+                        {
+                            ViewModel?.AddServerOrSubViaDeepLink(item.res.subscription.Url);
+                            Utils.SetMainPageReload();
+                        }
+                        else
+                        {
+                            // WTF is happening here !
+                        }
+                    }
+                }
+            }
+        }
         #region Event 
 
         private void UpdateViewHandler(string action)
@@ -742,8 +753,8 @@ namespace v2rayN.Views
             //else
             //{
             //}
-            
-            cmbSystemProxy.SelectedIndex = togEnableProxy.IsChecked==true ? 1 : 0;
+            ViewModel.ToggleSysProxy();
+            //cmbSystemProxy.SelectedIndex = togEnableProxy.IsChecked==true ? 1 : 0;
         }
 
 
