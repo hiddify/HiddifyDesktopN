@@ -148,11 +148,11 @@
                 Margin="31,0,0,0"
                 VerticalAlignment="Center"
                         >
-                <Button 
+                <Button
                     HorizontalAlignment="Center"
                     Padding="0"
                     Width="36" 
-                    Command="{Binding ToggleV2rayNPanelCmd}"
+                    Command="{Binding HomeRealPingServerCmd}"
                     Style="{StaticResource MaterialDesignFloatingActionButton}"
                         Background="White"
                         BorderBrush="White"
@@ -161,10 +161,21 @@
                     <materialDesign:PackIcon Kind="Speedometer" Width="26" Height="26" />
 
                 </Button>
-                
-                <Label  HorizontalAlignment="Center"                
-                Height="auto" Width="auto" FontSize="12" >
-                    Delay: 200ms
+
+
+                <Label  
+                    HorizontalAlignment="Center"                
+                    Height="auto" Width="auto" FontSize="12">
+                    <Label.Content>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}Delay: {0}">
+                                    <Binding Path="SelectedProfileDelay" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Label.Content>
+                    <!--Delay: 200ms-->
                 </Label>
             </StackPanel>
             <Label Name="connectlbl" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"               

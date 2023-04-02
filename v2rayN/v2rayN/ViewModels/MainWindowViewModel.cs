@@ -13,6 +13,7 @@ using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography.Pkcs;
 using System.Security.RightsManagement;
 using System.Text;
 using System.Windows;
@@ -25,6 +26,7 @@ using v2rayN.Mode;
 using v2rayN.Resx;
 using v2rayN.Tool;
 using v2rayN.Views;
+using static Grpc.Core.ChannelOption;
 using Application = System.Windows.Application;
 
 
@@ -65,13 +67,14 @@ namespace v2rayN.ViewModels
         private IObservableCollection<ComboItem> _servers = new ObservableCollectionExtended<ComboItem>();
         public IObservableCollection<ComboItem> Servers => _servers;
 
+        //home
         [Reactive]
         public ListBoxItem HomeSelectedRoutingItem { get; set; }
 
         [Reactive]
         public ListBoxItem HomeSelectedProxyMode { get; set; }
-        
-
+        [Reactive]
+        public int SelectedProfileDelay { get; set; }
         [Reactive]
         public bool V2RayNPanelVisible { get; set; } = false;
 
@@ -101,11 +104,11 @@ namespace v2rayN.ViewModels
         #region Menu
         //home
         public ReactiveCommand<Unit, Unit> HomeNewProfileCmd { get; }
-
-
         public ReactiveCommand<Unit, Unit> HomeConnectCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeUpdateUsageCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeGotoProfileCmd { get; }
+        
+        public ReactiveCommand<Unit, Unit> HomeRealPingServerCmd { get; }
 
         //servers
         public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
@@ -335,6 +338,10 @@ namespace v2rayN.ViewModels
             HomeGotoProfileCmd = ReactiveCommand.Create(() =>
             {
                 HomeGotoProfile(SelectedSub.id);
+            });
+            HomeRealPingServerCmd = ReactiveCommand.Create(() =>
+            {
+                HomeRealPingServer();
             });
             //servers
             AddVmessServerCmd = ReactiveCommand.Create(() =>
@@ -568,13 +575,7 @@ namespace v2rayN.ViewModels
 
             ToggleV2rayNPanelCmd = ReactiveCommand.Create(() =>
             {
-                V2RayNPanelVisible = !V2RayNPanelVisible;
-                
-                MaxWindowWidth = V2RayNPanelVisible ? 2100 : 420;
-                WindowWidth = V2RayNPanelVisible ? 1200 : 420;
-                ColorModeDark = !ColorModeDark;
-                ColorModeDark = !ColorModeDark;
-
+                ToggleV2rayPanel();
             });
             Global.ShowInTaskbar = true;
         }
@@ -2017,23 +2018,7 @@ namespace v2rayN.ViewModels
 
                     // Now the selected proxy mode is auto either load balance
 
-                    // Get selected sub items proxies/servers
-                    var subServers = LazyConfig.Instance.ProfileItems(SelectedSub.id);
-                    if (subServers.Count < 1)
-                    {
-                        return;
-                    }
-
-                    // Final server
-                    ProfileItem? server = null;
-
-                    // Handle auto mode
-                    if (proxyModeRemark == "Auto")
-                        server = subServers.FirstOrDefault(s => s.remarks == "Lowest Ping");
-                    // Handle load balance mode
-                    else if (proxyModeRemark == "Load Balance")
-                        server = subServers.FirstOrDefault(s => s.remarks == "Load Balance");
-
+                    ProfileItem server = GetSelectedServer(SelectedSub.id, proxyModeRemark);
                     if (server == null)
                         return;
 
@@ -2086,16 +2071,84 @@ namespace v2rayN.ViewModels
         public void HomeSelectedProxyChanged()
         {
             if (HomeSelectedProxyMode?.Content?.ToString() == "Manual")
-            {
-                ToggleV2rayNPanelCmd.Execute();
+            { 
+                ToggleV2rayPanel();
                 return;
             }
-
+            else if (V2RayNPanelVisible)
+            {
+                ToggleV2rayPanel();
+            }
             if (IsConnected)
             {
                 HomeConnect(true);
             }
         }
         #endregion
+
+        private void ToggleV2rayPanel()
+        {
+            V2RayNPanelVisible = !V2RayNPanelVisible;
+
+            MaxWindowWidth = V2RayNPanelVisible ? 2100 : 420;
+            WindowWidth = V2RayNPanelVisible ? 1200 : 420;
+            ColorModeDark = !ColorModeDark;
+            ColorModeDark = !ColorModeDark;
+        }
+
+        private ProfileItem? GetSelectedServer(string subId,string proxyMode)
+        {
+            if (subId.IsNullOrEmpty() || proxyMode.IsNullOrEmpty())
+                return null;
+
+
+            // Get selected sub items proxies/servers
+            var subServers = LazyConfig.Instance.ProfileItems(SelectedSub.id);
+            if (subServers.Count < 1)
+            {
+                return null;
+            }
+
+            if (proxyMode == "Manual")
+                return null;
+
+            ProfileItem server = null;
+
+            if (proxyMode == "Auto")
+            {
+                server = subServers.FirstOrDefault(s => s.remarks == "Lowest Ping");
+            }
+            else if (proxyMode == "Load Balance")
+            {
+                server = subServers.FirstOrDefault(s => s.remarks == "Load Balance");
+            }
+            else
+            {
+                return null;
+            }
+            return server;
+        }
+
+        private void HomeRealPingServer()
+        {
+            if (GetProfileItems(out List<ProfileItem> lstSelecteds, false) < 0)
+            {
+                return;
+            }
+
+            if (lstSelecteds.Count > 0)
+            {
+                //ClearTestResult();
+                new SpeedtestHandler(_config, _coreHandler, lstSelecteds, ESpeedActionType.Realping, UpdateHomeRealPingServer);
+            }
+        }
+        private void UpdateHomeRealPingServer(string indexId, string delay, string speed)
+        {
+            bool isNumberic = int.TryParse(delay, out int res);
+            if (isNumberic)
+            {
+                SelectedProfileDelay = Convert.ToInt32(res);
+            }
+        }
     }
 }

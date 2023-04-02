@@ -1188,49 +1188,8 @@ namespace v2rayN.Handler
                 }
                 // If it's sub we just add a sub
                 //maybe sub
-                if (Utils.IsNullOrEmpty(subid) && (str.StartsWith(Global.httpsProtocol) || str.StartsWith(Global.httpProtocol)))
+                if (str.StartsWith(Global.httpsProtocol) || str.StartsWith(Global.httpProtocol))
                 {
-                    //// It's a custom feature for this app (probably none of your business)
-                    //string? panelAddress = Utils.GetHostAndFirstTwoPathInUri(str);
-                    //// If we can't get panel address we just put host address in there
-                    //if (panelAddress == null)
-                    //{
-                    //    panelAddress = new Uri(str).Host;
-                    //}
-
-                    // WE SAVE THIS INFORMATION IN SubItem ITSELF (NOT AS ROW/SERVER)
-                    //var usageItem = new ProfileItem()
-                    //{
-                    //    configType = EConfigType.Usage,
-                    //    remarks = $"{userSubInfo.DownloadAndUploadTotalGigaBytes()}GB/{userSubInfo.TotalGigaBytes()}GB ",
-                    //    security = $"Expire in {userSubInfo.DaysLeftToExpire()} days",
-                    //    // Direct panel address
-                    //    address = panelAddress,
-                    //    coreType = ECoreType.Xray,
-                    //    subid = subid
-                    //};
-                    //AddServerCommon(ref config, usageItem, false);
-
-                    var LowestPingItem = new ProfileItem()
-                    {
-                        configType = EConfigType.LowestPing,
-                        remarks = "Lowest Ping",
-                        address = "All",
-                        coreType = ECoreType.Xray,
-                        subid = subid
-                    };
-                    AddServerCommon(ref config, LowestPingItem, false);
-                    var loadBalanceItem = new ProfileItem()
-                    {
-                        configType = EConfigType.LoadBalance,
-                        remarks = "Load Balance",
-                        address = "All",
-                        coreType = ECoreType.Xray,
-                        subid = subid
-                    };
-                    AddServerCommon(ref config, loadBalanceItem, false);
-
-
 
                     // If it's sub, We get remaining day to expire & used data & total remained data & profile web page url
                     // We add this information as a Server but these's just for display to user for their information
@@ -1244,10 +1203,34 @@ namespace v2rayN.Handler
                     //    // Handle error
                     //}
 
-                    var subName = Utils.ExtractNameParameterFromUri(str);
 
                     SubItem subscriptionItem = new SubItem();
                     subscriptionItem.id = Utils.GetGUID(false);
+                    subscriptionItem.url = str;
+
+                    var LowestPingItem = new ProfileItem()
+                    {
+                        configType = EConfigType.LowestPing,
+                        remarks = "Lowest Ping",
+                        address = "All",
+                        coreType = ECoreType.Xray,
+                        subid = subscriptionItem.id
+                    };
+                    AddServerCommon(ref config, LowestPingItem, false);
+                    var loadBalanceItem = new ProfileItem()
+                    {
+                        configType = EConfigType.LoadBalance,
+                        remarks = "Load Balance",
+                        address = "All",
+                        coreType = ECoreType.Xray,
+                        subid = subscriptionItem.id
+                    };
+                    AddServerCommon(ref config, loadBalanceItem, false);
+
+
+                    var subName = Utils.ExtractNameParameterFromUri(str);
+                    int lastSsdortNumber = LazyConfig.Instance.GetLastSubItemSortNumber();
+
                     if (subName == null)
                     {
                         int lastSortNumber = LazyConfig.Instance.GetLastSubItemSortNumber();
@@ -1631,6 +1614,15 @@ namespace v2rayN.Handler
                     }
                     subItem.sort = maxSort + 1;
                 }
+            }
+            if (subItem.sort <= 0)
+            {
+                var maxSort = 0;
+                if (SqliteHelper.Instance.Table<SubItem>().Count() > 0)
+                {
+                    maxSort = SqliteHelper.Instance.Table<SubItem>().Max(t => t == null ? 0 : t.sort);
+                }
+                subItem.sort = maxSort + 1;
             }
             if (SqliteHelper.Instance.Replace(subItem) > 0)
             {
