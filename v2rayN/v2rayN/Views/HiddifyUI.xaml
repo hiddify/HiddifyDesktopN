@@ -178,9 +178,9 @@
                     <!--Delay: 200ms-->
                 </Label>
             </StackPanel>
-            <Label Name="connectlbl" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"               
-                Height="61" Width="auto" FontSize="18" Margin="0,150,0,0">
-                Not Connected
+            <Label Name="connectlbl" Foreground="Red"  HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1"               
+                Height="61" Width="auto" FontSize="18" Margin="0,375,0,0">
+                sadfsadfasdfsd
             </Label>
 
 
@@ -229,7 +229,7 @@
                             <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" >
                                     Use For
                             </TextBlock>
-                            
+
                             <ListBox Name="lstRouting" Grid.IsSharedSizeScope="True"
                                      HorizontalContentAlignment="Center"
                                      HorizontalAlignment="Stretch"
@@ -257,13 +257,13 @@
                                 <ListBoxItem Content="{x:Static resx:ResUI.RoutingForeignSites}"/>
                                 <ListBoxItem Content="{x:Static resx:ResUI.RoutingAllSites}" />
                             </ListBox>
-                            
+
                             <TextBlock Style="{StaticResource MaterialDesignDataGridTextColumnStyle}" />
 
                             <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" >
                                     Proxy Selection Mode
                             </TextBlock>
-                            
+
                             <ListBox Name="lstProxyModes"
                                      HorizontalAlignment="Stretch"
                                      HorizontalContentAlignment="Center"
@@ -285,8 +285,8 @@
 
                                     </StackPanel>
                                 </ListBox.ToolTip>
-                                
-                                
+
+
                                 <ListBoxItem Content="Auto" />
                                 <ListBoxItem Content="Load Balance"/>
                                 <ListBoxItem Content="Manual" />

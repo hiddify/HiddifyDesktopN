@@ -78,7 +78,11 @@ namespace v2rayN.ViewModels
         public int SelectedProfileDelay { get; set; }
         [Reactive]
         public bool V2RayNPanelVisible { get; set; } = false;
+        [Reactive]
+        public string ConnectVPNLabel { get; set; } = "Not Connected";
 
+        [Reactive]
+        public string ConnectVPNLabelColor { get; set; } = "#FFFF0000";
 
         [Reactive]
         public double WindowWidth { get; set; }
@@ -2116,6 +2120,8 @@ namespace v2rayN.ViewModels
                     // The server works
 
                     //TODO: @hiddify1; change the connectVPN color to whatever should be
+                    ConnectVPNLabelColor = "#7CFC0000";
+                    ConnectVPNLabel = "Connected";
                     ConnectColor = "#7CFC00";
                     IsConnected = true;
                 }
@@ -2125,6 +2131,8 @@ namespace v2rayN.ViewModels
 
                     //TODO: @hiddify1; change the connectVPN color to whatever should be
                     ConnectColor = "#FFFF0000";
+                    ConnectVPNLabel = "Not Connected";
+                    ConnectVPNLabelColor = "#FFFF0000";
                     IsConnected = false;
                 }
                 SetSysProxy();
