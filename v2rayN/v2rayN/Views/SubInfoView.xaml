@@ -93,6 +93,7 @@
                         </Label.Content>
                     </Label>
                 </Grid>
+                <!--TODO: @hiddify1; Fix this progress bar-->
                 <ProgressBar Height="10" Value="25" HorizontalAlignment="Stretch" />
             </StackPanel>
         </Grid>
