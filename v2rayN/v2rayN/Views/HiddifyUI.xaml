@@ -121,11 +121,11 @@
             </Grid>
 
 
-
-            <Button x:Name="ConnectVPN"
-                Grid.Row="1"
+            <StackPanel Grid.Row="1"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Center"
+                VerticalAlignment="Center">
+            <Button x:Name="ConnectVPN"
+                
                 Width="96"
                 Height="96"
                 materialDesign:ButtonProgressAssist.IsIndeterminate="{Binding ConnectProgress}"
@@ -141,6 +141,11 @@
                 <Image Source="/v2rayN.ico" Width="36" Height="36" />
 
             </Button>
+                <Label Name="connectlbl" Foreground="{Binding ConnectVPNLabelColor}"  HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1"               
+                Height="61" Width="auto" FontSize="18" Content="{Binding ConnectVPNLabel}" >
+                    
+                </Label>
+            </StackPanel>
             <StackPanel Name="speedpanel" 
                 Visibility="Visible" 
                 Grid.Row="1"
@@ -180,10 +185,7 @@
                     <!--Delay: 200ms-->
                 </Label>
             </StackPanel>
-            <Label Name="connectlbl" Foreground="Red"  HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1"               
-                Height="61" Width="auto" FontSize="18" Margin="0,375,0,0">
-                sadfsadfasdfsd
-            </Label>
+            
 
 
             <materialDesign:Card  Grid.Row="1"

@@ -256,6 +256,7 @@ namespace v2rayN.ViewModels
         [Reactive]
         public string CurrentLanguage { get; set; }
 
+        
         #endregion
 
         #region Init
