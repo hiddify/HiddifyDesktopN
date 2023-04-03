@@ -233,7 +233,8 @@ namespace v2rayN.Views
             }
             Application.Current.MainWindow.Activate();
 
-            
+            if (ViewModel.CurrentLanguage=="fa-Ir")
+                FlowDirection = FlowDirection.RightToLeft;
         }
 
         private void HandlePageReloading()

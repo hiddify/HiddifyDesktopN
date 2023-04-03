@@ -9,6 +9,7 @@ using Splat;
 using System.ComponentModel;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -19,6 +20,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Markup;
 using System.Windows.Media;
 using v2rayN.Base;
 using v2rayN.Handler;
@@ -1824,12 +1826,14 @@ namespace v2rayN.ViewModels
                   y => y == true)
                       .Subscribe(c =>
                       {
-                          if (_config.uiItem.colorModeDark != ColorModeDark)
-                          {
-                              _config.uiItem.colorModeDark = ColorModeDark;
-                              ModifyTheme(ColorModeDark);
-                              ConfigHandler.SaveConfig(ref _config);
-                          }
+                          
+                              if (_config.uiItem.colorModeDark != ColorModeDark)
+                              {
+                                  _config.uiItem.colorModeDark = ColorModeDark;
+                                  ModifyTheme(ColorModeDark);
+                                  ConfigHandler.SaveConfig(ref _config);
+                              }
+                          
                       });
 
             this.WhenAnyValue(
@@ -1889,24 +1893,38 @@ namespace v2rayN.ViewModels
                                 return;
                             }
 
-                            var userRes = UI.ShowYesNo(ResUI.MsgProgramNeedsRestarting);
-                            if (userRes == DialogResult.Yes)
+                            //var userRes = UI.ShowYesNo(ResUI.MsgProgramNeedsRestarting);
+                            //if (userRes == DialogResult.Yes)
                             {
                                 Thread.CurrentThread.CurrentUICulture = new(CurrentLanguage);
+                                CultureInfo.DefaultThreadCurrentUICulture = new(_config.uiItem.currentLanguage);
                                 _config.uiItem.currentLanguage = CurrentLanguage;
                                 ConfigHandler.SaveConfig(ref _config);
 
                                 // Restart program
-                                PreExit(true);
-                                Utils.RestartProgram();
+                                // PreExit(true);
+                                //Utils.RestartProgram();
+                                Thread.CurrentThread.CurrentUICulture = new(_config.uiItem.currentLanguage);
+                                var newWindow = new MainWindow();
+
+                                // copy over any necessary properties from the old window
+                                newWindow.DataContext = this;
+
+                                // show the new window and close the old window
+                                var old = Application.Current.MainWindow;
+                                
+                                newWindow.Show();
+                                old.Close();
+                                Application.Current.MainWindow = newWindow;
+
 
                             }
-                            else
+                            /*else
                             {
                                 //TODO: it doesn't setting back language, in fact it does for variable but in ui doesn't
                                 IsForSettingBackLanguage = true;
                                 CurrentLanguage = _config.uiItem.currentLanguage;
-                            }
+                            }*/
                         }
 
                     }
