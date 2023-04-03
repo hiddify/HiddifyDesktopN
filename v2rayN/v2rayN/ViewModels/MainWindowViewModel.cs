@@ -209,6 +209,12 @@ namespace v2rayN.ViewModels
 
         [Reactive]
         public bool ConnectProgress { get; set; }
+
+        [Reactive]
+        public bool ProfileExpanded { get; set; }
+        
+        [Reactive]
+        public bool DelayProgress { get; set; } = false;
         [Reactive]
         public string ConnectColor { get; set; } = "#FFE0E0E0";
 
@@ -331,9 +337,9 @@ namespace v2rayN.ViewModels
             {
                 HomeNewProfile();
             });
-            HomeConnectCmd = ReactiveCommand.Create(() =>
+            HomeConnectCmd = ReactiveCommand.CreateFromTask(() =>
             {
-                HomeConnect();
+               return HomeConnect();
             });
             HomeUpdateUsageCmd = ReactiveCommand.Create(() =>
             {
@@ -343,9 +349,9 @@ namespace v2rayN.ViewModels
             {
                 HomeGotoProfile(SelectedSub.id);
             });
-            HomeRealPingServerCmd = ReactiveCommand.Create(() =>
+            HomeRealPingServerCmd = ReactiveCommand.CreateFromTask(() =>
             {
-                HomeRealPingServer(_config.indexId);
+                return HomeRealPingServer(_config.indexId);
             });
             //servers
             AddVmessServerCmd = ReactiveCommand.Create(() =>
@@ -780,6 +786,7 @@ namespace v2rayN.ViewModels
 
         public void SubSelectedChanged(bool c)
         {
+            ProfileExpanded = false;
             if (!c)
             {
                 return;
@@ -2026,14 +2033,13 @@ namespace v2rayN.ViewModels
                 }
             }
         }
-        public void HomeConnect(bool forceConnect = false)
+        public async Task HomeConnect(bool forceConnect = false)
         {
             if (SelectedSub == null)
             {
                 _noticeHandler.Enqueue("Please select a sub");
                 return;
             }
-
             // It's disconnected or it should be connected again
             if (forceConnect || !IsConnected)
             {
@@ -2106,7 +2112,7 @@ namespace v2rayN.ViewModels
                     if (count == 25)
                         break;
 
-                    Thread.Sleep(400);
+                    await Task.Delay(400).ConfigureAwait(false);
                     count += 1;
                 }
                 ConnectProgress = false;
@@ -2138,7 +2144,7 @@ namespace v2rayN.ViewModels
             //TODO: @hiddify1; the connectVPN color should be reset
             ConnectColor = "#FFE0E0E0";
 
-            SelectedProfile = null;
+            //SelectedProfile = null;
         }
         public void HomeGotoProfile(string subId)
         {
@@ -2148,9 +2154,11 @@ namespace v2rayN.ViewModels
         public void HomeSelectedRouteChanged()
         {
             Console.WriteLine(HomeSelectedRoutingItem);
+            
         }
-        public void HomeSelectedProxyChanged()
+        public async Task HomeSelectedProxyChanged()
         {
+            ProfileExpanded = false;
             if (HomeSelectedProxyMode?.Content?.ToString() == "Manual")
             { 
                 ToggleV2rayPanel();
@@ -2162,7 +2170,7 @@ namespace v2rayN.ViewModels
             }
             if (IsConnected)
             {
-                HomeConnect(true);
+                await HomeConnect(true).ConfigureAwait(false);
             }
         }
         #endregion
@@ -2210,28 +2218,31 @@ namespace v2rayN.ViewModels
             return server;
         }
 
-        private void HomeRealPingServer(string serverIndexId)
+        private async Task HomeRealPingServer(string serverIndexId)
         {
-          
-
+            IsDelayCalculationFinished = false;
+            DelayProgress = true;
             ProfileItem server = LazyConfig.Instance.GetProfileItem(serverIndexId);
             if (server != null)
             {
                 //ClearTestResult();
-                new SpeedtestHandler(_config, _coreHandler, new List<ProfileItem>() { server}, ESpeedActionType.Realping, UpdateHomeRealPingServer);
+                await Task.Run(() =>
+                {
+                    new SpeedtestHandler(_config, _coreHandler, new List<ProfileItem>() { server }, ESpeedActionType.Realping, UpdateHomeRealPingServer);
+                });
+                
             }
         }
         private void UpdateHomeRealPingServer(string indexId, string delay, string speed)
         {
-            if (IsDelayCalculationFinished)
-                IsDelayCalculationFinished = false;
-
             bool isNumberic = int.TryParse(delay, out int res);
             if (isNumberic)
             {
                 SelectedProfileDelay = Convert.ToInt32(res);
                 IsDelayCalculationFinished = true;
+                DelayProgress = false;
             }
+            
         }
        
     }

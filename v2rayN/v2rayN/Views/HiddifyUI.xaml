@@ -152,6 +152,8 @@
                     HorizontalAlignment="Center"
                     Padding="0"
                     Width="36" 
+                    materialDesign:ButtonProgressAssist.IsIndeterminate="{Binding DelayProgress}"
+                materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding DelayProgress}"
                     Command="{Binding HomeRealPingServerCmd}"
                     Style="{StaticResource MaterialDesignFloatingActionButton}"
                         Background="White"
@@ -194,7 +196,7 @@
 
 
 
-                <Expander HorizontalAlignment="Stretch" materialDesign:ExpanderAssist.HorizontalHeaderPadding="10,2,0,2" >
+                <Expander  IsExpanded="{Binding ProfileExpanded}" HorizontalAlignment="Stretch" materialDesign:ExpanderAssist.HorizontalHeaderPadding="10,2,0,2" >
                     <Expander.Header >
                         <views:MainSubInfoView x:Name="SubInfoView" DataContext="{Binding}"/>
                     </Expander.Header>

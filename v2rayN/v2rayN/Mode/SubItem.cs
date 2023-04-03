@@ -83,16 +83,7 @@ namespace v2rayN.Mode
         }
         public int UsedDataGigaBytes()
         {
-            string beforeDecimalPoint = "";
-
-            foreach (var c in ByteSize.FromBytes(this.download + this.upload).GigaBytes.ToString())
-            {
-                if (c != '.')
-                    beforeDecimalPoint += c;
-                else
-                    break;
-            }
-            return int.Parse(beforeDecimalPoint);
+            return (int)ByteSize.FromBytes(this.download + this.upload).GigaBytes;
         }
         public double DownloadAndUploadTotalGigaBytes()
         {
