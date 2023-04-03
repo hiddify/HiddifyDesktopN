@@ -345,7 +345,7 @@ namespace v2rayN.ViewModels
             });
             HomeRealPingServerCmd = ReactiveCommand.Create(() =>
             {
-                HomeRealPingServer();
+                HomeRealPingServer(_config.indexId);
             });
             //servers
             AddVmessServerCmd = ReactiveCommand.Create(() =>
@@ -2037,6 +2037,7 @@ namespace v2rayN.ViewModels
             // It's disconnected or it should be connected again
             if (forceConnect || !IsConnected)
             {
+                // Change connectVPN button color
                 ConnectProgress = true;
                 ConnectColor = "#FFFF0000";
 
@@ -2047,25 +2048,32 @@ namespace v2rayN.ViewModels
                     // Handle manual mode
                     if (proxyModeRemark == "Manual")
                     {
-                        if (SelectedServer == null)
+                        if (Utils.IsNullOrEmpty(_config.indexId))
                         {
+                            //TODO: Send message to user about what happend
                             _noticeHandler.Enqueue("Please select a server to connect");
+                            ConnectColor = "#FFE0E0E0";
+                            ConnectProgress = false;
                             return;
                         }
 
-                        ServerSelectedChanged(true);
-                        return;
+                        SetDefaultServer(_config.indexId);
                     }
-
-                    // Now the selected proxy mode is auto either load balance
-
-                    ProfileItem server = GetSelectedServer(SelectedSub.id, proxyModeRemark);
-                    if (server == null)
-                        return;
-
-                    SetDefaultServer(server.indexId);
+                    else
+                    {
+                        // Now the selected proxy mode is auto either load balance
+                        ProfileItem server = GetSelectedServer(SelectedSub.id, proxyModeRemark);
+                        if (server == null)
+                        {
+                            //TODO: Send message to user about what happend
+                            ConnectColor = "#FFE0E0E0";
+                            ConnectProgress = false;
+                            return;
+                        }
+                        SetDefaultServer(server.indexId);
+                    }
                 }
-                // There is no selected proxy mode (default is auto)
+                // There is no selected proxy mode (we use default proxy setting)
                 else
                 {
                     ProfileItem? server = null;
@@ -2077,35 +2085,49 @@ namespace v2rayN.ViewModels
                         server = subServers.FirstOrDefault(s => s.remarks == DefaultProxyMode);
 
                     if (server == null)
+                    {
+                        //TODO Send message to user about what happend
+                        ConnectColor = "#FFE0E0E0";
+                        ConnectProgress = false;
                         return;
+                    }
 
                     SetDefaultServer(server.indexId);
                 }
-                // Till now, we start the server
 
-                // Now we calculate real ping of server to make sure, it's working
-                // Test server
-                HomeRealPingServer();
-                // Wait for delay calculation
+                // Till now, we started a server
+                // Now we calculate real ping of the server to make sure, it's working
+                HomeRealPingServer(_config.indexId);
+                // Wait for delay calculation (10 seconds)
+                short count = 1;
                 while (!IsDelayCalculationFinished)
                 {
-                    Thread.Sleep(300);
+                    // We don't want to stuck in a infinite loop
+                    if (count == 25)
+                        break;
+
+                    Thread.Sleep(400);
+                    count += 1;
                 }
+                ConnectProgress = false;
                 // Check delay
                 if (SelectedProfileDelay > 0 && SelectedProfileDelay != -1)
                 {
                     // The server works
-                    
+
                     //TODO: @hiddify1; change the connectVPN color to whatever should be
+                    ConnectColor = "#7CFC00";
+                    IsConnected = true;
                 }
                 else
                 {
                     // The server doesn't work
 
                     //TODO: @hiddify1; change the connectVPN color to whatever should be
+                    ConnectColor = "#FFFF0000";
+                    IsConnected = false;
                 }
                 SetSysProxy();
-                IsConnected = true;
                 return;
             }
 
@@ -2114,7 +2136,7 @@ namespace v2rayN.ViewModels
             UnsetSysProxy();
 
             //TODO: @hiddify1; the connectVPN color should be reset
-
+            ConnectColor = "#FFE0E0E0";
 
             SelectedProfile = null;
         }
@@ -2188,17 +2210,15 @@ namespace v2rayN.ViewModels
             return server;
         }
 
-        private void HomeRealPingServer()
+        private void HomeRealPingServer(string serverIndexId)
         {
-            if (GetProfileItems(out List<ProfileItem> lstSelecteds, false) < 0)
-            {
-                return;
-            }
+          
 
-            if (lstSelecteds.Count > 0)
+            ProfileItem server = LazyConfig.Instance.GetProfileItem(serverIndexId);
+            if (server != null)
             {
                 //ClearTestResult();
-                new SpeedtestHandler(_config, _coreHandler, lstSelecteds, ESpeedActionType.Realping, UpdateHomeRealPingServer);
+                new SpeedtestHandler(_config, _coreHandler, new List<ProfileItem>() { server}, ESpeedActionType.Realping, UpdateHomeRealPingServer);
             }
         }
         private void UpdateHomeRealPingServer(string indexId, string delay, string speed)
