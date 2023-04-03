@@ -1620,6 +1620,14 @@ namespace v2rayN.ViewModels
                     NotifyIcon = MainFormHandler.Instance.GetNotifyIcon(_config);
                     AppIcon = MainFormHandler.Instance.GetAppIcon(_config);
                 }
+                if (BlSystemProxySet || BlSystemProxyPac)
+                {
+                    SysProxyState = true;
+                }
+                else
+                {
+                    SysProxyState = false;
+                }
             }));
         }
 
@@ -1688,11 +1696,13 @@ namespace v2rayN.ViewModels
         {
             SetListenerType(ESysProxyType.ForcedChange);
             SysProxyState = true;
+            _config.sysProxyType= ESysProxyType.ForcedChange;
         }
         private void UnsetSysProxy()
         {
             SetListenerType(ESysProxyType.ForcedClear);
             SysProxyState = false;
+            _config.sysProxyType = ESysProxyType.ForcedClear;
         }
         public void ToggleSysProxy()
         {
