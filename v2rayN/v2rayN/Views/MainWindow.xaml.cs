@@ -48,6 +48,8 @@ namespace v2rayN.Views
             }
 
             ViewModel = new MainWindowViewModel(MainSnackbar.MessageQueue!, UpdateViewHandler);
+            if (ViewModel.CurrentLanguage == "fa-Ir")
+                FlowDirection = FlowDirection.RightToLeft;
             DataContext = ViewModel;
 
             // Handle URI scheme(Deep link), If there is any
@@ -233,8 +235,7 @@ namespace v2rayN.Views
             }
             Application.Current.MainWindow.Activate();
 
-            if (ViewModel.CurrentLanguage=="fa-Ir")
-                FlowDirection = FlowDirection.RightToLeft;
+            
         }
 
         private void HandlePageReloading()

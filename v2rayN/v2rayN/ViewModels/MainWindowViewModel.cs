@@ -7,6 +7,7 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Globalization;
@@ -1916,7 +1917,8 @@ namespace v2rayN.ViewModels
                                 newWindow.Show();
                                 old.Close();
                                 Application.Current.MainWindow = newWindow;
-
+                                // Exit the current instance of the application
+                                //Application.Current.Shutdown();
 
                             }
                             /*else
