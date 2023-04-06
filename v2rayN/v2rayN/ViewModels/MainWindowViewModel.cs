@@ -922,7 +922,7 @@ namespace v2rayN.ViewModels
             _subItems.Clear();
 
             _subItems.Add(new SubItem { remarks = ResUI.AllGroupServers });
-            foreach (var item in LazyConfig.Instance.SubItems().OrderBy(t => t.sort))
+            foreach (var item in LazyConfig.Instance.SubItems().OrderByDescending(t => t.sort))
             {
                 _subItems.Add(item);
             }
