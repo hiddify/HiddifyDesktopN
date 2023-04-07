@@ -1926,6 +1926,9 @@ namespace v2rayN.ViewModels
                                 newWindow.Show();
                                 old.Close();
                                 Application.Current.MainWindow = newWindow;
+
+                                // Refresh subs information when language changed
+                                InitSubscriptionView();
                                 // Exit the current instance of the application
                                 //Application.Current.Shutdown();
 
