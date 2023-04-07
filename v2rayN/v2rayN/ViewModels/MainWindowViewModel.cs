@@ -1914,7 +1914,15 @@ namespace v2rayN.ViewModels
 
                                 // show the new window and close the old window
                                 var old = Application.Current.MainWindow;
-                                
+
+                                newWindow.Show();
+                                newWindow.WindowState = WindowState.Minimized;
+                                newWindow.WindowState = WindowState.Normal;
+                                newWindow.Activate();
+                                newWindow.Topmost = true;
+                                newWindow.Topmost = false;
+                                newWindow.Focus();
+
                                 newWindow.Show();
                                 old.Close();
                                 Application.Current.MainWindow = newWindow;
@@ -2128,6 +2136,7 @@ namespace v2rayN.ViewModels
 
                 // Till now, we started a server
                 // Now we calculate real ping of the server to make sure, it's working
+                DelayProgress = true;
                 HomeRealPingServer(_config.indexId);
                 // Wait for delay calculation (10 seconds)
                 short count = 1;
@@ -2141,6 +2150,7 @@ namespace v2rayN.ViewModels
                     count += 1;
                 }
                 ConnectProgress = false;
+                DelayProgress = false;
                 // Check delay
                 if (SelectedProfileDelay > 0 && SelectedProfileDelay != -1)
                 {
@@ -2250,7 +2260,7 @@ namespace v2rayN.ViewModels
         private async Task HomeRealPingServer(string serverIndexId)
         {
             IsDelayCalculationFinished = false;
-            DelayProgress = true;
+            //DelayProgress = true;
             ProfileItem server = LazyConfig.Instance.GetProfileItem(serverIndexId);
             if (server != null)
             {
@@ -2269,7 +2279,7 @@ namespace v2rayN.ViewModels
             {
                 SelectedProfileDelay = Convert.ToInt32(res);
                 IsDelayCalculationFinished = true;
-                DelayProgress = false;
+                //DelayProgress = false;
             }
             
         }
