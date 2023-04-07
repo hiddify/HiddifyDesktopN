@@ -2190,7 +2190,12 @@ namespace v2rayN.ViewModels
         }
         public void HomeGotoProfile(string subId)
         {
-
+            SubItem sub = LazyConfig.Instance.GetSubItem(subId);
+            var ret = (new SubEditWindow(sub)).ShowDialog();
+            if (ret == true)
+            {
+                InitSubscriptionView();
+            }
         }
 
         public void HomeSelectedRouteChanged()

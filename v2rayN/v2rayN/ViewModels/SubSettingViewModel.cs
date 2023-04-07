@@ -67,7 +67,7 @@ namespace v2rayN.ViewModels
         public void RefreshSubItems()
         {
             _subItems.Clear();
-            _subItems.AddRange(LazyConfig.Instance.SubItems().OrderBy(t => t.sort));
+            _subItems.AddRange(LazyConfig.Instance.SubItems().OrderByDescending(t => t.sort));
         }
 
         public void EditSub(bool blNew)

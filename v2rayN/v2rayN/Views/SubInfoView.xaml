@@ -21,13 +21,13 @@
                 Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="{Binding remarks}" >
 
                 </TextBlock>
-                <Button Name="GotoProfile"
+                <!--<Button Name="GotoProfile"
                     Command="{Binding HomeGotoProfileCmd}"
                     Margin="10,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}"
                     Foreground="Black"
                     >
                     <materialDesign:PackIcon Kind="OpenInNew"  />
-                </Button>
+                </Button>-->
             </StackPanel>
             <Button Name="NewProfile" Grid.Column="1"
                                             Padding="0"
