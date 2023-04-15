@@ -601,6 +601,7 @@ namespace v2rayN.Handler
                     {
                         tlsSettings.serverName = Utils.String2List(host)[0];
                     }
+                    tlsSettings.minVersion = "1.3";
                     streamSettings.tlsSettings = tlsSettings;
                 }
 

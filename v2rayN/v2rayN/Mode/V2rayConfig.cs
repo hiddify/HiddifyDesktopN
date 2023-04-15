@@ -437,6 +437,8 @@ namespace v2rayN.Mode
         public string? shortId { get; set; }
         public string? spiderX { get; set; }
 
+        public string? minVersion { get; set; }//hiddify
+
     }
 
     public class TcpSettings
