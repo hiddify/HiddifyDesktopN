@@ -38,6 +38,7 @@ using ZXing.Common;
 using ZXing.QrCode;
 using ZXing.Windows.Compatibility;
 using ByteSizeLib;
+using System.Net.Mail;
 
 namespace v2rayN
 {
@@ -1417,8 +1418,9 @@ namespace v2rayN
         {
             using (var client = new HttpClient())
             {
-                Url sUrl = new Url(url);
-                HttpResponseMessage response = client.GetAsync(url).Result;
+                System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                client.DefaultRequestHeaders.Accept.Clear();
+                var response = client.GetAsync(new Uri(url)).Result;
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     return response.Headers;

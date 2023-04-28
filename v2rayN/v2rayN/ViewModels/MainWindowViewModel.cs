@@ -799,7 +799,14 @@ namespace v2rayN.ViewModels
             {
                 return;
             }
-            _subId = SelectedSub?.id;
+
+            string subID = GetSubIdByRemark(SelectedSub?.remarks);
+            if (subID == null)
+            {
+                throw new Exception("Selected a sub that we couldn't find its id");
+            }
+
+            _subId = subID;
             _config.subIndexId = _subId;
 
             RefreshServers();
@@ -807,6 +814,15 @@ namespace v2rayN.ViewModels
             _updateView("ProfilesFocus");
         }
 
+        private string? GetSubIdByRemark(string remarks)
+        {
+            foreach (SubItem item in _subItems)
+            {
+                if (item.remarks == remarks)
+                    return item.id;
+            }
+            return null;
+        }
         private void ServerFilterChanged(bool c)
         {
             if (!c)
@@ -2038,17 +2054,20 @@ namespace v2rayN.ViewModels
                     // TODO @everyone: translate this response
                     UI.ShowError("There's invalid config/url/link");
                 }
+                else
+                {
+                    string msg = "";
+                    if (addedServersCount > 0)
+                    {
+                        msg = $"Added servers: {addedServersCount}";
+                    }
+                    if (addedSubsIds?.Count > 0)
+                    {
+                        msg += $"\nAdded subscription: {addedSubsIds?.Count}";
+                    }
+                    UI.Show(msg);
+                }
 
-                string msg = "";
-                if (addedServersCount > 0)
-                {
-                    msg = $"Added servers: {addedServersCount}";
-                }
-                if (addedSubsIds?.Count > 0)
-                {
-                    msg += $"\nAdded subscription: {addedSubsIds?.Count}";
-                }
-                UI.Show(msg);
             }
         }
         public void HomeUpdateUsage(string subId)
