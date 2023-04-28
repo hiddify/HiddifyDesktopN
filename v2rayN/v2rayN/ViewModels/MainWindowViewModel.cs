@@ -2026,14 +2026,29 @@ namespace v2rayN.ViewModels
             string? cData = Utils.GetClipboardData();
             if (cData == null)
             {
-                _noticeHandler.Enqueue("Please copy servers or subscriptions");
-                // Pop up to user that they should copy some address first
+                // TODO @everyone: translate this response
+                UI.ShowError("There's no config/url/link");
             }
             else
             {
                 var (addedServersCount, addedSubsIds) = HomeAddServerOrSubViaClipboard(cData);
-                _noticeHandler.SendMessage($"{addedServersCount} addded\n{addedSubsIds.Count} sub added");
-                Console.WriteLine();
+                // If nothing added, we show some error to user
+                if (addedServersCount == 0 && (addedSubsIds == null || addedSubsIds.Count < 1))
+                {
+                    // TODO @everyone: translate this response
+                    UI.ShowError("There's invalid config/url/link");
+                }
+
+                string msg = "";
+                if (addedServersCount > 0)
+                {
+                    msg = $"Added servers: {addedServersCount}";
+                }
+                if (addedSubsIds?.Count > 0)
+                {
+                    msg += $"\nAdded subscription: {addedSubsIds?.Count}";
+                }
+                UI.Show(msg);
             }
         }
         public void HomeUpdateUsage(string subId)
