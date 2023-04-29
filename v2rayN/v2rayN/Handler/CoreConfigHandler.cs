@@ -1,9 +1,6 @@
 ﻿using DynamicData;
 using System;
 using System.IO;
-using System.Net;
-using System.Net.NetworkInformation;
-using v2rayN.Base;
 using v2rayN.Mode;
 using v2rayN.Resx;
 
@@ -12,21 +9,8 @@ namespace v2rayN.Handler
     /// <summary>
     /// Core configuration file processing class
     /// </summary>
-    class CoreConfigHandler
+    internal class CoreConfigHandler
     {
-        private static string SampleClient = Global.v2raySampleClient;
-        private static string SampleServer = Global.v2raySampleServer;
-
-        #region Generate client configuration
-
-        /// <summary>
-        /// Generate client configuration
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="fileName"></param>
-        /// <param name="msg"></param>
-        /// <param name="content"></param>
-        /// <returns></returns>
         public static int GenerateClientConfig(ProfileItem node, string? fileName, out string msg, out string content)
         {
             content = string.Empty;
@@ -59,10 +43,26 @@ namespace v2rayN.Handler
                         Utils.ToJsonFile(v2rayConfig, fileName, false);
                     }
                 }
+                else if (LazyConfig.Instance.GetCoreType(node, node.configType) == ECoreType.sing_box)
+                {
+                    var configGenSingbox = new CoreConfigSingbox(LazyConfig.Instance.GetConfig());
+                    if (configGenSingbox.GenerateClientConfigContent(node, out SingboxConfig? singboxConfig, out msg) != 0)
+                    {
+                        return -1;
+                    }
+                    if (Utils.IsNullOrEmpty(fileName))
+                    {
+                        content = Utils.ToJson(singboxConfig);
+                    }
+                    else
+                    {
+                        Utils.ToJsonFile(singboxConfig, fileName, false);
+                    }
+                }
                 else
                 {
-                    V2rayConfig? v2rayConfig = null;
-                    if (GenerateClientConfigContent(node, false, ref v2rayConfig, out msg) != 0)
+                    var coreConfigV2ray = new CoreConfigV2ray(LazyConfig.Instance.GetConfig());
+                    if (coreConfigV2ray.GenerateClientConfigContent(node, out V2rayConfig? v2rayConfig, out msg) != 0)
                     {
                         return -1;
                     }
@@ -85,97 +85,7 @@ namespace v2rayN.Handler
             return 0;
         }
 
-        private static int log(Config config, ref V2rayConfig v2rayConfig, bool blExport)
-        {
-            try
-            {
-                if (blExport)
-                {
-                    if (config.coreBasicItem.logEnabled)
-                    {
-                        v2rayConfig.log.loglevel = config.coreBasicItem.loglevel;
-                    }
-                    else
-                    {
-                        v2rayConfig.log.loglevel = config.coreBasicItem.loglevel;
-                        v2rayConfig.log.access = "";
-                        v2rayConfig.log.error = "";
-                    }
-                }
-                else
-                {
-                    if (config.coreBasicItem.logEnabled)
-                    {
-                        var dtNow = DateTime.Now;
-                        v2rayConfig.log.loglevel = config.coreBasicItem.loglevel;
-                        v2rayConfig.log.access = Utils.GetLogPath($"Vaccess_{dtNow:yyyy-MM-dd}.txt");
-                        v2rayConfig.log.error = Utils.GetLogPath($"Verror_{dtNow:yyyy-MM-dd}.txt");
-                    }
-                    else
-                    {
-                        v2rayConfig.log.loglevel = config.coreBasicItem.loglevel;
-                        v2rayConfig.log.access = "";
-                        v2rayConfig.log.error = "";
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Utils.SaveLog(ex.Message, ex);
-            }
-            return 0;
-        }
-
-        private static int inbound(Config config, ref V2rayConfig v2rayConfig)
-        {
-            try
-            {
-                v2rayConfig.inbounds = new List<Inbounds>();
-
-                Inbounds? inbound = GetInbound(config.inbound[0], Global.InboundSocks, 0, true);
-                v2rayConfig.inbounds.Add(inbound);
-
-                //http
-                Inbounds? inbound2 = GetInbound(config.inbound[0], Global.InboundHttp, 1, false);
-                v2rayConfig.inbounds.Add(inbound2);
-
-                if (config.inbound[0].allowLANConn)
-                {
-                    if (config.inbound[0].newPort4LAN)
-                    {
-                        Inbounds inbound3 = GetInbound(config.inbound[0], Global.InboundSocks2, 2, true);
-                        inbound3.listen = "0.0.0.0";
-                        v2rayConfig.inbounds.Add(inbound3);
-
-                        Inbounds inbound4 = GetInbound(config.inbound[0], Global.InboundHttp2, 3, false);
-                        inbound4.listen = "0.0.0.0";
-                        v2rayConfig.inbounds.Add(inbound4);
-
-                        //auth
-                        if (!Utils.IsNullOrEmpty(config.inbound[0].user) && !Utils.IsNullOrEmpty(config.inbound[0].pass))
-                        {
-                            inbound3.settings.auth = "password";
-                            inbound3.settings.accounts = new List<AccountsItem> { new AccountsItem() { user = config.inbound[0].user, pass = config.inbound[0].pass } };
-
-                            inbound4.settings.auth = "password";
-                            inbound4.settings.accounts = new List<AccountsItem> { new AccountsItem() { user = config.inbound[0].user, pass = config.inbound[0].pass } };
-                        }
-                    }
-                    else
-                    {
-                        inbound.listen = "0.0.0.0";
-                        inbound2.listen = "0.0.0.0";
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Utils.SaveLog(ex.Message, ex);
-            }
-            return 0;
-        }
-
-        private static Inbounds? GetInbound(InItem inItem, string tag, int offset, bool bSocks)
+        private static int GenerateClientCustomConfig(ProfileItem node, string? fileName, out string msg)
         {
             string result = Utils.GetEmbedText(Global.v2raySampleInbound);
             if (Utils.IsNullOrEmpty(result))
@@ -202,8 +112,7 @@ namespace v2rayN.Handler
         {
             try
             {
-                
-                if (v2rayConfig.routing?.rules != null)
+                if (node == null || fileName is null)
                 {
                     if (balancer != null)
                     {
@@ -928,9 +837,10 @@ namespace v2rayN.Handler
                         case ECoreType.Xray:
                         case ECoreType.v2fly_v5:
                             break;
+
                         case ECoreType.clash:
                         case ECoreType.clash_meta:
-                            //remove the original 
+                            //remove the original
                             var indexPort = fileContent.FindIndex(t => t.Contains("port:"));
                             if (indexPort >= 0)
                             {
@@ -1643,8 +1553,5 @@ namespace v2rayN.Handler
                 return "";
             }
         }
-
-        #endregion
-
     }
 }

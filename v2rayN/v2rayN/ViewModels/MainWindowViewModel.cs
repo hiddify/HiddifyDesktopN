@@ -3,6 +3,7 @@ using DynamicData.Binding;
 using MaterialDesignColors;
 using MaterialDesignColors.ColorManipulation;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
@@ -32,7 +33,6 @@ using v2rayN.Views;
 using static Grpc.Core.ChannelOption;
 using Application = System.Windows.Application;
 
-
 namespace v2rayN.ViewModels
 {
     public class MainWindowViewModel : ReactiveObject
@@ -47,13 +47,13 @@ namespace v2rayN.ViewModels
         private static Config _config;
         private readonly PaletteHelper _paletteHelper = new();
         private Dictionary<string, bool> _dicHeaderSort = new();
-        private Action<string> _updateView;
+        private Action<EViewAction> _updateView;
         private bool IsConnected = false;
         private string DefaultProxyMode = "Auto";
         private bool IsForSettingBackLanguage = false;
         private bool IsDelayCalculationFinished = false;
 
-        #endregion
+        #endregion private prop
         // It's public because we need it in MainWindow.xaml.cs
         public NoticeHandler? _noticeHandler;
 
@@ -94,20 +94,28 @@ namespace v2rayN.ViewModels
 
         [Reactive]
         public ProfileItemModel SelectedProfile { get; set; }
+
         public IList<ProfileItemModel> SelectedProfiles { get; set; }
+
         [Reactive]
         public SubItem SelectedSub { get; set; }
+
         [Reactive]
         public SubItem SelectedMoveToGroup { get; set; }
+
         [Reactive]
         public RoutingItem SelectedRouting { get; set; }
+
         [Reactive]
         public ComboItem SelectedServer { get; set; }
+
         [Reactive]
         public string ServerFilter { get; set; }
+
         [Reactive]
         public bool BlServers { get; set; }
-        #endregion
+
+        #endregion ObservableCollection
 
         #region Menu
         //home
@@ -120,6 +128,7 @@ namespace v2rayN.ViewModels
 
         //servers
         public ReactiveCommand<Unit, Unit> AddVmessServerCmd { get; }
+
         public ReactiveCommand<Unit, Unit> AddVlessServerCmd { get; }
         public ReactiveCommand<Unit, Unit> AddShadowsocksServerCmd { get; }
         public ReactiveCommand<Unit, Unit> AddSocksServerCmd { get; }
@@ -127,34 +136,41 @@ namespace v2rayN.ViewModels
         public ReactiveCommand<Unit, Unit> AddCustomServerCmd { get; }
         public ReactiveCommand<Unit, Unit> AddServerViaClipboardCmd { get; }
         public ReactiveCommand<Unit, Unit> AddServerViaScanCmd { get; }
+
         //servers delete
         public ReactiveCommand<Unit, Unit> EditServerCmd { get; }
+
         public ReactiveCommand<Unit, Unit> RemoveServerCmd { get; }
         public ReactiveCommand<Unit, Unit> RemoveDuplicateServerCmd { get; }
         public ReactiveCommand<Unit, Unit> CopyServerCmd { get; }
         public ReactiveCommand<Unit, Unit> SetDefaultServerCmd { get; }
         public ReactiveCommand<Unit, Unit> ShareServerCmd { get; }
-        //servers move   
+
+        //servers move
         public ReactiveCommand<Unit, Unit> MoveTopCmd { get; }
+
         public ReactiveCommand<Unit, Unit> MoveUpCmd { get; }
         public ReactiveCommand<Unit, Unit> MoveDownCmd { get; }
         public ReactiveCommand<Unit, Unit> MoveBottomCmd { get; }
 
-        //servers ping 
+        //servers ping
         public ReactiveCommand<Unit, Unit> MixedTestServerCmd { get; }
+
         public ReactiveCommand<Unit, Unit> PingServerCmd { get; }
         public ReactiveCommand<Unit, Unit> TcpingServerCmd { get; }
         public ReactiveCommand<Unit, Unit> RealPingServerCmd { get; }
         public ReactiveCommand<Unit, Unit> SpeedServerCmd { get; }
         public ReactiveCommand<Unit, Unit> SortServerResultCmd { get; }
+
         //servers export
         public ReactiveCommand<Unit, Unit> Export2ClientConfigCmd { get; }
-        public ReactiveCommand<Unit, Unit> Export2ServerConfigCmd { get; }
+
         public ReactiveCommand<Unit, Unit> Export2ShareUrlCmd { get; }
         public ReactiveCommand<Unit, Unit> Export2SubContentCmd { get; }
 
         //Subscription
         public ReactiveCommand<Unit, Unit> SubSettingCmd { get; }
+
         public ReactiveCommand<Unit, Unit> AddSubCmd { get; }
         public ReactiveCommand<Unit, Unit> SubUpdateCmd { get; }
         public ReactiveCommand<Unit, Unit> SubUpdateViaProxyCmd { get; }
@@ -163,18 +179,23 @@ namespace v2rayN.ViewModels
 
         //Setting
         public ReactiveCommand<Unit, Unit> OptionSettingCmd { get; }
+
         public ReactiveCommand<Unit, Unit> RoutingSettingCmd { get; }
+        public ReactiveCommand<Unit, Unit> DNSSettingCmd { get; }
         public ReactiveCommand<Unit, Unit> GlobalHotkeySettingCmd { get; }
+        public ReactiveCommand<Unit, Unit> RebootAsAdminCmd { get; }
         public ReactiveCommand<Unit, Unit> ClearServerStatisticsCmd { get; }
         public ReactiveCommand<Unit, Unit> ImportOldGuiConfigCmd { get; }
 
         //CheckUpdate
         public ReactiveCommand<Unit, Unit> CheckUpdateNCmd { get; }
+
         public ReactiveCommand<Unit, Unit> CheckUpdateV2flyCoreCmd { get; }
         public ReactiveCommand<Unit, Unit> CheckUpdateSagerNetCoreCmd { get; }
         public ReactiveCommand<Unit, Unit> CheckUpdateXrayCoreCmd { get; }
         public ReactiveCommand<Unit, Unit> CheckUpdateClashCoreCmd { get; }
         public ReactiveCommand<Unit, Unit> CheckUpdateClashMetaCoreCmd { get; }
+        public ReactiveCommand<Unit, Unit> CheckUpdateSingBoxCoreCmd { get; }
         public ReactiveCommand<Unit, Unit> CheckUpdateGeoCmd { get; }
 
         public ReactiveCommand<Unit, Unit> ToggleV2rayNPanelCmd { get; }
@@ -184,21 +205,32 @@ namespace v2rayN.ViewModels
         public bool BlReloadEnabled { get; set; }
 
         public ReactiveCommand<Unit, Unit> NotifyLeftClickCmd { get; }
+
         [Reactive]
         public Icon NotifyIcon { get; set; }
+
         [Reactive]
         public ImageSource AppIcon { get; set; }
-        #endregion
 
-        #region System Proxy 
+        [Reactive]
+        public bool BlShowTrayTip { get; set; }
+
+        #endregion Menu
+
+        #region System Proxy
+
         [Reactive]
         public bool BlSystemProxyClear { get; set; }
+
         [Reactive]
         public bool BlSystemProxySet { get; set; }
+
         [Reactive]
         public bool BlSystemProxyNothing { get; set; }
+
         [Reactive]
         public bool BlSystemProxyPac { get; set; }
+
         public ReactiveCommand<Unit, Unit> SystemProxyClearCmd { get; }
         public ReactiveCommand<Unit, Unit> SystemProxySetCmd { get; }
         public ReactiveCommand<Unit,Unit> SystemProxyToggleCmd { get; }
@@ -207,9 +239,11 @@ namespace v2rayN.ViewModels
 
         [Reactive]
         public bool BlRouting { get; set; }
+
         [Reactive]
         public int SystemProxySelected { get; set; }
-        #endregion
+
+        #endregion System Proxy
 
         #region UI
 
@@ -227,18 +261,25 @@ namespace v2rayN.ViewModels
 
         [Reactive]
         public string InboundDisplay { get; set; }
+
         [Reactive]
         public string InboundLanDisplay { get; set; }
+
         [Reactive]
         public string RunningServerDisplay { get; set; }
+
         [Reactive]
         public string RunningServerToolTipText { get; set; }
+
         [Reactive]
         public string RunningInfoDisplay { get; set; }
+
         [Reactive]
         public string SpeedProxyDisplay { get; set; }
+
         [Reactive]
         public string SpeedDirectDisplay { get; set; }
+
         [Reactive]
         public bool EnableTun { get; set; }
         [Reactive]
@@ -246,18 +287,20 @@ namespace v2rayN.ViewModels
 
         [Reactive]
         public bool ColorModeDark { get; set; }
+
         private IObservableCollection<Swatch> _swatches = new ObservableCollectionExtended<Swatch>();
         public IObservableCollection<Swatch> Swatches => _swatches;
+
         [Reactive]
         public Swatch SelectedSwatch { get; set; }
+
         [Reactive]
         public int CurrentFontSize { get; set; }
 
         [Reactive]
         public string CurrentLanguage { get; set; }
 
-        
-        #endregion
+        #endregion UI
 
         #region Init
 
@@ -419,7 +462,7 @@ namespace v2rayN.ViewModels
             {
                 ShareServer();
             }, canEditRemove);
-            //servers move   
+            //servers move
             MoveTopCmd = ReactiveCommand.Create(() =>
             {
                 MoveServer(EMove.Top);
@@ -467,10 +510,6 @@ namespace v2rayN.ViewModels
             {
                 Export2ClientConfig();
             }, canEditRemove);
-            Export2ServerConfigCmd = ReactiveCommand.Create(() =>
-            {
-                Export2ServerConfig();
-            }, canEditRemove);
             Export2ShareUrlCmd = ReactiveCommand.Create(() =>
             {
                 Export2ShareUrl();
@@ -479,7 +518,6 @@ namespace v2rayN.ViewModels
             {
                 Export2SubContent();
             }, canEditRemove);
-
 
             //Subscription
             SubSettingCmd = ReactiveCommand.Create(() =>
@@ -516,12 +554,20 @@ namespace v2rayN.ViewModels
             {
                 RoutingSetting();
             });
+            DNSSettingCmd = ReactiveCommand.Create(() =>
+            {
+                DNSSetting();
+            });
             GlobalHotkeySettingCmd = ReactiveCommand.Create(() =>
             {
                 if ((new GlobalHotkeySettingWindow()).ShowDialog() == true)
                 {
                     _noticeHandler?.Enqueue(ResUI.OperationSuccess);
                 }
+            });
+            RebootAsAdminCmd = ReactiveCommand.Create(() =>
+            {
+                RebootAsAdmin();
             });
             ClearServerStatisticsCmd = ReactiveCommand.Create(() =>
             {
@@ -557,6 +603,10 @@ namespace v2rayN.ViewModels
             CheckUpdateClashMetaCoreCmd = ReactiveCommand.Create(() =>
             {
                 CheckUpdateCore(ECoreType.clash_meta);
+            });
+            CheckUpdateSingBoxCoreCmd = ReactiveCommand.Create(() =>
+            {
+                CheckUpdateCore(ECoreType.sing_box);
             });
             CheckUpdateGeoCmd = ReactiveCommand.Create(() =>
             {
@@ -605,8 +655,8 @@ namespace v2rayN.ViewModels
         private void Init()
         {
             ConfigHandler.InitBuiltinRouting(ref _config);
-            //MainFormHandler.Instance.BackupGuiNConfig(_config, true);
-            _coreHandler = new CoreHandler(UpdateHandler);
+            ConfigHandler.InitBuiltinDNS(_config);
+            _coreHandler = new CoreHandler(_config, UpdateHandler);
 
             if (_config.guiItem.enableStatistics)
             {
@@ -619,6 +669,7 @@ namespace v2rayN.ViewModels
             Reload();
             ChangeSystemProxyStatus(_config.sysProxyType, true);
         }
+
         private void OnProgramStarted(object state, bool timeout)
         {
             Application.Current.Dispatcher.Invoke((Action)(() =>
@@ -627,13 +678,15 @@ namespace v2rayN.ViewModels
             }));
         }
 
-        #endregion
+        #endregion Init
 
         #region Actions
+
         private void UpdateHandler(bool notify, string msg)
         {
             _noticeHandler?.SendMessage(msg);
         }
+
         private void UpdateTaskHandler(bool success, string msg)
         {
             _noticeHandler?.SendMessage(msg);
@@ -647,10 +700,11 @@ namespace v2rayN.ViewModels
                 }
                 if (_config.uiItem.enableAutoAdjustMainLvColWidth)
                 {
-                    _updateView("AdjustMainLvColWidth");
+                    _updateView(EViewAction.AdjustMainLvColWidth);
                 }
             }
         }
+
         private void UpdateStatisticsHandler(ServerSpeedItem update)
         {
             try
@@ -661,8 +715,9 @@ namespace v2rayN.ViewModels
                     {
                         return;
                     }
-                    SpeedProxyDisplay = string.Format("{0}:{1}/s¡ü | {2}/s¡ý", Global.agentTag, Utils.HumanFy(update.proxyUp), Utils.HumanFy(update.proxyDown));
-                    SpeedDirectDisplay = string.Format("{0}:{1}/s¡ü | {2}/s¡ý", Global.directTag, Utils.HumanFy(update.directUp), Utils.HumanFy(update.directDown));
+
+                    SpeedProxyDisplay = string.Format(ResUI.SpeedDisplayText, Global.agentTag, Utils.HumanFy(update.proxyUp), Utils.HumanFy(update.proxyDown));
+                    SpeedDirectDisplay = string.Format(ResUI.SpeedDisplayText, Global.directTag, Utils.HumanFy(update.directUp), Utils.HumanFy(update.directDown));
 
                     if (update.proxyUp + update.proxyDown > 0)
                     {
@@ -697,6 +752,7 @@ namespace v2rayN.ViewModels
                 Utils.SaveLog(ex.Message, ex);
             }
         }
+
         private void UpdateSpeedtestHandler(string indexId, string delay, string speed)
         {
             Application.Current.Dispatcher.Invoke((Action)(() =>
@@ -704,6 +760,7 @@ namespace v2rayN.ViewModels
                 SetTestResult(indexId, delay, speed);
             }));
         }
+
         private void SetTestResult(string indexId, string delay, string speed)
         {
             if (Utils.IsNullOrEmpty(indexId))
@@ -736,21 +793,26 @@ namespace v2rayN.ViewModels
                 case EGlobalHotkey.ShowForm:
                     ShowHideWindow(null);
                     break;
+
                 case EGlobalHotkey.SystemProxyClear:
                     SetListenerType(ESysProxyType.ForcedClear);
                     break;
+
                 case EGlobalHotkey.SystemProxySet:
                     SetListenerType(ESysProxyType.ForcedChange);
                     break;
+
                 case EGlobalHotkey.SystemProxyUnchanged:
                     SetListenerType(ESysProxyType.Unchanged);
                     break;
+
                 case EGlobalHotkey.SystemProxyPac:
                     SetListenerType(ESysProxyType.Pac);
                     break;
             }
         }
-        private void PreExit(bool blWindowsShutDown)
+
+        public void MyAppExit(bool blWindowsShutDown)
         {
             Utils.SaveLog("PreExit Begin");
 
@@ -788,7 +850,7 @@ namespace v2rayN.ViewModels
             }
         }
 
-        #endregion
+        #endregion Actions
 
         #region Servers && Groups
 
@@ -811,7 +873,7 @@ namespace v2rayN.ViewModels
 
             RefreshServers();
 
-            _updateView("ProfilesFocus");
+            _updateView(EViewAction.ProfilesFocus);
         }
 
         private string? GetSubIdByRemark(string remarks)
@@ -830,10 +892,13 @@ namespace v2rayN.ViewModels
                 return;
             }
             _serverFilter = ServerFilter;
-            RefreshServers();
+            if (Utils.IsNullOrEmpty(_serverFilter))
+            {
+                RefreshServers();
+            }
         }
 
-        private void RefreshServers()
+        public void RefreshServers()
         {
             List<ProfileItemModel> lstModel = LazyConfig.Instance.ProfileItems(_subId, _serverFilter);
 
@@ -893,7 +958,7 @@ namespace v2rayN.ViewModels
 
                 RefreshServersMenu();
 
-                //display running server 
+                //display running server
                 var running = ConfigHandler.GetDefaultServer(ref _config);
                 if (running != null)
                 {
@@ -952,9 +1017,10 @@ namespace v2rayN.ViewModels
             }
         }
 
-        #endregion
+        #endregion Servers && Groups
 
         #region Add Servers
+
         private int GetProfileItems(out List<ProfileItem> lstSelecteds, bool latest)
         {
             lstSelecteds = new List<ProfileItem>();
@@ -992,6 +1058,7 @@ namespace v2rayN.ViewModels
                 {
                     subid = _subId,
                     configType = eConfigType,
+                    isSub = false,
                 };
             }
             else
@@ -1090,9 +1157,10 @@ namespace v2rayN.ViewModels
         {
             ShowHideWindow(false);
 
+            var dpiXY = Utils.GetDpiXY(Application.Current.MainWindow);
             string result = await Task.Run(() =>
             {
-                return Utils.ScanScreen();
+                return Utils.ScanScreen(dpiXY.Item1, dpiXY.Item2);
             });
 
             ShowHideWindow(true);
@@ -1112,14 +1180,15 @@ namespace v2rayN.ViewModels
                 }
             }
         }
+
         public void RemoveServer()
         {
-            if (GetProfileItems(out List<ProfileItem> lstSelecteds, false) < 0)
+            if (GetProfileItems(out List<ProfileItem> lstSelecteds, true) < 0)
             {
                 return;
             }
 
-            if (UI.ShowYesNo(ResUI.RemoveServer) == DialogResult.No)
+            if (UI.ShowYesNo(ResUI.RemoveServer) == MessageBoxResult.No)
             {
                 return;
             }
@@ -1137,12 +1206,12 @@ namespace v2rayN.ViewModels
 
         private void RemoveDuplicateServer()
         {
-            int oldCount = _lstProfile.Count;
-            int newCount = ConfigHandler.DedupServerList(ref _config, ref _lstProfile);
+            var tuple = ConfigHandler.DedupServerList(_config, _subId);
             RefreshServers();
             Reload();
-            _noticeHandler?.Enqueue(string.Format(ResUI.RemoveDuplicateServerResult, oldCount, newCount));
+            _noticeHandler?.Enqueue(string.Format(ResUI.RemoveDuplicateServerResult, tuple.Item1, tuple.Item2));
         }
+
         private void CopyServer()
         {
             if (GetProfileItems(out List<ProfileItem> lstSelecteds, false) < 0)
@@ -1164,6 +1233,7 @@ namespace v2rayN.ViewModels
             }
             SetDefaultServer(SelectedProfile.indexId);
         }
+
         private void SetDefaultServer(string indexId)
         {
             if (Utils.IsNullOrEmpty(indexId))
@@ -1187,6 +1257,7 @@ namespace v2rayN.ViewModels
                 Reload();
             }
         }
+
         private void ServerSelectedChanged(bool c)
         {
             if (!c)
@@ -1203,7 +1274,6 @@ namespace v2rayN.ViewModels
             }
             SetDefaultServer(SelectedServer.ID);
         }
-
 
         public async void ShareServer()
         {
@@ -1235,10 +1305,7 @@ namespace v2rayN.ViewModels
                 return;
             }
 
-            if (!_dicHeaderSort.ContainsKey(colName))
-            {
-                _dicHeaderSort.Add(colName, true);
-            }
+            _dicHeaderSort.TryAdd(colName, true);
             _dicHeaderSort.TryGetValue(colName, out bool asc);
             if (ConfigHandler.SortServers(ref _config, _subId, colName, asc) != 0)
             {
@@ -1277,7 +1344,7 @@ namespace v2rayN.ViewModels
                 return;
             }
 
-            if (GetProfileItems(out List<ProfileItem> lstSelecteds, false) < 0)
+            if (GetProfileItems(out List<ProfileItem> lstSelecteds, true) < 0)
             {
                 return;
             }
@@ -1347,17 +1414,6 @@ namespace v2rayN.ViewModels
             MainFormHandler.Instance.Export2ClientConfig(item, _config);
         }
 
-        private void Export2ServerConfig()
-        {
-            var item = LazyConfig.Instance.GetProfileItem(SelectedProfile.indexId);
-            if (item is null)
-            {
-                _noticeHandler?.Enqueue(ResUI.PleaseSelectServer);
-                return;
-            }
-            MainFormHandler.Instance.Export2ServerConfig(item, _config);
-        }
-
         public void Export2ShareUrl()
         {
             if (GetProfileItems(out List<ProfileItem> lstSelecteds, true) < 0)
@@ -1408,7 +1464,7 @@ namespace v2rayN.ViewModels
             }
         }
 
-        #endregion
+        #endregion Add Servers
 
         #region Subscription
 
@@ -1428,6 +1484,7 @@ namespace v2rayN.ViewModels
                 }
             }
         }
+
         private void AddSub()
         {
             SubItem item = new();
@@ -1453,7 +1510,7 @@ namespace v2rayN.ViewModels
             (new UpdateHandle()).UpdateSubscriptionProcess(_config, subId, blProxy, UpdateTaskHandler);
         }
 
-        #endregion
+        #endregion Subscription
 
         #region Setting
 
@@ -1464,9 +1521,9 @@ namespace v2rayN.ViewModels
             {
                 //RefreshServers();
                 Reload();
-                TunModeSwitch();
             }
         }
+
         private void RoutingSetting()
         {
             var ret = (new RoutingSettingWindow()).ShowDialog();
@@ -1479,6 +1536,33 @@ namespace v2rayN.ViewModels
             }
         }
 
+        private void DNSSetting()
+        {
+            var ret = (new DNSSettingWindow()).ShowDialog();
+            if (ret == true)
+            {
+                Reload();
+            }
+        }
+
+        private void RebootAsAdmin()
+        {
+            ProcessStartInfo startInfo = new()
+            {
+                UseShellExecute = true,
+                Arguments = Global.RebootAs,
+                WorkingDirectory = Utils.StartupPath(),
+                FileName = Utils.GetExePath(),
+                Verb = "runas",
+            };
+            try
+            {
+                Process.Start(startInfo);
+                MyAppExit(false);
+            }
+            catch { }
+        }
+
         private void ImportOldGuiConfig()
         {
             OpenFileDialog fileDialog = new()
@@ -1486,7 +1570,7 @@ namespace v2rayN.ViewModels
                 Multiselect = false,
                 Filter = "guiNConfig|*.json|All|*.*"
             };
-            if (fileDialog.ShowDialog() != DialogResult.OK)
+            if (fileDialog.ShowDialog() != true)
             {
                 return;
             }
@@ -1511,7 +1595,7 @@ namespace v2rayN.ViewModels
             }
         }
 
-        #endregion
+        #endregion Setting
 
         #region CheckUpdate
 
@@ -1524,7 +1608,7 @@ namespace v2rayN.ViewModels
                 {
                     MyAppExit(false);
                 }
-            };
+            }
             (new UpdateHandle()).CheckUpdateGuiN(_config, _updateUI, _config.guiItem.checkPreReleaseUpdate);
         }
 
@@ -1553,21 +1637,16 @@ namespace v2rayN.ViewModels
                         File.Delete(fileName);
                     }
                 }
-            };
+            }
             (new UpdateHandle()).CheckUpdateCore(type, _config, _updateUI, _config.guiItem.checkPreReleaseUpdate);
         }
 
         private void CheckUpdateGeo()
         {
-            Task.Run(() =>
-            {
-                var updateHandle = new UpdateHandle();
-                updateHandle.UpdateGeoFile("geosite", _config, UpdateTaskHandler);
-                updateHandle.UpdateGeoFile("geoip", _config, UpdateTaskHandler);
-            });
+            (new UpdateHandle()).UpdateGeoFileAll(_config, UpdateTaskHandler);
         }
 
-        #endregion
+        #endregion CheckUpdate
 
         #region v2ray job
 
@@ -1576,21 +1655,16 @@ namespace v2rayN.ViewModels
             _ = LoadV2ray();
         }
 
-
-        async Task LoadV2ray()
+        private async Task LoadV2ray()
         {
             Application.Current.Dispatcher.Invoke((Action)(() =>
             {
                 BlReloadEnabled = false;
             }));
 
-            //if (Global.reloadV2ray)
-            //{
-            //    _noticeHandler?.SendMessage(Global.CommandClearMsg);
-            //}
             await Task.Run(() =>
             {
-                _coreHandler.LoadCore(_config);
+                _coreHandler.LoadCore();
 
                 //ConfigHandler.SaveConfig(ref _config, false);
 
@@ -1615,7 +1689,7 @@ namespace v2rayN.ViewModels
             _coreHandler.CoreStop();
         }
 
-        #endregion
+        #endregion v2ray job
 
         #region System proxy and Routings
 
@@ -1711,7 +1785,7 @@ namespace v2rayN.ViewModels
             }
         }
 
-        void DoSystemProxySelected(bool c)
+        private void DoSystemProxySelected(bool c)
         {
             if (!c)
             {
@@ -1749,13 +1823,14 @@ namespace v2rayN.ViewModels
             }
         }
 
-        void DoEnableTun(bool c)
+        private void DoEnableTun(bool c)
         {
             // If it's for initiation, we ignore (user didn't change the value)
             if (ForInitiationTun)
             {
                 ForInitiationTun = false;
                 return;
+                Reload();
             }
 
             if (Utils.IsAdministrator())
@@ -1769,7 +1844,7 @@ namespace v2rayN.ViewModels
 
         }
 
-        void TunModeSwitch()
+        private void TunModeSwitch()
         {
             if (EnableTun)
             {
@@ -1781,7 +1856,7 @@ namespace v2rayN.ViewModels
             }
         }
 
-        #endregion
+        #endregion System proxy and Routings
 
         #region UI
 
@@ -1805,7 +1880,7 @@ namespace v2rayN.ViewModels
                 //Application.Current.MainWindow.ShowInTaskbar = false;
                 //IntPtr windowHandle = new WindowInteropHelper(Application.Current.MainWindow).Handle;
                 //Utils.RegWriteValue(Global.MyRegPath, Utils.WindowHwndKey, Convert.ToString((long)windowHandle));
-            };
+            }
             Global.ShowInTaskbar = bl;
         }
 
@@ -1824,6 +1899,7 @@ namespace v2rayN.ViewModels
                 }
             }
         }
+
         private void StorageUI()
         {
         }
@@ -1838,6 +1914,7 @@ namespace v2rayN.ViewModels
             }
             CurrentFontSize = _config.uiItem.currentFontSize;
             CurrentLanguage = _config.uiItem.currentLanguage;
+            BlShowTrayTip = _config.uiItem.showTrayTip;
 
             this.WhenAnyValue(
                   x => x.ColorModeDark,
@@ -2006,6 +2083,7 @@ namespace v2rayN.ViewModels
 
             Utils.SetDarkBorder(Application.Current.MainWindow, isDarkTheme);
         }
+
         public void ChangePrimaryColor(System.Windows.Media.Color color)
         {
             var theme = _paletteHelper.GetTheme();
@@ -2022,7 +2100,7 @@ namespace v2rayN.ViewModels
             if (_config.uiItem.autoHideStartup)
             {
                 Observable.Range(1, 1)
-                 .Delay(TimeSpan.FromSeconds(1))
+                 .Delay(TimeSpan.FromSeconds(2))
                  .Subscribe(x =>
                  {
                      Application.Current.Dispatcher.Invoke(() =>
@@ -2033,7 +2111,7 @@ namespace v2rayN.ViewModels
             }
         }
 
-        #endregion
+        #endregion UI
 
         #region Home
         public void HomeNewProfile()

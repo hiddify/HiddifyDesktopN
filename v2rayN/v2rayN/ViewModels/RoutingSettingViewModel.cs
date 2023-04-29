@@ -4,7 +4,6 @@ using ReactiveUI.Fody.Helpers;
 using Splat;
 using System.Reactive;
 using System.Windows;
-using System.Windows.Forms;
 using v2rayN.Base;
 using v2rayN.Handler;
 using v2rayN.Mode;
@@ -21,34 +20,46 @@ namespace v2rayN.ViewModels
         private RoutingItem _lockedItem;
         private List<RulesItem> _lockedRules;
 
-
         #region Reactive
 
         private IObservableCollection<RoutingItemModel> _routingItems = new ObservableCollectionExtended<RoutingItemModel>();
         public IObservableCollection<RoutingItemModel> RoutingItems => _routingItems;
+
         [Reactive]
         public RoutingItemModel SelectedSource { get; set; }
+
         public IList<RoutingItemModel> SelectedSources { get; set; }
 
         [Reactive]
         public bool enableRoutingAdvanced { get; set; }
+
         [Reactive]
         public bool enableRoutingBasic { get; set; }
+
         [Reactive]
         public string domainStrategy { get; set; }
+
         [Reactive]
         public string domainMatcher { get; set; }
 
         [Reactive]
+        public string domainStrategy4Singbox { get; set; }
+
+        [Reactive]
         public string ProxyDomain { get; set; }
+
         [Reactive]
         public string ProxyIP { get; set; }
+
         [Reactive]
         public string DirectDomain { get; set; }
+
         [Reactive]
         public string DirectIP { get; set; }
+
         [Reactive]
         public string BlockDomain { get; set; }
+
         [Reactive]
         public string BlockIP { get; set; }
 
@@ -60,7 +71,8 @@ namespace v2rayN.ViewModels
 
         public ReactiveCommand<Unit, Unit> SaveCmd { get; }
         public bool IsModified { get; set; }
-        #endregion
+
+        #endregion Reactive
 
         public RoutingSettingViewModel(Window view)
         {
@@ -74,6 +86,7 @@ namespace v2rayN.ViewModels
             enableRoutingAdvanced = _config.routingBasicItem.enableRoutingAdvanced;
             domainStrategy = _config.routingBasicItem.domainStrategy;
             domainMatcher = _config.routingBasicItem.domainMatcher;
+            domainStrategy4Singbox = _config.routingBasicItem.domainStrategy4Singbox;
 
             RefreshRoutingItems();
 
@@ -118,6 +131,7 @@ namespace v2rayN.ViewModels
         }
 
         #region locked
+
         private void BindingLockedData()
         {
             _lockedItem = ConfigHandler.GetLockedRoutingItem(ref _config);
@@ -134,27 +148,30 @@ namespace v2rayN.ViewModels
                 BlockIP = Utils.List2String(_lockedRules[2].ip, true);
             }
         }
+
         private void EndBindingLockedData()
         {
             if (_lockedItem != null)
             {
-                _lockedRules[0].domain = Utils.String2List(ProxyDomain.TrimEx());
-                _lockedRules[0].ip = Utils.String2List(ProxyIP.TrimEx());
+                _lockedRules[0].domain = Utils.String2List(Utils.Convert2Comma(ProxyDomain.TrimEx()));
+                _lockedRules[0].ip = Utils.String2List(Utils.Convert2Comma(ProxyIP.TrimEx()));
 
-                _lockedRules[1].domain = Utils.String2List(DirectDomain.TrimEx());
-                _lockedRules[1].ip = Utils.String2List(DirectIP.TrimEx());
+                _lockedRules[1].domain = Utils.String2List(Utils.Convert2Comma(DirectDomain.TrimEx()));
+                _lockedRules[1].ip = Utils.String2List(Utils.Convert2Comma(DirectIP.TrimEx()));
 
-                _lockedRules[2].domain = Utils.String2List(BlockDomain.TrimEx());
-                _lockedRules[2].ip = Utils.String2List(BlockIP.TrimEx());
+                _lockedRules[2].domain = Utils.String2List(Utils.Convert2Comma(BlockDomain.TrimEx()));
+                _lockedRules[2].ip = Utils.String2List(Utils.Convert2Comma(BlockIP.TrimEx()));
 
                 _lockedItem.ruleSet = Utils.ToJson(_lockedRules, false);
 
                 ConfigHandler.SaveRoutingItem(ref _config, _lockedItem);
             }
         }
-        #endregion
+
+        #endregion locked
 
         #region Refresh Save
+
         public void RefreshRoutingItems()
         {
             _routingItems.Clear();
@@ -181,11 +198,13 @@ namespace v2rayN.ViewModels
                 _routingItems.Add(it);
             }
         }
+
         private void SaveRouting()
         {
             _config.routingBasicItem.domainStrategy = domainStrategy;
             _config.routingBasicItem.enableRoutingAdvanced = enableRoutingAdvanced;
             _config.routingBasicItem.domainMatcher = domainMatcher;
+            _config.routingBasicItem.domainStrategy4Singbox = domainStrategy4Singbox;
 
             EndBindingLockedData();
 
@@ -200,7 +219,7 @@ namespace v2rayN.ViewModels
             }
         }
 
-        #endregion
+        #endregion Refresh Save
 
         private void RoutingBasicImportRules()
         {
@@ -237,14 +256,14 @@ namespace v2rayN.ViewModels
             }
         }
 
-        private void RoutingAdvancedRemove()
+        public void RoutingAdvancedRemove()
         {
             if (SelectedSource is null || SelectedSource.remarks.IsNullOrEmpty())
             {
                 UI.Show(ResUI.PleaseSelectRules);
                 return;
             }
-            if (UI.ShowYesNo(ResUI.RemoveRules) == DialogResult.No)
+            if (UI.ShowYesNo(ResUI.RemoveRules) == MessageBoxResult.No)
             {
                 return;
             }
@@ -261,7 +280,7 @@ namespace v2rayN.ViewModels
             IsModified = true;
         }
 
-        private void RoutingAdvancedSetDefault()
+        public void RoutingAdvancedSetDefault()
         {
             var item = LazyConfig.Instance.GetRoutingItem(SelectedSource?.id);
             if (item is null)
@@ -276,6 +295,7 @@ namespace v2rayN.ViewModels
                 IsModified = true;
             }
         }
+
         private void RoutingAdvancedImportRules()
         {
             if (ConfigHandler.InitBuiltinRouting(ref _config, true) == 0)

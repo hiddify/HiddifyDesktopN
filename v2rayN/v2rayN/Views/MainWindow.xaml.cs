@@ -3,7 +3,6 @@ using DynamicData.Binding;
 using ReactiveUI;
 using Splat;
 using System.ComponentModel;
-using System.Drawing;
 using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,7 +17,6 @@ using v2rayN.Resx;
 using v2rayN.Tool;
 using v2rayN.ViewModels;
 using Point = System.Windows.Point;
-using SystemInformation = System.Windows.Forms.SystemInformation;
 
 namespace v2rayN.Views
 {
@@ -35,6 +33,8 @@ namespace v2rayN.Views
             App.Current.SessionEnding += Current_SessionEnding;
             this.Closing += MainWindow_Closing;
             this.PreviewKeyDown += MainWindow_PreviewKeyDown;
+            btnAutofitColumnWidth.Click += BtnAutofitColumnWidth_Click;
+            txtServerFilter.PreviewKeyDown += TxtServerFilter_PreviewKeyDown;
             lstProfiles.PreviewKeyDown += LstProfiles_PreviewKeyDown;
             lstProfiles.SelectionChanged += lstProfiles_SelectionChanged;
             lstProfiles.LoadingRow += LstProfiles_LoadingRow;
@@ -118,7 +118,7 @@ namespace v2rayN.Views
                 this.BindCommand(ViewModel, vm => vm.MoveDownCmd, v => v.menuMoveDown).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.MoveBottomCmd, v => v.menuMoveBottom).DisposeWith(disposables);
 
-                //servers ping 
+                //servers ping
                 this.BindCommand(ViewModel, vm => vm.MixedTestServerCmd, v => v.menuMixedTestServer).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.PingServerCmd, v => v.menuPingServer).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.TcpingServerCmd, v => v.menuTcpingServer).DisposeWith(disposables);
@@ -128,7 +128,6 @@ namespace v2rayN.Views
 
                 //servers export
                 this.BindCommand(ViewModel, vm => vm.Export2ClientConfigCmd, v => v.menuExport2ClientConfig).DisposeWith(disposables);
-                this.BindCommand(ViewModel, vm => vm.Export2ServerConfigCmd, v => v.menuExport2ServerConfig).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.Export2ShareUrlCmd, v => v.menuExport2ShareUrl).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.Export2SubContentCmd, v => v.menuExport2SubContent).DisposeWith(disposables);
 
@@ -142,7 +141,9 @@ namespace v2rayN.Views
                 //setting
                 this.BindCommand(ViewModel, vm => vm.OptionSettingCmd, v => v.menuOptionSetting).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.RoutingSettingCmd, v => v.menuRoutingSetting).DisposeWith(disposables);
+                this.BindCommand(ViewModel, vm => vm.DNSSettingCmd, v => v.menuDNSSetting).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.GlobalHotkeySettingCmd, v => v.menuGlobalHotkeySetting).DisposeWith(disposables);
+                this.BindCommand(ViewModel, vm => vm.RebootAsAdminCmd, v => v.menuRebootAsAdmin).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.ClearServerStatisticsCmd, v => v.menuClearServerStatistics).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.ImportOldGuiConfigCmd, v => v.menuImportOldGuiConfig).DisposeWith(disposables);
 
@@ -153,6 +154,7 @@ namespace v2rayN.Views
                 this.BindCommand(ViewModel, vm => vm.CheckUpdateXrayCoreCmd, v => v.menuCheckUpdateXrayCore).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.CheckUpdateClashCoreCmd, v => v.menuCheckUpdateClashCore).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.CheckUpdateClashMetaCoreCmd, v => v.menuCheckUpdateClashMetaCore).DisposeWith(disposables);
+                this.BindCommand(ViewModel, vm => vm.CheckUpdateSingBoxCoreCmd, v => v.menuCheckUpdateSingBoxCore).DisposeWith(disposables);
                 this.BindCommand(ViewModel, vm => vm.CheckUpdateGeoCmd, v => v.menuCheckUpdateGeo).DisposeWith(disposables);
 
                 this.BindCommand(ViewModel, vm => vm.ReloadCmd, v => v.menuReload).DisposeWith(disposables);
@@ -172,6 +174,7 @@ namespace v2rayN.Views
                 this.OneWayBind(ViewModel, vm => vm.RoutingItems, v => v.cmbRoutings.ItemsSource).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.SelectedRouting, v => v.cmbRoutings.SelectedItem).DisposeWith(disposables);
                 this.OneWayBind(ViewModel, vm => vm.BlRouting, v => v.menuRoutings.Visibility).DisposeWith(disposables);
+                this.OneWayBind(ViewModel, vm => vm.BlRouting, v => v.sepRoutings.Visibility).DisposeWith(disposables);
 
                 this.OneWayBind(ViewModel, vm => vm.Servers, v => v.cmbServers.ItemsSource).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.SelectedServer, v => v.cmbServers.SelectedItem).DisposeWith(disposables);
@@ -187,6 +190,7 @@ namespace v2rayN.Views
                 this.OneWayBind(ViewModel, vm => vm.RunningServerToolTipText, v => v.tbNotify.ToolTipText).DisposeWith(disposables);
                 this.OneWayBind(ViewModel, vm => vm.NotifyLeftClickCmd, v => v.tbNotify.LeftClickCommand).DisposeWith(disposables);
                 this.OneWayBind(ViewModel, vm => vm.AppIcon, v => v.Icon).DisposeWith(disposables);
+                this.OneWayBind(ViewModel, vm => vm.BlShowTrayTip, v => v.borTrayToolTip.Visibility).DisposeWith(disposables);
 
                 //status bar
                 this.OneWayBind(ViewModel, vm => vm.InboundDisplay, v => v.txtInboundDisplay.Text).DisposeWith(disposables);
@@ -218,10 +222,10 @@ namespace v2rayN.Views
 
             //spEnableTun.IsEnabled = IsAdministrator ? Visibility.Visible : Visibility.Collapsed;
 
-            if (_config.uiItem.autoHideStartup)
-            {
-                WindowState = WindowState.Minimized;
-            }
+            //if (_config.uiItem.autoHideStartup)
+            //{
+            //    WindowState = WindowState.Minimized;
+            //}
 
             if (!_config.guiItem.enableHWA)
             {
@@ -310,19 +314,16 @@ namespace v2rayN.Views
         }
         #region Event 
 
-        private void UpdateViewHandler(string action)
+        private void UpdateViewHandler(EViewAction action)
         {
-            if (action == "AdjustMainLvColWidth")
+            if (action == EViewAction.AdjustMainLvColWidth)
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    foreach (var it in lstProfiles.Columns)
-                    {
-                        it.Width = new DataGridLength(1, DataGridLengthUnitType.Auto);
-                    }
+                    AutofitColumnWidth();
                 });
             }
-            else if (action == "ProfilesFocus")
+            else if (action == EViewAction.ProfilesFocus)
             {
                 lstProfiles.Focus();
             }
@@ -364,14 +365,10 @@ namespace v2rayN.Views
         {
             ViewModel.SelectedProfiles = lstProfiles.SelectedItems.Cast<ProfileItemModel>().ToList();
         }
+
         private void LstProfiles_LoadingRow(object? sender, DataGridRowEventArgs e)
         {
-            //if (e.Row.GetIndex() == 0)
-            //{
-            //    lstProfiles.Focus();
-            //}
-
-            e.Row.Header = e.Row.GetIndex() + 1;
+            e.Row.Header = $" {e.Row.GetIndex() + 1}";
             
         }
 
@@ -402,16 +399,6 @@ namespace v2rayN.Views
             var colHeader = sender as DataGridColumnHeader;
             if (colHeader == null || colHeader.TabIndex < 0 || colHeader.Column == null)
             {
-                return;
-            }
-
-            if (colHeader.Column.GetType().Name != typeof(MyDGTextColumn).Name)
-            {
-                foreach (var it in lstProfiles.Columns)
-                {
-                    //it.MinWidth = it.ActualWidth;
-                    it.Width = new DataGridLength(1, DataGridLengthUnitType.Auto);
-                }
                 return;
             }
 
@@ -516,12 +503,12 @@ namespace v2rayN.Views
             }
         }
 
-
         private void menuClose_Click(object sender, RoutedEventArgs e)
         {
             StorageUI();
             ViewModel?.ShowHideWindow(false);
         }
+
         private void menuPromotion_Click(object sender, RoutedEventArgs e)
         {
             Utils.ProcessStart($"{Utils.Base64Decode(Global.PromotionUrl)}");
@@ -531,13 +518,36 @@ namespace v2rayN.Views
         {
             ViewModel?.TestServerAvailability();
         }
+
         private void menuSettingsSetUWP_Click(object sender, RoutedEventArgs e)
         {
             Utils.ProcessStart(Utils.GetBinPath("EnableLoopback.exe"));
         }
-        #endregion
 
-        #region UI          
+        private void BtnAutofitColumnWidth_Click(object sender, RoutedEventArgs e)
+        {
+            AutofitColumnWidth();
+        }
+
+        private void AutofitColumnWidth()
+        {
+            foreach (var it in lstProfiles.Columns)
+            {
+                it.Width = new DataGridLength(1, DataGridLengthUnitType.Auto);
+            }
+        }
+
+        private void TxtServerFilter_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key is Key.Enter or Key.Return)
+            {
+                ViewModel?.RefreshServers();
+            }
+        }
+
+        #endregion Event
+
+        #region UI
 
         private void RestoreUI()
         {
@@ -547,16 +557,10 @@ namespace v2rayN.Views
                 Height = _config.uiItem.mainHeight;
             }
 
-            IntPtr hWnd = new WindowInteropHelper(this).EnsureHandle();
-            Graphics g = Graphics.FromHwnd(hWnd);
-            if (Width > SystemInformation.WorkingArea.Width * 96 / g.DpiX)
-            {
-                Width = SystemInformation.WorkingArea.Width * 96 / g.DpiX;
-            }
-            if (Height > SystemInformation.WorkingArea.Height * 96 / g.DpiY)
-            {
-                Height = SystemInformation.WorkingArea.Height * 96 / g.DpiY;
-            }
+            var maxWidth = SystemParameters.WorkArea.Width;
+            var maxHeight = SystemParameters.WorkArea.Height;
+            if (Width > maxWidth) Width = maxWidth;
+            if (Height > maxHeight) Height = maxHeight;
             if (_config.uiItem.mainGirdHeight1 > 0 && _config.uiItem.mainGirdHeight2 > 0)
             {
                 gridMain.RowDefinitions[0].Height = new GridLength(_config.uiItem.mainGirdHeight1, GridUnitType.Star);
@@ -572,14 +576,14 @@ namespace v2rayN.Views
                     var item2 = (MyDGTextColumn)lstProfiles.Columns[k];
                     if (item2.ExName == item.Name)
                     {
-                        if (item.Width <= 0)
+                        if (item.Width < 0)
                         {
                             item2.Visibility = Visibility.Hidden;
                         }
                         else
                         {
                             item2.Width = item.Width;
-                            item2.DisplayIndex = i + 1;
+                            item2.DisplayIndex = i;
                         }
                     }
                 }
@@ -593,19 +597,20 @@ namespace v2rayN.Views
                 colTotalDown.Visibility = Visibility.Hidden;
             }
         }
+
         private void StorageUI()
         {
             _config.uiItem.mainWidth = this.Width;
             _config.uiItem.mainHeight = this.Height;
 
             List<ColumnItem> lvColumnItem = new();
-            for (int k = 1; k < lstProfiles.Columns.Count; k++)
+            for (int k = 0; k < lstProfiles.Columns.Count; k++)
             {
                 var item2 = (MyDGTextColumn)lstProfiles.Columns[k];
                 lvColumnItem.Add(new()
                 {
                     Name = item2.ExName,
-                    Width = item2.Visibility == Visibility.Visible ? Convert.ToInt32(item2.ActualWidth) : 0,
+                    Width = item2.Visibility == Visibility.Visible ? Convert.ToInt32(item2.ActualWidth) : -1,
                     Index = item2.DisplayIndex
                 });
             }
@@ -629,6 +634,7 @@ namespace v2rayN.Views
                 menuHelp.Items.Add(item);
             }
         }
+
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             if (sender is MenuItem item)
@@ -637,8 +643,8 @@ namespace v2rayN.Views
             }
         }
 
+        #endregion UI
 
-        #endregion
         #region Drag and Drop
 
         private Point startPoint = new();
@@ -665,12 +671,12 @@ namespace v2rayN.Views
             return null;
         }
 
-
         private void LstProfiles_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Get current mouse position
             startPoint = e.GetPosition(null);
         }
+
         private void LstProfiles_MouseMove(object sender, MouseEventArgs e)
         {
             // Get the current mouse position
@@ -719,7 +725,7 @@ namespace v2rayN.Views
                 // Find the data behind the Item
                 ProfileItemModel item = (ProfileItemModel)listView.ItemContainerGenerator.ItemFromContainer(listViewItem);
                 if (item == null) return;
-                // Move item into observable collection 
+                // Move item into observable collection
                 // (this will be automatically reflected to lstView.ItemsSource)
                 e.Effects = DragDropEffects.Move;
 

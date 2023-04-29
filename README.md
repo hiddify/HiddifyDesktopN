@@ -1,5 +1,5 @@
 # v2rayN
-A V2Ray client for Windows, support [Xray core](https://github.com/XTLS/Xray-core) and [v2fly core](https://github.com/v2fly/v2ray-core)
+A GUI client for Windows, support [Xray core](https://github.com/XTLS/Xray-core) and [v2fly core](https://github.com/v2fly/v2ray-core) and [others](https://github.com/2dust/v2rayN/wiki/List-of-supported-cores)
 
 
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/2dust/v2rayN)](https://github.com/2dust/v2rayN/commits/master)
@@ -12,10 +12,9 @@ A V2Ray client for Windows, support [Xray core](https://github.com/XTLS/Xray-cor
 - Otherwise please download v2rayN.zip (you will also need to download v2ray core into the same folder with HiddifyN.exe)
 - Run HiddifyN.exe
 
-### Requirements  
-- Microsoft [.NET Framework 4.8 Runtime](https://dotnet.microsoft.com/zh-cn/download/dotnet-framework/thank-you/net48-offline-installer)
-- v2fly core [https://github.com/v2fly/v2ray-core/releases](https://github.com/v2fly/v2ray-core/releases)
-- Xray core [https://github.com/XTLS/Xray-core/releases](https://github.com/XTLS/Xray-core/releases)
+## Requirements  
+- [Microsoft .NET 6.0 Desktop Runtime ](https://download.visualstudio.microsoft.com/download/pr/513d13b7-b456-45af-828b-b7b7981ff462/edf44a743b78f8b54a2cec97ce888346/windowsdesktop-runtime-6.0.15-win-x64.exe)
+- [Supported cores](https://github.com/2dust/v2rayN/wiki/List-of-supported-cores)
 
 ### Telegram
 - Channel: [Hiddify](https://t.me/hiddify)

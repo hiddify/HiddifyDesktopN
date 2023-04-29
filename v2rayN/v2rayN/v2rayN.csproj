@@ -10,20 +10,14 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<ApplicationIcon>v2rayN.ico</ApplicationIcon>
 		<Copyright>Copyright © 2017-2023 (GPLv3)</Copyright>
-		<FileVersion>6.19</FileVersion>
+		<FileVersion>6.23</FileVersion>
 		<AssemblyName>HiddifyN</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="v2rayN.ico" />
-	  <None Remove="Views\v2rayN.ico" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="ByteSize" Version="2.1.1" />
 		<PackageReference Include="Downloader" Version="3.0.4" />		
-		<PackageReference Include="MaterialDesignThemes" Version="4.8.0" />
-		<PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />		 
+		<PackageReference Include="MaterialDesignThemes" Version="4.7.1" />
+		<PackageReference Include="H.NotifyIcon.Wpf" Version="2.0.108" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="QRCoder.Xaml" Version="1.4.3" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
@@ -38,6 +32,9 @@
 	
 	<ItemGroup>       
         <AdditionalFiles Include="app.manifest" />       
+        <EmbeddedResource Include="Sample\SingboxSampleClientConfig">
+          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>       
         <EmbeddedResource Include="Sample\tun_singbox">
 			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</EmbeddedResource>
@@ -71,7 +68,19 @@
         <EmbeddedResource Include="Sample\SampleInbound">
           <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>  
-        <EmbeddedResource Include="Sample\SampleServerConfig">
+        <EmbeddedResource Include="Sample\tun_singbox_rules">
+          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>  
+        <EmbeddedResource Include="Sample\tun_singbox_inbound">
+          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>
+		<EmbeddedResource Include="Sample\dns_v2ray_normal">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<EmbeddedResource Include="Sample\dns_singbox_normal">
+          <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+        </EmbeddedResource>  
+        <EmbeddedResource Include="v2rayN.ico">
           <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </EmbeddedResource>
         <Resource Include="Resources\NotifyIcon1.ico" />

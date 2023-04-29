@@ -20,7 +20,5 @@
         public List<string> protocol { get; set; }
 
         public bool enabled { get; set; } = true;
-
     }
-
 }

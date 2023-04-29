@@ -7,6 +7,7 @@ namespace v2rayN.Mode
     {
         [PrimaryKey]
         public string id { get; set; }
+
         public string remarks { get; set; }
         public string url { get; set; }
         public string ruleSet { get; set; }
@@ -15,7 +16,7 @@ namespace v2rayN.Mode
         public bool locked { get; set; }
         public string customIcon { get; set; }
         public string domainStrategy { get; set; }
+        public string domainStrategy4Singbox { get; set; }
         public int sort { get; set; }
-
     }
 }

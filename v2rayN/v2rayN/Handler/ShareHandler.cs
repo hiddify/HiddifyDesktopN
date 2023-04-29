@@ -7,9 +7,8 @@ using v2rayN.Resx;
 
 namespace v2rayN.Handler
 {
-    class ShareHandler
+    internal class ShareHandler
     {
-
         #region GetShareUrl
 
         /// <summary>
@@ -49,7 +48,7 @@ namespace v2rayN.Handler
             VmessQRCode vmessQRCode = new()
             {
                 v = item.configVersion.ToString(),
-                ps = item.remarks.TrimEx(), //备注也许很长 ;
+                ps = item.remarks.TrimEx(),
                 add = item.address,
                 port = item.port.ToString(),
                 id = item.id,
@@ -163,6 +162,7 @@ namespace v2rayN.Handler
             url = $"{Global.vlessProtocol}{url}{query}{remark}";
             return url;
         }
+
         private static string GetIpv6(string address)
         {
             return Utils.IsIpv6(address) ? $"[{address}]" : address;
@@ -227,6 +227,7 @@ namespace v2rayN.Handler
                         dicQuery.Add("host", Utils.UrlEncode(item.requestHost));
                     }
                     break;
+
                 case "kcp":
                     dicQuery.Add("headerType", !Utils.IsNullOrEmpty(item.headerType) ? item.headerType : "none");
                     if (!Utils.IsNullOrEmpty(item.path))
@@ -264,6 +265,7 @@ namespace v2rayN.Handler
                     dicQuery.Add("quicSecurity", Utils.UrlEncode(item.requestHost));
                     dicQuery.Add("key", Utils.UrlEncode(item.path));
                     break;
+
                 case "grpc":
                     if (!Utils.IsNullOrEmpty(item.path))
                     {
@@ -278,10 +280,9 @@ namespace v2rayN.Handler
             return 0;
         }
 
-        #endregion
+        #endregion GetShareUrl
 
-        #region  ImportShareUrl 
-
+        #region ImportShareUrl
 
         /// <summary>
         /// 从剪贴板导入URL
@@ -296,7 +297,7 @@ namespace v2rayN.Handler
 
             try
             {
-                //载入配置文件 
+                //载入配置文件
                 string result = clipboardData.TrimEx();// Utils.GetClipboardData();
                 if (Utils.IsNullOrEmpty(result))
                 {
@@ -315,7 +316,6 @@ namespace v2rayN.Handler
                     {
                         profileItem = ResolveVmess(result, out msg);
                     }
-
                 }
                 else if (result.StartsWith(Global.ssProtocol))
                 {
@@ -358,7 +358,6 @@ namespace v2rayN.Handler
                 else if (result.StartsWith(Global.vlessProtocol))
                 {
                     profileItem = ResolveStdVLESS(result);
-
                 }
                 else
                 {
@@ -492,8 +491,8 @@ namespace v2rayN.Handler
             switch (i.streamSecurity)
             {
                 case "tls":
-                    // TODO tls config
                     break;
+
                 default:
                     if (!string.IsNullOrWhiteSpace(i.streamSecurity))
                         return null;
@@ -506,12 +505,10 @@ namespace v2rayN.Handler
                 case "tcp":
                     string t1 = q["type"] ?? "none";
                     i.headerType = t1;
-                    // TODO http option
-
                     break;
+
                 case "kcp":
                     i.headerType = q["type"] ?? "none";
-                    // TODO kcp seed
                     break;
 
                 case "ws":
@@ -643,7 +640,6 @@ namespace v2rayN.Handler
             return server;
         }
 
-
         private static readonly Regex StdVmessUserInfo = new(
             @"^(?<network>[a-z]+)(\+(?<streamSecurity>[a-z]+))?:(?<id>[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$", RegexOptions.Compiled);
 
@@ -745,6 +741,7 @@ namespace v2rayN.Handler
 
             return item;
         }
+
         private static ProfileItem ResolveStdVLESS(string result)
         {
             ProfileItem item = new()
@@ -788,6 +785,7 @@ namespace v2rayN.Handler
                     item.requestHost = Utils.UrlDecode(query["host"] ?? "");
 
                     break;
+
                 case "kcp":
                     item.headerType = query["headerType"] ?? "none";
                     item.path = Utils.UrlDecode(query["seed"] ?? "");
@@ -810,16 +808,18 @@ namespace v2rayN.Handler
                     item.requestHost = query["quicSecurity"] ?? "none";
                     item.path = Utils.UrlDecode(query["key"] ?? "");
                     break;
+
                 case "grpc":
                     item.path = Utils.UrlDecode(query["serviceName"] ?? "");
                     item.headerType = Utils.UrlDecode(query["mode"] ?? Global.GrpcgunMode);
                     break;
+
                 default:
                     break;
             }
             return 0;
         }
 
-        #endregion
+        #endregion ImportShareUrl
     }
 }

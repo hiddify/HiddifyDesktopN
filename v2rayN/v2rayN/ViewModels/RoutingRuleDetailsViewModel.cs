@@ -31,9 +31,7 @@ namespace v2rayN.ViewModels
         [Reactive]
         public bool AutoSort { get; set; }
 
-
         public ReactiveCommand<Unit, Unit> SaveCmd { get; }
-
 
         public RoutingRuleDetailsViewModel(RulesItem rulesItem, Window view)
         {
@@ -63,8 +61,12 @@ namespace v2rayN.ViewModels
 
             Utils.SetDarkBorder(view, _config.uiItem.colorModeDark);
         }
+
         private void SaveRules()
         {
+            Domain = Utils.Convert2Comma(Domain);
+            IP = Utils.Convert2Comma(IP);
+
             if (AutoSort)
             {
                 SelectedSource.domain = Utils.String2ListSorted(Domain);

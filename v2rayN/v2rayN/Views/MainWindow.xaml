@@ -10,7 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveui="http://reactiveui.net"
     xmlns:resx="clr-namespace:v2rayN.Resx"
-    xmlns:tb="http://www.hardcodet.net/taskbar"
+    xmlns:tb="clr-namespace:H.NotifyIcon;assembly=H.NotifyIcon.Wpf"
     xmlns:vms="clr-namespace:v2rayN.ViewModels"
     Title="HiddifyN"
     Width="{Binding WindowWidth, Mode=TwoWay}"
@@ -120,10 +120,18 @@
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="{x:Static resx:ResUI.menuRoutingSetting}" />
                                 <MenuItem
+                                    x:Name="menuDNSSetting"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="{x:Static resx:ResUI.menuDNSSetting}" />
+                                <MenuItem
                                     x:Name="menuGlobalHotkeySetting"
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="{x:Static resx:ResUI.menuGlobalHotkeySetting}" />
                                 <Separator Margin="-40,5" />
+                                <MenuItem
+                                    x:Name="menuRebootAsAdmin"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="{x:Static resx:ResUI.menuRebootAsAdmin}" />
                                 <MenuItem
                                     x:Name="menuSettingsSetUWP"
                                     Height="{StaticResource MenuItemHeight}"
@@ -234,6 +242,11 @@
                                     Header="Clash.Meta Core" />
                                         <Separator Margin="-40,5" />
                                         <MenuItem
+                                    x:Name="menuCheckUpdateSingBoxCore"
+                                    Height="{StaticResource MenuItemHeight}"
+                                    Header="Sing-box Core" />
+                                <Separator Margin="-40,5" />
+                                <MenuItem
                                     x:Name="menuCheckUpdateGeo"
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="Geo files" />
@@ -323,7 +336,6 @@
                                         Margin="8"
                                         materialDesign:HintAssist.Hint="Language"
                                         Style="{StaticResource DefComboBox}" />
-
                                 </Grid>
                             </StackPanel>
                         </materialDesign:PopupBox>
@@ -427,6 +439,14 @@
                         Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
                         <materialDesign:PackIcon VerticalAlignment="Center" Kind="Plus" />
                     </Button>
+                    <Button
+                        x:Name="btnAutofitColumnWidth"
+                        Width="30"
+                        Height="30"
+                        Margin="4,0"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
+                        <materialDesign:PackIcon VerticalAlignment="Center" Kind="ArrowSplitVertical" />
+                    </Button>
                     <TextBox
                         x:Name="txtServerFilter"
                         Width="200"
@@ -528,10 +548,10 @@
                         CanUserSortColumns="False"
                         EnableRowVirtualization="True"
                         Focusable="True"
-                        FrozenColumnCount="1"
                         GridLinesVisibility="All"
                         HeadersVisibility="All"
                         IsReadOnly="True"
+                        RowHeaderWidth="40"
                         Style="{StaticResource DefDataGrid}">
                         <DataGrid.InputBindings>
                             <KeyBinding Command="ApplicationCommands.NotACommand" Gesture="Ctrl+C" />
@@ -638,10 +658,6 @@
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="{x:Static resx:ResUI.menuExport2ClientConfig}" />
                                 <MenuItem
-                                    x:Name="menuExport2ServerConfig"
-                                    Height="{StaticResource MenuItemHeight}"
-                                    Header="{x:Static resx:ResUI.menuExport2ServerConfig}" />
-                                <MenuItem
                                     x:Name="menuExport2ShareUrl"
                                     Height="{StaticResource MenuItemHeight}"
                                     Header="{x:Static resx:ResUI.menuExport2ShareUrl}" />
@@ -678,22 +694,18 @@
                             <Style BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}" TargetType="DataGridColumnHeader">
                                 <EventSetter Event="Click" Handler="LstProfiles_ColumnHeader_Click" />
                             </Style>
-                            
-                            
-                            
+
+                            <Style BasedOn="{StaticResource MaterialDesignDataGridCell}" TargetType="DataGridCell">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding isActive}" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
+                                        <Setter Property="Foreground" Value="Black" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueLightBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
                         </DataGrid.Resources>
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn Width="40">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Border
-                                            Width="auto"
-                                            Height="auto"
-                                            Background="{DynamicResource PrimaryHueLightBrush}"
-                                            Visibility="{Binding Path=isActive, Converter={StaticResource BoolToVisConverter}}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
 
                             <base:MyDGTextColumn
                                 Width="80"
@@ -704,7 +716,7 @@
                                 Width="150"
                                 Binding="{Binding remarks}"
                                 ExName="remarks"
-                                Header="{x:Static resx:ResUI.LvAlias}" />
+                                Header="{x:Static resx:ResUI.LvRemarks}" />
                             <base:MyDGTextColumn
                                 Width="120"
                                 Binding="{Binding address}"
@@ -789,7 +801,6 @@
                     <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" />
                     <local:MsgView Grid.Row="2" />
                 </Grid>
-
             </DockPanel>
             <tb:TaskbarIcon
                 x:Name="tbNotify"
@@ -845,7 +856,7 @@
                                 </StackPanel>
                             </MenuItem.Header>
                         </MenuItem>
-                        <Separator />
+                        <Separator x:Name="sepRoutings" />
                         <MenuItem x:Name="menuRoutings" Height="Auto">
                             <MenuItem.Header>
                                 <DockPanel>
@@ -899,6 +910,7 @@
                 </tb:TaskbarIcon.ContextMenu>
                 <tb:TaskbarIcon.TrayToolTip>
                     <Border
+                        x:Name="borTrayToolTip"
                         Width="Auto"
                         Height="Auto"
                         Background="{DynamicResource MaterialDesignLightBackground}"
@@ -916,6 +928,6 @@
             </tb:TaskbarIcon>
             <materialDesign:Snackbar x:Name="MainSnackbar" MessageQueue="{materialDesign:MessageQueue}" />
         </Grid>
-        </Grid>
+        
     </materialDesign:DialogHost>
 </reactiveui:ReactiveWindow>

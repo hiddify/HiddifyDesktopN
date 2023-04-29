@@ -18,6 +18,7 @@ namespace v2rayN.Handler
             SqliteHelper.Instance.CreateTable<ServerStatItem>();
             SqliteHelper.Instance.CreateTable<RoutingItem>();
             SqliteHelper.Instance.CreateTable<ProfileExItem>();
+            SqliteHelper.Instance.CreateTable<DNSItem>();
         }
 
         #region Config
@@ -26,6 +27,7 @@ namespace v2rayN.Handler
         {
             _config = config;
         }
+
         public Config GetConfig()
         {
             return _config;
@@ -95,19 +97,18 @@ namespace v2rayN.Handler
             if (Utils.IsNullOrEmpty(subid))
             {
                 return SqliteHelper.Instance.Table<ProfileItem>().ToList();
-
             }
             else
             {
                 return SqliteHelper.Instance.Table<ProfileItem>().Where(t => t.subid == subid).ToList();
             }
         }
+
         public List<string> ProfileItemIndexs(string subid)
         {
             if (Utils.IsNullOrEmpty(subid))
             {
                 return SqliteHelper.Instance.Table<ProfileItem>().Select(t => t.indexId).ToList();
-
             }
             else
             {
@@ -117,10 +118,10 @@ namespace v2rayN.Handler
 
         public List<ProfileItemModel> ProfileItems(string subid, string filter)
         {
-            var sql = @$"select a.* 
-                           ,b.remarks subRemarks                           
+            var sql = @$"select a.*
+                           ,b.remarks subRemarks
                         from ProfileItem a
-                        left join SubItem b on a.subid = b.id 
+                        left join SubItem b on a.subid = b.id
                         where 1=1 ";
             if (!Utils.IsNullOrEmpty(subid))
             {
@@ -151,12 +152,23 @@ namespace v2rayN.Handler
         {
             return SqliteHelper.Instance.Table<RoutingItem>().Where(it => it.locked == false).OrderBy(t => t.sort).ToList();
         }
+
         public RoutingItem GetRoutingItem(string id)
         {
             return SqliteHelper.Instance.Table<RoutingItem>().FirstOrDefault(it => it.locked == false && it.id == id);
         }
 
-        #endregion
+        public List<DNSItem> DNSItems()
+        {
+            return SqliteHelper.Instance.Table<DNSItem>().ToList();
+        }
+
+        public DNSItem GetDNSItem(ECoreType eCoreType)
+        {
+            return SqliteHelper.Instance.Table<DNSItem>().FirstOrDefault(it => it.coreType == eCoreType);
+        }
+
+        #endregion Config
 
         #region Core Type
 
@@ -220,8 +232,9 @@ namespace v2rayN.Handler
                 coreType = ECoreType.v2rayN,
                 coreUrl = Global.NUrl,
                 coreReleaseApiUrl = Global.NUrl.Replace(Global.githubUrl, Global.githubApiUrl),
-                coreDownloadUrl32 = Global.NUrl + "/download/{0}/v2rayN.zip",
+                coreDownloadUrl32 = Global.NUrl + "/download/{0}/v2rayN-32.zip",
                 coreDownloadUrl64 = Global.NUrl + "/download/{0}/v2rayN.zip",
+                coreDownloadUrlArm64 = Global.NUrl + "/download/{0}/v2rayN-arm64.zip"
             });
 
             coreInfos.Add(new CoreInfo
@@ -233,6 +246,7 @@ namespace v2rayN.Handler
                 coreReleaseApiUrl = Global.v2flyCoreUrl.Replace(Global.githubUrl, Global.githubApiUrl),
                 coreDownloadUrl32 = Global.v2flyCoreUrl + "/download/{0}/v2ray-windows-{1}.zip",
                 coreDownloadUrl64 = Global.v2flyCoreUrl + "/download/{0}/v2ray-windows-{1}.zip",
+                coreDownloadUrlArm64 = Global.v2flyCoreUrl + "/download/{0}/v2ray-windows-{1}.zip",
                 match = "V2Ray",
                 versionArg = "-version",
                 redirectInfo = true,
@@ -247,6 +261,7 @@ namespace v2rayN.Handler
                 coreReleaseApiUrl = Global.SagerNetCoreUrl.Replace(Global.githubUrl, Global.githubApiUrl),
                 coreDownloadUrl32 = Global.SagerNetCoreUrl + "/download/{0}/v2ray-windows-{1}.zip",
                 coreDownloadUrl64 = Global.SagerNetCoreUrl + "/download/{0}/v2ray-windows-{1}.zip",
+                coreDownloadUrlArm64 = Global.SagerNetCoreUrl + "/download/{0}/v2ray-windows-{1}.zip",
                 match = "V2Ray",
                 versionArg = "version",
                 redirectInfo = true,
@@ -261,6 +276,7 @@ namespace v2rayN.Handler
                 coreReleaseApiUrl = Global.v2flyCoreUrl.Replace(Global.githubUrl, Global.githubApiUrl),
                 coreDownloadUrl32 = Global.v2flyCoreUrl + "/download/{0}/v2ray-windows-{1}.zip",
                 coreDownloadUrl64 = Global.v2flyCoreUrl + "/download/{0}/v2ray-windows-{1}.zip",
+                coreDownloadUrlArm64 = Global.v2flyCoreUrl + "/download/{0}/v2ray-windows-{1}.zip",
                 match = "V2Ray",
                 versionArg = "version",
                 redirectInfo = true,
@@ -275,6 +291,7 @@ namespace v2rayN.Handler
                 coreReleaseApiUrl = Global.xrayCoreUrl.Replace(Global.githubUrl, Global.githubApiUrl),
                 coreDownloadUrl32 = Global.xrayCoreUrl + "/download/{0}/Xray-windows-{1}.zip",
                 coreDownloadUrl64 = Global.xrayCoreUrl + "/download/{0}/Xray-windows-{1}.zip",
+                coreDownloadUrlArm64 = Global.xrayCoreUrl + "/download/{0}/Xray-windows-{1}.zip",
                 match = "Xray",
                 versionArg = "-version",
                 redirectInfo = true,
@@ -289,6 +306,7 @@ namespace v2rayN.Handler
                 coreReleaseApiUrl = Global.clashCoreUrl.Replace(Global.githubUrl, Global.githubApiUrl),
                 coreDownloadUrl32 = Global.clashCoreUrl + "/download/{0}/clash-windows-386-{0}.zip",
                 coreDownloadUrl64 = Global.clashCoreUrl + "/download/{0}/clash-windows-amd64-{0}.zip",
+                coreDownloadUrlArm64 = Global.clashCoreUrl + "/download/{0}/clash-windows-arm64-{0}.zip",
                 match = "v",
                 versionArg = "-v",
                 redirectInfo = true,
@@ -303,6 +321,7 @@ namespace v2rayN.Handler
                 coreReleaseApiUrl = Global.clashMetaCoreUrl.Replace(Global.githubUrl, Global.githubApiUrl),
                 coreDownloadUrl32 = Global.clashMetaCoreUrl + "/download/{0}/Clash.Meta-windows-386-{0}.zip",
                 coreDownloadUrl64 = Global.clashMetaCoreUrl + "/download/{0}/Clash.Meta-windows-amd64-compatible-{0}.zip",
+                coreDownloadUrlArm64 = Global.clashMetaCoreUrl + "/download/{0}/Clash.Meta-windows-arm64-{0}.zip",
                 match = "v",
                 versionArg = "-v",
                 redirectInfo = true,
@@ -317,6 +336,7 @@ namespace v2rayN.Handler
                 coreReleaseApiUrl = Global.hysteriaCoreUrl.Replace(Global.githubUrl, Global.githubApiUrl),
                 coreDownloadUrl32 = Global.hysteriaCoreUrl + "/download/{0}/hysteria-windows-386.exe",
                 coreDownloadUrl64 = Global.hysteriaCoreUrl + "/download/{0}/hysteria-windows-amd64.exe",
+                coreDownloadUrlArm64 = Global.hysteriaCoreUrl + "/download/{0}/hysteria-windows-arm64.exe",
                 redirectInfo = true,
             });
 
@@ -342,12 +362,18 @@ namespace v2rayN.Handler
             {
                 coreType = ECoreType.sing_box,
                 coreExes = new List<string> { "sing-box-client", "sing-box" },
-                arguments = "run",
+                arguments = "run{0}",
                 coreUrl = Global.singboxCoreUrl,
                 redirectInfo = true,
+                coreReleaseApiUrl = Global.singboxCoreUrl.Replace(Global.githubUrl, Global.githubApiUrl),
+                coreDownloadUrl32 = Global.singboxCoreUrl + "/download/{0}/sing-box-{1}-windows-386.zip",
+                coreDownloadUrl64 = Global.singboxCoreUrl + "/download/{0}/sing-box-{1}-windows-amd64.zip",
+                coreDownloadUrlArm64 = Global.singboxCoreUrl + "/download/{0}/sing-box-{1}-windows-arm64.zip",
+                match = "sing-box",
+                versionArg = "version",
             });
         }
 
-        #endregion
+        #endregion Core Type
     }
 }

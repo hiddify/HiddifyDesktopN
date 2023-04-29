@@ -367,16 +367,34 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Alias.
+        ///   查找类似 Automatic update interval(minutes) 的本地化字符串。
         /// </summary>
-        public static string LvAlias {
+        public static string LvAutoUpdateInterval {
             get {
-                return ResourceManager.GetString("LvAlias", resourceCulture);
+                return ResourceManager.GetString("LvAutoUpdateInterval", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Count.
+        ///   查找类似 Convert target type 的本地化字符串。
+        /// </summary>
+        public static string LvConvertTarget {
+            get {
+                return ResourceManager.GetString("LvConvertTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Please leave blank if no conversion is required 的本地化字符串。
+        /// </summary>
+        public static string LvConvertTargetTip {
+            get {
+                return ResourceManager.GetString("LvConvertTargetTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Count 的本地化字符串。
         /// </summary>
         public static string LvCount {
             get {
@@ -421,7 +439,16 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Port.
+        ///   查找类似 More urls, separated by commas;Subscription conversion will be invalid 的本地化字符串。
+        /// </summary>
+        public static string LvMoreUrl {
+            get {
+                return ResourceManager.GetString("LvMoreUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Port 的本地化字符串。
         /// </summary>
         public static string LvPort {
             get {
@@ -682,7 +709,16 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit Server (Ctrl+D).
+        ///   查找类似 DNS Settings 的本地化字符串。
+        /// </summary>
+        public static string menuDNSSetting {
+            get {
+                return ResourceManager.GetString("menuDNSSetting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Edit Server (Ctrl+D) 的本地化字符串。
         /// </summary>
         public static string menuEditServer {
             get {
@@ -934,7 +970,16 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reload.
+        ///   查找类似 Reboot as administrator 的本地化字符串。
+        /// </summary>
+        public static string menuRebootAsAdmin {
+            get {
+                return ResourceManager.GetString("menuRebootAsAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Reload 的本地化字符串。
         /// </summary>
         public static string menuReload {
             get {
@@ -997,7 +1042,7 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove selected.
+        ///   查找类似 Remove selected (Delete) 的本地化字符串。
         /// </summary>
         public static string menuRoutingAdvancedRemove {
             get {
@@ -1213,7 +1258,7 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Subscription group Setting.
+        ///   查找类似 Subscription group Settings 的本地化字符串。
         /// </summary>
         public static string menuSubSetting {
             get {
@@ -1447,7 +1492,7 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to To perform this operation, the program must be restarted !.
+        ///   查找类似 Servers Filter, press Enter to execute 的本地化字符串。
         /// </summary>
         public static string MsgProgramNeedsRestarting {
             get {
@@ -1465,11 +1510,11 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Simplify PAC Success.
+        ///   查找类似 Updates are not enabled, skip this subscription 的本地化字符串。
         /// </summary>
-        public static string MsgSimplifyPAC {
+        public static string MsgSkipSubscriptionUpdate {
             get {
-                return ResourceManager.GetString("MsgSimplifyPAC", resourceCulture);
+                return ResourceManager.GetString("MsgSkipSubscriptionUpdate", resourceCulture);
             }
         }
         
@@ -1798,11 +1843,11 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The server configuration file is saved at: {0}.
+        ///   查找类似 {0}:{1}/s↑ | {2}/s↓ 的本地化字符串。
         /// </summary>
-        public static string SaveServerConfigurationIn {
+        public static string SpeedDisplayText {
             get {
-                return ResourceManager.GetString("SaveServerConfigurationIn", resourceCulture);
+                return ResourceManager.GetString("SpeedDisplayText", resourceCulture);
             }
         }
         
@@ -2051,7 +2096,7 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Support DnsObject.
+        ///   查找类似 Support DnsObject, Click to view the document 的本地化字符串。
         /// </summary>
         public static string TbDnsObjectDoc {
             get {
@@ -2060,7 +2105,16 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Domain Matcher.
+        ///   查找类似 Please fill in DNS Structure, Click to view the document 的本地化字符串。
+        /// </summary>
+        public static string TbDnsSingboxObjectDoc {
+            get {
+                return ResourceManager.GetString("TbDnsSingboxObjectDoc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Domain Matcher 的本地化字符串。
         /// </summary>
         public static string TbdomainMatcher {
             get {
@@ -2078,7 +2132,16 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit.
+        ///   查找类似 Sing-box domain strategy 的本地化字符串。
+        /// </summary>
+        public static string TbdomainStrategy4Singbox {
+            get {
+                return ResourceManager.GetString("TbdomainStrategy4Singbox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Edit 的本地化字符串。
         /// </summary>
         public static string TbEdit {
             get {
@@ -2132,7 +2195,7 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to GlobalHotkey Setting.
+        ///   查找类似 GlobalHotkey Settings 的本地化字符串。
         /// </summary>
         public static string TbGlobalHotkeySetting {
             get {
@@ -2384,7 +2447,16 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Advanced proxy settings, protocol selection (optional).
+        ///   查找类似 Click to import default DNS config 的本地化字符串。
+        /// </summary>
+        public static string TBSettingDnsImportDefConfig {
+            get {
+                return ResourceManager.GetString("TBSettingDnsImportDefConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Advanced proxy settings, protocol selection (optional) 的本地化字符串。
         /// </summary>
         public static string TbSettingsAdvancedProtocol {
             get {
@@ -2411,7 +2483,7 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Automatic latency test interval (minutes).
+        ///   查找类似 Automatic update interval of Geo (hours) 的本地化字符串。
         /// </summary>
         public static string TbSettingsAutoTest {
             get {
@@ -2465,7 +2537,7 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Core: DNS settings.
+        ///   查找类似 V2ray DNS settings 的本地化字符串。
         /// </summary>
         public static string TbSettingsCoreDns {
             get {
@@ -2474,7 +2546,16 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Core: KCP settings.
+        ///   查找类似 Sing-box DNS settings 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsCoreDnsSingbox {
+            get {
+                return ResourceManager.GetString("TbSettingsCoreDnsSingbox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Core: KCP settings 的本地化字符串。
         /// </summary>
         public static string TbSettingsCoreKcp {
             get {
@@ -2681,7 +2762,16 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Log Level.
+        ///   查找类似 Enable logging to file 的本地化字符串。
+        /// </summary>
+        public static string TbSettingsLogEnabledToFile {
+            get {
+                return ResourceManager.GetString("TbSettingsLogEnabledToFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Log Level 的本地化字符串。
         /// </summary>
         public static string TbSettingsLogLevel {
             get {
@@ -3086,7 +3176,7 @@ namespace v2rayN.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to * After setting this value, an socks service will be started using V2ray to provide functions such as speed display.
+        ///   查找类似 * After setting this value, an socks service will be started using Sing-box to provide functions such as speed display 的本地化字符串。
         /// </summary>
         public static string TipPreSocksPort {
             get {

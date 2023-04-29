@@ -1,10 +1,10 @@
 ﻿using DynamicData.Binding;
+using Microsoft.Win32;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
 using System.Reactive;
 using System.Windows;
-using System.Windows.Forms;
 using v2rayN.Base;
 using v2rayN.Handler;
 using v2rayN.Mode;
@@ -26,8 +26,10 @@ namespace v2rayN.ViewModels
 
         private IObservableCollection<RulesItemModel> _rulesItems = new ObservableCollectionExtended<RulesItemModel>();
         public IObservableCollection<RulesItemModel> RulesItems => _rulesItems;
+
         [Reactive]
         public RulesItemModel SelectedSource { get; set; }
+
         public IList<RulesItemModel> SelectedSources { get; set; }
 
         public ReactiveCommand<Unit, Unit> RuleAddCmd { get; }
@@ -42,7 +44,6 @@ namespace v2rayN.ViewModels
         public ReactiveCommand<Unit, Unit> MoveBottomCmd { get; }
 
         public ReactiveCommand<Unit, Unit> SaveCmd { get; }
-
 
         public RoutingRuleSettingViewModel(RoutingItem routingItem, Window view)
         {
@@ -166,14 +167,14 @@ namespace v2rayN.ViewModels
             }
         }
 
-        private void RuleRemove()
+        public void RuleRemove()
         {
             if (SelectedSource is null || SelectedSource.outboundTag.IsNullOrEmpty())
             {
                 UI.Show(ResUI.PleaseSelectRules);
                 return;
             }
-            if (UI.ShowYesNo(ResUI.RemoveRules) == DialogResult.No)
+            if (UI.ShowYesNo(ResUI.RemoveRules) == MessageBoxResult.No)
             {
                 return;
             }
@@ -188,6 +189,7 @@ namespace v2rayN.ViewModels
 
             RefreshRulesItems();
         }
+
         public void RuleExportSelected()
         {
             if (SelectedSource is null || SelectedSource.outboundTag.IsNullOrEmpty())
@@ -268,7 +270,7 @@ namespace v2rayN.ViewModels
                 Multiselect = false,
                 Filter = "Rules|*.json|All|*.*"
             };
-            if (fileDialog.ShowDialog() != DialogResult.OK)
+            if (fileDialog.ShowDialog() != true)
             {
                 return;
             }
@@ -299,6 +301,7 @@ namespace v2rayN.ViewModels
                 UI.Show(ResUI.OperationSuccess);
             }
         }
+
         private async Task ImportRulesFromUrl()
         {
             var url = SelectedRouting.url;
@@ -319,10 +322,11 @@ namespace v2rayN.ViewModels
                 UI.Show(ResUI.OperationSuccess);
             }
         }
+
         private int AddBatchRoutingRules(RoutingItem routingItem, string clipboardData)
         {
             bool blReplace = false;
-            if (UI.ShowYesNo(ResUI.AddBatchRoutingRulesYesNo) == DialogResult.No)
+            if (UI.ShowYesNo(ResUI.AddBatchRoutingRulesYesNo) == MessageBoxResult.No)
             {
                 blReplace = true;
             }
@@ -351,6 +355,6 @@ namespace v2rayN.ViewModels
             return 0;
         }
 
-        #endregion
+        #endregion Import rules
     }
 }

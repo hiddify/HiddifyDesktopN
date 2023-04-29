@@ -17,10 +17,11 @@
 
         public string coreDownloadUrl64 { get; set; }
 
+        public string coreDownloadUrlArm64 { get; set; }
+
         public string match { get; set; }
         public string versionArg { get; set; }
 
         public bool redirectInfo { get; set; }
-
     }
 }

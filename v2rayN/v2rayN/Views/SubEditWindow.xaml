@@ -11,7 +11,7 @@
     xmlns:vms="clr-namespace:v2rayN.ViewModels"
     Title="{x:Static resx:ResUI.menuSubSetting}"
     Width="700"
-    Height="550"
+    Height="600"
     x:TypeArguments="vms:SubEditViewModel"
     Background="{DynamicResource MaterialDesignPaper}"
     FontFamily="{x:Static conv:MaterialDesignFonts.MyFont}"
@@ -23,6 +23,14 @@
     TextOptions.TextRenderingMode="Auto"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
     <ScrollViewer
         materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
         HorizontalScrollBarVisibility="Auto"
@@ -41,8 +49,11 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
@@ -92,6 +103,31 @@
                     Style="{StaticResource MyOutlinedTextBox}"
                     TextWrapping="Wrap" />
 
+                <materialDesign:PopupBox
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    StaysOpen="True"
+                    Style="{StaticResource MaterialDesignToolForegroundPopupBox}">
+                    <StackPanel>
+                        <TextBlock
+                            Margin="4"
+                            VerticalAlignment="Center"
+                            Style="{StaticResource ToolbarTextBlock}"
+                            Text="{x:Static resx:ResUI.LvMoreUrl}" />
+                        <TextBox
+                            x:Name="txtMoreUrl"
+                            Width="400"
+                            Margin="4"
+                            VerticalAlignment="Top"
+                            materialDesign:HintAssist.Hint="{x:Static resx:ResUI.SubUrlTips}"
+                            AcceptsReturn="True"
+                            MinLines="4"
+                            Style="{StaticResource MyOutlinedTextBox}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </materialDesign:PopupBox>
+
                 <TextBlock
                     Grid.Row="3"
                     Grid.Column="0"
@@ -111,10 +147,28 @@
                     Grid.Column="0"
                     Margin="4"
                     VerticalAlignment="Center"
+                    Style="{StaticResource ToolbarTextBlock}"
+                    Text="{x:Static resx:ResUI.LvAutoUpdateInterval}" />
+                <TextBox
+                    x:Name="txtAutoUpdateInterval"
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Width="400"
+                    Margin="4"
+                    VerticalAlignment="Top"
+                    materialDesign:HintAssist.Hint="{x:Static resx:ResUI.SubUrlTips}"
+                    AcceptsReturn="True"
+                    Style="{StaticResource MyOutlinedTextBox}" />
+
+                <TextBlock
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Margin="4"
+                    VerticalAlignment="Center"
                     Text="{x:Static resx:ResUI.LvUserAgent}" />
                 <TextBox
                     x:Name="txtUserAgent"
-                    Grid.Row="4"
+                    Grid.Row="5"
                     Grid.Column="1"
                     Width="400"
                     Margin="4"
@@ -125,7 +179,7 @@
                     TextWrapping="Wrap" />
 
                 <TextBlock
-                    Grid.Row="5"
+                    Grid.Row="6"
                     Grid.Column="0"
                     Margin="4"
                     VerticalAlignment="Center"
@@ -133,7 +187,7 @@
                     Text="{x:Static resx:ResUI.LvFilter}" />
                 <TextBox
                     x:Name="txtFilter"
-                    Grid.Row="5"
+                    Grid.Row="6"
                     Grid.Column="1"
                     Width="400"
                     Margin="4"
@@ -142,8 +196,27 @@
                     AcceptsReturn="True"
                     Style="{StaticResource MyOutlinedTextBox}" />
 
+
                 <TextBlock
-                    Grid.Row="6"
+                    Grid.Row="7"
+                    Grid.Column="0"
+                    Margin="4"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource ToolbarTextBlock}"
+                    Text="{x:Static resx:ResUI.LvConvertTarget}" />
+                <ComboBox
+                    x:Name="cmbConvertTarget"
+                    Grid.Row="7"
+                    Grid.Column="1"
+                    Margin="4"
+                    materialDesign:HintAssist.Hint="{x:Static resx:ResUI.LvConvertTargetTip}"
+                    FontSize="{DynamicResource StdFontSize}"
+                    MaxDropDownHeight="1000"
+                    Style="{StaticResource MaterialDesignOutlinedComboBox}" />
+
+
+                <TextBlock
+                    Grid.Row="8"
                     Grid.Column="0"
                     Margin="4"
                     VerticalAlignment="Center"
@@ -151,14 +224,13 @@
                     Text="{x:Static resx:ResUI.LvSort}" />
                 <TextBox
                     x:Name="txtSort"
-                    Grid.Row="6"
+                    Grid.Row="8"
                     Grid.Column="1"
                     Width="400"
                     Margin="4"
                     VerticalAlignment="Top"
                     AcceptsReturn="True"
                     Style="{StaticResource MyOutlinedTextBox}" />
-
             </Grid>
             <Grid
                 Grid.Row="1"

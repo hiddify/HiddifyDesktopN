@@ -195,9 +195,6 @@
   <data name="LvAddress" xml:space="preserve">
     <value>Address</value>
   </data>
-  <data name="LvAlias" xml:space="preserve">
-    <value>Alias</value>
-  </data>
   <data name="LvEncryptionMethod" xml:space="preserve">
     <value>Security</value>
   </data>
@@ -209,9 +206,6 @@
   </data>
   <data name="LvSubscription" xml:space="preserve">
     <value>Subs group</value>
-  </data>
-  <data name="LvTestResults" xml:space="preserve">
-    <value>Test Results</value>
   </data>
   <data name="LvTodayDownloadDataAmount" xml:space="preserve">
     <value>Download traffic today</value>
@@ -228,9 +222,6 @@
   <data name="LvTransportProtocol" xml:space="preserve">
     <value>Transport</value>
   </data>
-  <data name="MediumFresh" xml:space="preserve">
-    <value>Medium</value>
-  </data>
   <data name="MsgClearSubscription" xml:space="preserve">
     <value>Clear original subscription content</value>
   </data>
@@ -246,26 +237,14 @@
   <data name="MsgNoValidSubscription" xml:space="preserve">
     <value>No valid subscriptions set</value>
   </data>
-  <data name="MsgPACUpdateFailed" xml:space="preserve">
-    <value>PAC update failed</value>
-  </data>
-  <data name="MsgPACUpdateSuccessfully" xml:space="preserve">
-    <value>PAC update succeeded</value>
-  </data>
   <data name="MsgParsingSuccessfully" xml:space="preserve">
     <value>Resolve {0} successfully</value>
-  </data>
-  <data name="MsgSimplifyPAC" xml:space="preserve">
-    <value>Simplify PAC Success</value>
   </data>
   <data name="MsgStartGettingSubscriptions" xml:space="preserve">
     <value>Start getting subscriptions</value>
   </data>
   <data name="MsgStartUpdating" xml:space="preserve">
     <value>Start updating {0}...</value>
-  </data>
-  <data name="MsgStartUpdatingPAC" xml:space="preserve">
-    <value>Start updating PAC...</value>
   </data>
   <data name="MsgSubscriptionDecodingFailed" xml:space="preserve">
     <value>Invalid subscription content</value>
@@ -297,9 +276,6 @@
   <data name="MsgUpdateV2rayCoreSuccessfullyMore" xml:space="preserve">
     <value>Update Core successfully! Restarting service...</value>
   </data>
-  <data name="NeedHttpGlobalProxy" xml:space="preserve">
-    <value> This feature relies on the Http global proxy, please set it correctly first.</value>
-  </data>
   <data name="NonvmessOrssProtocol" xml:space="preserve">
     <value>Non-VMess or ss protocol</value>
   </data>
@@ -327,9 +303,6 @@
   <data name="PleaseSelectServer" xml:space="preserve">
     <value>Please select the server first</value>
   </data>
-  <data name="QuickFresh" xml:space="preserve">
-    <value>Fast</value>
-  </data>
   <data name="RemoveDuplicateServerResult" xml:space="preserve">
     <value>Servers deduplication completed. Old: {0}, New: {1}.</value>
   </data>
@@ -338,18 +311,6 @@
   </data>
   <data name="SaveClientConfigurationIn" xml:space="preserve">
     <value>The client configuration file is saved at: {0}</value>
-  </data>
-  <data name="SaveServerConfigurationIn" xml:space="preserve">
-    <value>The server configuration file is saved at: {0}</value>
-  </data>
-  <data name="SlowFresh" xml:space="preserve">
-    <value>Slow</value>
-  </data>
-  <data name="SpeedServerTips" xml:space="preserve">
-    <value>Note: This feature relies on the Http global proxy. Please manually adjust the Http global proxy and active node after testing.</value>
-  </data>
-  <data name="StartPacFailed" xml:space="preserve">
-    <value>PAC failed to start. Please run this program as Administrator.</value>
   </data>
   <data name="StartService" xml:space="preserve">
     <value>Start service ({0})...</value>
@@ -482,10 +443,7 @@
     <value>Local</value>
   </data>
   <data name="MsgServerTitle" xml:space="preserve">
-    <value>Servers Filter</value>
-  </data>
-  <data name="NetFrameworkRequirementsTip" xml:space="preserve">
-    <value>Normal use of this version requires .NET Framework 4.8</value>
+    <value>Servers Filter, press Enter to execute</value>
   </data>
   <data name="menuCheckUpdate" xml:space="preserve">
     <value>Check Update</value>
@@ -518,7 +476,7 @@
     <value>Servers</value>
   </data>
   <data name="menuSetting" xml:space="preserve">
-    <value>Setting</value>
+    <value>Settings</value>
   </data>
   <data name="menuSubGroupUpdate" xml:space="preserve">
     <value>Update current subscription without proxy</value>
@@ -530,7 +488,7 @@
     <value>Subs group</value>
   </data>
   <data name="menuSubSetting" xml:space="preserve">
-    <value>Subscription group Setting</value>
+    <value>Subscription group Settings</value>
   </data>
   <data name="menuSubUpdate" xml:space="preserve">
     <value>Update subscription without proxy</value>
@@ -603,9 +561,6 @@
   </data>
   <data name="menuExport2ClientConfig" xml:space="preserve">
     <value>Export selected server for client configuration</value>
-  </data>
-  <data name="menuExport2ServerConfig" xml:space="preserve">
-    <value>Export selected server for server configuration</value>
   </data>
   <data name="menuExport2ShareUrl" xml:space="preserve">
     <value>Export share URLs to clipboard (Ctrl+C)</value>
@@ -758,7 +713,7 @@
     <value>txtPreSocksPort</value>
   </data>
   <data name="TipPreSocksPort" xml:space="preserve">
-    <value>* After setting this value, an socks service will be started using V2ray to provide functions such as speed display</value>
+    <value>* After setting this value, an socks service will be started using Sing-box to provide functions such as speed display</value>
   </data>
   <data name="TbBrowse" xml:space="preserve">
     <value>Browse</value>
@@ -775,20 +730,14 @@
   <data name="TbSettingsAutoHideStartup" xml:space="preserve">
     <value>Auto hide startup</value>
   </data>
-  <data name="TbSettingsAutoTest" xml:space="preserve">
-    <value>Automatic latency test interval (minutes)</value>
-  </data>
-  <data name="TbSettingsAutoUpdate" xml:space="preserve">
-    <value>Automatic update interval of subscriptions (hours)</value>
-  </data>
   <data name="TbSettingsAutoUpdateInterval" xml:space="preserve">
-    <value>Automatic update interval of and Geo (hours)</value>
+    <value>Automatic update interval of Geo (hours)</value>
   </data>
   <data name="TbSettingsCore" xml:space="preserve">
     <value>Core: basic settings</value>
   </data>
   <data name="TbSettingsCoreDns" xml:space="preserve">
-    <value>Core: DNS settings</value>
+    <value>V2ray DNS settings</value>
   </data>
   <data name="TbSettingsCoreKcp" xml:space="preserve">
     <value>Core: KCP settings</value>
@@ -820,9 +769,6 @@
   <data name="TbSettingsIgnoreGeoUpdateCore" xml:space="preserve">
     <value>Ignore Geo files when updating core</value>
   </data>
-  <data name="TbSettingsIpv6" xml:space="preserve">
-    <value>Enable IPv6</value>
-  </data>
   <data name="TbSettingsKeepOlderDedupl" xml:space="preserve">
     <value>Keep older when deduplication</value>
   </data>
@@ -838,17 +784,11 @@
   <data name="TbSettingsN" xml:space="preserve">
     <value>v2rayN settings</value>
   </data>
-  <data name="TbSettingsPacListenPort" xml:space="preserve">
-    <value>Pac listen port</value>
-  </data>
   <data name="TbSettingsPass" xml:space="preserve">
     <value>Auth pass</value>
   </data>
   <data name="TbSettingsRemoteDNS" xml:space="preserve">
     <value>Custom DNS (multiple, separated by commas (,))</value>
-  </data>
-  <data name="TbSettingsSaveTip" xml:space="preserve">
-    <value>After modifying the following parameters, click Save to take effect</value>
   </data>
   <data name="TbSettingsSetUWP" xml:space="preserve">
     <value>Set Win10 UWP Loopback</value>
@@ -893,7 +833,7 @@
     <value>Display GUI</value>
   </data>
   <data name="TbGlobalHotkeySetting" xml:space="preserve">
-    <value>GlobalHotkey Setting</value>
+    <value>GlobalHotkey Settings</value>
   </data>
   <data name="TbGlobalHotkeySettingTip" xml:space="preserve">
     <value>Set directly by pressing the keyboard, Take effect after restart</value>
@@ -950,10 +890,10 @@
     <value>Import Advanced Rules</value>
   </data>
   <data name="menuRoutingAdvancedRemove" xml:space="preserve">
-    <value>Remove selected</value>
+    <value>Remove selected (Delete)</value>
   </data>
   <data name="menuRoutingAdvancedSetDefault" xml:space="preserve">
-    <value>Set as active rule</value>
+    <value>Set as active rule(Enter)</value>
   </data>
   <data name="menuRoutingBasic" xml:space="preserve">
     <value>Basic Function</value>
@@ -995,7 +935,7 @@
     <value>Import Rules From Sub Url</value>
   </data>
   <data name="menuRoutingRuleSetting" xml:space="preserve">
-    <value>Rule Setting</value>
+    <value>Rule Settings</value>
   </data>
   <data name="menuRuleAdd" xml:space="preserve">
     <value>Rule Add</value>
@@ -1007,7 +947,7 @@
     <value>Rule List</value>
   </data>
   <data name="menuRuleRemove" xml:space="preserve">
-    <value>Remove Rules</value>
+    <value>Remove Rules (Delete)</value>
   </data>
   <data name="menuRoutingRuleDetailsSetting" xml:space="preserve">
     <value>RoutingRuleDetailsSetting</value>
@@ -1019,7 +959,7 @@
     <value>Ruleobject Doc</value>
   </data>
   <data name="TbDnsObjectDoc" xml:space="preserve">
-    <value>Support DnsObject</value>
+    <value>Support DnsObject, Click to view the document</value>
   </data>
   <data name="SubUrlTips" xml:space="preserve">
     <value>Group please leave blank here</value>
@@ -1161,6 +1101,45 @@
   </data>
   <data name="TipDisplayLog" xml:space="preserve">
     <value>Please turn off when there is an abnormal disconnection</value>
+  </data>
+  <data name="MsgSkipSubscriptionUpdate" xml:space="preserve">
+    <value>Updates are not enabled, skip this subscription</value>
+  </data>
+  <data name="menuRebootAsAdmin" xml:space="preserve">
+    <value>Reboot as administrator</value>
+  </data>
+  <data name="LvMoreUrl" xml:space="preserve">
+    <value>More urls, separated by commas;Subscription conversion will be invalid</value>
+  </data>
+  <data name="SpeedDisplayText" xml:space="preserve">
+    <value>{0}:{1}/s↑ | {2}/s↓</value>
+  </data>
+  <data name="LvAutoUpdateInterval" xml:space="preserve">
+    <value>Automatic update interval(minutes)</value>
+  </data>
+  <data name="TbSettingsLogEnabledToFile" xml:space="preserve">
+    <value>Enable logging to file</value>
+  </data>
+  <data name="LvConvertTarget" xml:space="preserve">
+    <value>Convert target type</value>
+  </data>
+  <data name="LvConvertTargetTip" xml:space="preserve">
+    <value>Please leave blank if no conversion is required</value>
+  </data>
+  <data name="menuDNSSetting" xml:space="preserve">
+    <value>DNS Settings</value>
+  </data>
+  <data name="TbSettingsCoreDnsSingbox" xml:space="preserve">
+    <value>Sing-box DNS settings</value>
+  </data>
+  <data name="TbDnsSingboxObjectDoc" xml:space="preserve">
+    <value>Please fill in DNS Structure, Click to view the document</value>
+  </data>
+  <data name="TBSettingDnsImportDefConfig" xml:space="preserve">
+    <value>Click to import default DNS config</value>
+  </data>
+  <data name="TbdomainStrategy4Singbox" xml:space="preserve">
+    <value>Sing-box domain strategy</value>
   </data>
   <data name="TbEnableProxy" xml:space="preserve">
     <value>Use Proxy</value>

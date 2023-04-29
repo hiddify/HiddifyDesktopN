@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using Microsoft.Win32;
+using ReactiveUI;
 using System.Globalization;
 using System.IO;
 using System.Reactive.Disposables;
@@ -38,10 +39,7 @@ namespace v2rayN.Views
             {
                 cmbdefUserAgent.Items.Add(it);
             });
-            Global.domainStrategy4Freedoms.ForEach(it =>
-            {
-                cmbdomainStrategy4Freedom.Items.Add(it);
-            });
+
             for (int i = 1; i <= 10; i++)
             {
                 cmbStatisticsFreshRate.Items.Add(i);
@@ -71,6 +69,10 @@ namespace v2rayN.Views
             Global.SpeedTestUrls.ForEach(it =>
             {
                 cmbSpeedTestUrl.Items.Add(it);
+            });
+            Global.SubConvertUrls.ForEach(it =>
+            {
+                cmbSubConvertUrl.Items.Add(it);
             });
 
             //fill fonts
@@ -133,11 +135,6 @@ namespace v2rayN.Views
                 this.Bind(ViewModel, vm => vm.defFingerprint, v => v.cmbdefFingerprint.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.defUserAgent, v => v.cmbdefUserAgent.Text).DisposeWith(disposables);
 
-
-                this.Bind(ViewModel, vm => vm.domainStrategy4Freedom, v => v.cmbdomainStrategy4Freedom.Text).DisposeWith(disposables);
-                this.Bind(ViewModel, vm => vm.remoteDNS, v => v.txtremoteDNS.Text).DisposeWith(disposables);
-
-
                 //this.Bind(ViewModel, vm => vm.Kcpmtu, v => v.txtKcpmtu.Text).DisposeWith(disposables);
                 //this.Bind(ViewModel, vm => vm.Kcptti, v => v.txtKcptti.Text).DisposeWith(disposables);
                 //this.Bind(ViewModel, vm => vm.KcpuplinkCapacity, v => v.txtKcpuplinkCapacity.Text).DisposeWith(disposables);
@@ -145,7 +142,6 @@ namespace v2rayN.Views
                 //this.Bind(ViewModel, vm => vm.KcpreadBufferSize, v => v.txtKcpreadBufferSize.Text).DisposeWith(disposables);
                 //this.Bind(ViewModel, vm => vm.KcpwriteBufferSize, v => v.txtKcpwriteBufferSize.Text).DisposeWith(disposables);
                 //this.Bind(ViewModel, vm => vm.Kcpcongestion, v => v.togKcpcongestion.IsChecked).DisposeWith(disposables);
-
 
                 this.Bind(ViewModel, vm => vm.AutoRun, v => v.togAutoRun.IsChecked).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.EnableStatistics, v => v.togEnableStatistics.IsChecked).DisposeWith(disposables);
@@ -159,17 +155,15 @@ namespace v2rayN.Views
                 this.Bind(ViewModel, vm => vm.EnableDragDropSort, v => v.togEnableDragDropSort.IsChecked).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.DoubleClick2Activate, v => v.togDoubleClick2Activate.IsChecked).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.autoUpdateInterval, v => v.txtautoUpdateInterval.Text).DisposeWith(disposables);
-                this.Bind(ViewModel, vm => vm.autoUpdateSubInterval, v => v.txtautoUpdateSubInterval.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.trayMenuServersLimit, v => v.txttrayMenuServersLimit.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.currentFontFamily, v => v.cmbcurrentFontFamily.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.SpeedTestTimeout, v => v.cmbSpeedTestTimeout.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.SpeedTestUrl, v => v.cmbSpeedTestUrl.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.EnableHWA, v => v.togEnableHWA.IsChecked).DisposeWith(disposables);
-
+                this.Bind(ViewModel, vm => vm.SubConvertUrl, v => v.cmbSubConvertUrl.Text).DisposeWith(disposables);
 
                 this.Bind(ViewModel, vm => vm.systemProxyAdvancedProtocol, v => v.cmbsystemProxyAdvancedProtocol.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.systemProxyExceptions, v => v.txtsystemProxyExceptions.Text).DisposeWith(disposables);
-
 
                 this.Bind(ViewModel, vm => vm.TunShowWindow, v => v.togShowWindow.IsChecked).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.TunEnabledLog, v => v.togEnabledLog.IsChecked).DisposeWith(disposables);
@@ -187,7 +181,6 @@ namespace v2rayN.Views
                 this.Bind(ViewModel, vm => vm.TunProxyProcess, v => v.txtProxyProcess.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.TunProxyDNS, v => v.txtProxyDNS.Text).DisposeWith(disposables);
 
-
                 this.Bind(ViewModel, vm => vm.CoreType1, v => v.cmbCoreType1.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.CoreType2, v => v.cmbCoreType2.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.CoreType3, v => v.cmbCoreType3.Text).DisposeWith(disposables);
@@ -196,21 +189,17 @@ namespace v2rayN.Views
                 this.Bind(ViewModel, vm => vm.CoreType6, v => v.cmbCoreType6.Text).DisposeWith(disposables);
 
                 this.BindCommand(ViewModel, vm => vm.SaveCmd, v => v.btnSave).DisposeWith(disposables);
-
             });
-        }
-        private void linkDnsObjectDoc_Click(object sender, RoutedEventArgs e)
-        {
-            Utils.ProcessStart("https://www.v2fly.org/config/dns.html#dnsobject");
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
+
         private void btnBrowse_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            var openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            var openFileDialog1 = new OpenFileDialog();
             openFileDialog1.Filter = "tunConfig|*.json|All|*.*";
             openFileDialog1.ShowDialog();
 

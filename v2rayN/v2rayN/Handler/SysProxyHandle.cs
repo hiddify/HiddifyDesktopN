@@ -22,7 +22,7 @@ namespace v2rayN.Handler
         //  <pac-url>
         private static SysproxyConfig? _userSettings = null;
 
-        enum RET_ERRORS : int
+        private enum RET_ERRORS : int
         {
             RET_NO_ERROR = 0,
             INVALID_FORMAT = 1,
@@ -44,7 +44,6 @@ namespace v2rayN.Handler
                 Utils.SaveLog(ex.Message, ex);
             }
         }
-
 
         public static bool UpdateSysProxy(Config config, bool forceDisable)
         {
@@ -80,10 +79,12 @@ namespace v2rayN.Handler
                             .Replace("{http_port}", port.ToString())
                             .Replace("{socks_port}", portSocks.ToString());
                     }
+                    ProxySetting.SetProxy(strProxy, strExceptions, 2);
                     SetIEProxy(true, strProxy, strExceptions);
                 }
                 else if (type == ESysProxyType.ForcedClear)
                 {
+                    ProxySetting.UnsetProxy();
                     ResetIEProxy();
                 }
                 else if (type == ESysProxyType.Unchanged)
@@ -93,6 +94,7 @@ namespace v2rayN.Handler
                 {
                     PacHandler.Start(Utils.GetConfigPath(), port, portPac);
                     var strProxy = $"{Global.httpProtocol}{Global.Loopback}:{portPac}/pac?t={DateTime.Now.Ticks}";
+                    ProxySetting.SetProxy(strProxy, "", 4);
                     SetIEProxy(false, strProxy, "");
                 }
 
@@ -120,7 +122,6 @@ namespace v2rayN.Handler
             }
         }
 
-
         public static void SetIEProxy(bool global, string strProxy, string strExceptions)
         {
             string arguments = global
@@ -131,22 +132,9 @@ namespace v2rayN.Handler
         }
 
         // set system proxy to 1 (null) (null) (null)
-        public static bool ResetIEProxy()
+        public static void ResetIEProxy()
         {
-            try
-            {
-                // clear user-wininet.json
-                //_userSettings = new SysproxyConfig();
-                //Save();
-                // clear system setting
-                ExecSysproxy("set 1 - - -");
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
-            return true;
+            ExecSysproxy("set 1 - - -");
         }
 
         private static void ExecSysproxy(string arguments)
@@ -209,7 +197,6 @@ namespace v2rayN.Handler
             }
             catch (System.ComponentModel.Win32Exception e)
             {
-
                 // log the arguments
                 throw new Exception(process.StartInfo.Arguments);
             }
@@ -231,7 +218,5 @@ namespace v2rayN.Handler
             //    _queryStr = stdout;
             //}
         }
-
-
     }
 }

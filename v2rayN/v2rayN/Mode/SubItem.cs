@@ -7,46 +7,21 @@ namespace v2rayN.Mode
     public class SubItem
     {
         [PrimaryKey]
-        public string id
-        {
-            get; set;
-        }
+        public string id { get; set; }
 
-        /// <summary>
-        /// 备注
-        /// </summary>
-        public string remarks
-        {
-            get; set;
-        }
+        public string remarks { get; set; }
 
-        /// <summary>
-        /// url
-        /// </summary>
-        public string url
-        {
-            get; set;
-        }
+        public string url { get; set; }
 
-        /// <summary>
-        /// enable
-        /// </summary>
+        public string moreUrl { get; set; }
+
         public bool enabled { get; set; } = true;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public string userAgent
-        {
-            get; set;
-        } = string.Empty;
+        public string userAgent { get; set; } = string.Empty;
 
+        public int sort { get; set; }
 
-        public int sort
-        {
-            get; set;
-        }
-        public string filter { get; set; }
+        public string? filter { get; set; }
         public long upload { get; set; }
         public long download { get; set; }
         public long total { get; set; }
@@ -56,6 +31,11 @@ namespace v2rayN.Mode
         public int TotalDataGB { get; set; }
         public string? profileWebPageUrl { get; set; }
 
+        public int autoUpdateInterval { get; set; }
+
+        public long updateTime { get; set; }
+
+        public string? convertTarget { get; set; }
         public double UploadMegaBytes()
         {
             return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.upload).MegaBytes);
