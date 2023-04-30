@@ -111,6 +111,7 @@ namespace v2rayN.ViewModels
                 item.headerType = SelectedSource.headerType;
                 item.requestHost = SelectedSource.requestHost;
                 item.path = SelectedSource.path;
+                item.fragment = SelectedSource.fragment;
 
                 item.streamSecurity = SelectedSource.streamSecurity;
                 item.sni = SelectedSource.sni;
