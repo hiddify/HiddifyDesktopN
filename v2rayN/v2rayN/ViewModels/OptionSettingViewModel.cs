@@ -54,7 +54,7 @@ namespace v2rayN.ViewModels
         [Reactive] public bool KeepOlderDedupl { get; set; }
         [Reactive] public bool IgnoreGeoUpdateCore { get; set; }
         [Reactive] public bool EnableAutoAdjustMainLvColWidth { get; set; }
-        [Reactive] public bool EnableSecurityProtocolTls13 { get; set; }
+        [Reactive] public bool EnableSecurityProtocolTls13 { get; set; } = true;
         [Reactive] public bool AutoHideStartup { get; set; }
         [Reactive] public bool EnableCheckPreReleaseUpdate { get; set; }
         [Reactive] public bool EnableDragDropSort { get; set; }

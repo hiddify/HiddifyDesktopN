@@ -520,6 +520,23 @@
                     VerticalAlignment="Center"
                     Style="{StaticResource ToolbarTextBlock}"
                     Text="{x:Static resx:ResUI.TbPath}" />
+
+                <TextBlock
+                    x:Name="lblFragment"
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Margin="{StaticResource ServerItemMargin}"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource ToolbarTextBlock}"
+                    Text="{x:Static resx:Hiddify.Fragment}" />
+                <ComboBox
+                    x:Name="cmbFragment"
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Width="100"
+                    Margin="{StaticResource ServerItemMargin}"
+                    Style="{StaticResource DefComboBox}" />
+               
             </Grid>
 
             <Separator

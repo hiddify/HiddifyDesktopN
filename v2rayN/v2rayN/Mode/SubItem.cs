@@ -1,6 +1,6 @@
-﻿using ByteSizeLib;
+﻿
 using SQLite;
-
+using System.Windows;
 namespace v2rayN.Mode
 {
     [Serializable]
@@ -25,6 +25,8 @@ namespace v2rayN.Mode
         public long upload { get; set; }
         public long download { get; set; }
         public long total { get; set; }
+        public long usage { get { return (download + upload); } set { } }
+        
         public long expireDate { get; set; }
         public int remaningExpireDays { get; set; }
         public int UsedDataGB { get; set; }
@@ -36,38 +38,40 @@ namespace v2rayN.Mode
         public long updateTime { get; set; }
 
         public string? convertTarget { get; set; }
+        public Visibility sub_info_visible { get { return TotalDataGB>0?Visibility.Visible:Visibility.Collapsed;} }
+        //public Visibility sub_info_visible { get { return Visibility.Collapsed; } }
         public double UploadMegaBytes()
         {
-            return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.upload).MegaBytes);
+            return GetJustThreeDigitOfaNumber(this.upload/1024/1024);
         }
         public double DownloadMegaBytes()
         {
-            return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.download).MegaBytes);
+            return GetJustThreeDigitOfaNumber(this.download/1024 / 1024);
         }
         public double TotalMegaBytes()
         {
-            return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.total).MegaBytes);
+            return GetJustThreeDigitOfaNumber(this.total/1024 / 1024);
         }
 
         public double UploadGigaBytes()
         {
-            return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.upload).GigaBytes);
+            return GetJustThreeDigitOfaNumber(this.upload / 1024 / 1024/1024);
         }
         public double DownloadGigaBytes()
         {
-            return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.download).GigaBytes);
+            return GetJustThreeDigitOfaNumber(this.download / 1024 / 1024 / 1024);
         }
         public int TotalDataGigaBytes()
         {
-            return Convert.ToInt32(Math.Floor(ByteSize.FromBytes(this.total).GigaBytes));
+            return (int)((this.total / 1024 / 1024 / 1024));
         }
         public int UsedDataGigaBytes()
         {
-            return (int)ByteSize.FromBytes(this.download + this.upload).GigaBytes;
+            return (int)(this.download + this.upload) / 1024 / 1024 / 1024;
         }
         public double DownloadAndUploadTotalGigaBytes()
         {
-            return GetJustThreeDigitOfaNumber(ByteSize.FromBits(this.download + this.upload).GigaBytes);
+            return GetJustThreeDigitOfaNumber((this.download + this.upload) / 1024 / 1024 / 1024);
         }
         public DateTime ExpireToDate()
         {

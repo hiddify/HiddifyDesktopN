@@ -124,7 +124,7 @@
             <StackPanel Grid.Row="1"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
-            <Button x:Name="ConnectVPN"
+                <Button x:Name="ConnectVPN"
                 
                 Width="96"
                 Height="96"
@@ -138,12 +138,12 @@
                 Style="{StaticResource MaterialDesignFloatingActionButton}" 
                 Foreground="{DynamicResource SecondaryHueMidBrushForeground}" BorderBrush="{x:Null}">
 
-                <Image Source="/v2rayN.ico" Width="36" Height="36" />
+                    <Image Source="/v2rayN.ico" Width="36" Height="36" />
 
-            </Button>
+                </Button>
                 <Label Name="connectlbl" Foreground="{Binding ConnectVPNLabelColor}"  HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1"               
                 Height="61" Width="auto" FontSize="18" Content="{Binding ConnectVPNLabel}" >
-                    
+
                 </Label>
             </StackPanel>
             <StackPanel Name="speedpanel" 
@@ -185,7 +185,7 @@
                     <!--Delay: 200ms-->
                 </Label>
             </StackPanel>
-            
+
 
 
             <materialDesign:Card  Grid.Row="1"
@@ -202,25 +202,21 @@
                     <Expander.Header >
                         <views:MainSubInfoView x:Name="SubInfoView" DataContext="{Binding}"/>
                     </Expander.Header>
-                    <StackPanel Margin="24,8,24,16" Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
-                        <ScrollViewer x:Name="MainScrollViewer"
-                          Grid.Row="1"
-                          materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
-                          HorizontalScrollBarVisibility="{Binding SelectedItem.HorizontalScrollBarVisibilityRequirement, FallbackValue=Disabled}"
-                          VerticalScrollBarVisibility="{Binding SelectedItem.VerticalScrollBarVisibilityRequirement, FallbackValue=Disabled}">
-                            <ListView Margin="12,0,12,0" Grid.IsSharedSizeScope="True" ItemsSource="{Binding SubItems}" SelectedItem="{Binding SelectedSub}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <views:SubInfoView HorizontalAlignment="Stretch"  />
-
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ListView>
-
-                        </ScrollViewer>
 
 
-                    </StackPanel>
+                    <ListView Margin="12,0,12,0" Grid.IsSharedSizeScope="True" ItemsSource="{Binding SubItems}" SelectedItem="{Binding SelectedSub}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <views:SubInfoView HorizontalAlignment="Stretch"  />
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ListView>
+
+
+
+
+
                 </Expander>
 
 
@@ -228,14 +224,15 @@
             <materialDesign:Card  Grid.Row="1"
                 VerticalAlignment="Bottom" >
                 <StackPanel>
-                    <Expander HorizontalAlignment="Stretch" Header="Advanced">
-                        <StackPanel Margin="24,8,24,16" Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}">
-                            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" >
+                    <Expander HorizontalAlignment="Stretch" Header="Advanced" IsExpanded="True">
+                        <StackPanel Margin="24,8,24,16" Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}" >
+                            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" Visibility="Collapsed">
                                     Use For
                             </TextBlock>
 
                             <ListBox Name="lstRouting" Grid.IsSharedSizeScope="True"
                                      HorizontalContentAlignment="Center"
+                                     Visibility="Collapsed"
                                      HorizontalAlignment="Stretch"
                                      SelectedItem="{Binding HomeSelectedRoutingItem}"
                                      Style="{StaticResource MaterialDesignToolToggleListBox}">
@@ -291,7 +288,7 @@
                                 </ListBox.ToolTip>
 
 
-                                <ListBoxItem Content="Auto" />
+                                <ListBoxItem Content="Auto" IsSelected="True" />
                                 <ListBoxItem Content="Load Balance"/>
                                 <ListBoxItem Content="Manual" />
                             </ListBox>

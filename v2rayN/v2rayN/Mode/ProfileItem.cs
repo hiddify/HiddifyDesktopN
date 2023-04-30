@@ -148,6 +148,7 @@ namespace v2rayN.Mode
         /// ws h2 path
         /// </summary>
         public string path { get; set; }
+        public string fragment { get; set; }//hiddify
 
         /// <summary>
         /// 传输层安全

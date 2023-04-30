@@ -54,6 +54,10 @@ namespace v2rayN.Views
             {
                 cmbAllowInsecure.Items.Add(it);
             });
+            Global.fragmentStrategies.ForEach(it =>
+            {
+                cmbFragment.Items.Add(it);//hiddify
+            });
             Global.alpns.ForEach(it =>
             {
                 cmbAlpn.Items.Add(it);
@@ -150,6 +154,7 @@ namespace v2rayN.Views
                 this.Bind(ViewModel, vm => vm.SelectedSource.headerType, v => v.cmbHeaderType.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.SelectedSource.requestHost, v => v.txtRequestHost.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.SelectedSource.path, v => v.txtPath.Text).DisposeWith(disposables);
+                this.Bind(ViewModel, vm => vm.SelectedSource.fragment, v => v.cmbFragment.Text).DisposeWith(disposables);
 
                 this.Bind(ViewModel, vm => vm.SelectedSource.streamSecurity, v => v.cmbStreamSecurity.Text).DisposeWith(disposables);
                 this.Bind(ViewModel, vm => vm.SelectedSource.sni, v => v.txtSNI.Text).DisposeWith(disposables);
@@ -209,7 +214,7 @@ namespace v2rayN.Views
         private void SetHeaderType()
         {
             cmbHeaderType.Items.Clear();
-
+            
             var network = cmbNetwork.SelectedItem.ToString();
             if (Utils.IsNullOrEmpty(network))
             {
@@ -253,7 +258,7 @@ namespace v2rayN.Views
             tipRequestHost.Text =
             tipPath.Text =
             tipHeaderType.Text = string.Empty;
-
+            lblFragment.Visibility = cmbFragment.Visibility = Visibility.Hidden;
             switch (network)
             {
                 case Global.DefaultNetwork:
@@ -269,6 +274,7 @@ namespace v2rayN.Views
                 case "ws":
                     tipRequestHost.Text = ResUI.TransportRequestHostTip2;
                     tipPath.Text = ResUI.TransportPathTip1;
+                    lblFragment.Visibility = cmbFragment.Visibility = Visibility.Visible;
                     break;
 
                 case "h2":

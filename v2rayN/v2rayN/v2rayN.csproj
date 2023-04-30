@@ -98,6 +98,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Update="Resx\Hiddify.Designer.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>Hiddify.resx</DependentUpon>
+		</Compile>
 		<Compile Update="Resx\ResUI.Designer.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
@@ -106,6 +111,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Update="Resx\Hiddify.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Hiddify.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
 	  <EmbeddedResource Update="Resx\ResUI.resx">
 	    <Generator>PublicResXFileCodeGenerator</Generator>
 	    <LastGenOutput>ResUI.Designer.cs</LastGenOutput>

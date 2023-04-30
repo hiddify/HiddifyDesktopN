@@ -5,7 +5,6 @@ using v2rayN.Mode;
 using v2rayN.Tool;
 using v2rayN.ViewModels;
 using v2rayN.Tool;
-using ByteSizeLib;
 using System.Net;
 using HiddifyN.Tool;
 

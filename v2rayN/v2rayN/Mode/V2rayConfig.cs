@@ -561,8 +561,16 @@ namespace v2rayN.Mode
         ///
         /// </summary>
         public Headers headers { get; set; }
+        public FragmentationConfig fragmentation { get; set; }
     }
-
+    public class FragmentationConfig
+    {
+        public bool enabled { get; set; }=false;
+        public long fragmentationIntervalTimeout { get; set; } = 100;
+        public string strategy { get; set; } = "random";
+        public int maxChunkSize { get; set; } = 100;
+        public string sni { get; set; } = "www.cloudflare.com";
+    }
     public class Headers
     {
         /// <summary>

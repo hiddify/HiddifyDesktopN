@@ -37,8 +37,10 @@ using ZXing;
 using ZXing.Common;
 using ZXing.QrCode;
 using ZXing.Windows.Compatibility;
-using ByteSizeLib;
+
 using System.Net.Mail;
+using System.Windows.Data;
+using System.Globalization;
 
 namespace v2rayN
 {
@@ -1588,4 +1590,6 @@ namespace v2rayN
         }
         #endregion
     }
+    
+
 }

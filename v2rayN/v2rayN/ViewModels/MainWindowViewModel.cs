@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Splat;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
@@ -21,7 +22,6 @@ using System.Security.RightsManagement;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Markup;
 using System.Windows.Media;
 using v2rayN.Base;
@@ -30,7 +30,7 @@ using v2rayN.Mode;
 using v2rayN.Resx;
 using v2rayN.Tool;
 using v2rayN.Views;
-using static Grpc.Core.ChannelOption;
+
 using Application = System.Windows.Application;
 
 namespace v2rayN.ViewModels
@@ -309,7 +309,7 @@ namespace v2rayN.ViewModels
         private bool ForInitiationLanguage = true;
         private bool ForInitiationTun = true;
 
-        public MainWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue, Action<string> updateView)
+        public MainWindowViewModel(ISnackbarMessageQueue snackbarMessageQueue, Action<EViewAction> updateView)
         {
             _updateView = updateView;
             ThreadPool.RegisterWaitForSingleObject(App.ProgramStarted, OnProgramStarted, null, -1, false);
@@ -650,6 +650,7 @@ namespace v2rayN.ViewModels
                 ToggleV2rayPanel();
             });
             Global.ShowInTaskbar = true;
+            HomeConnect(true);
         }
 
         private void Init()
@@ -812,7 +813,7 @@ namespace v2rayN.ViewModels
             }
         }
 
-        public void MyAppExit(bool blWindowsShutDown)
+        public void PreExit(bool blWindowsShutDown)
         {
             Utils.SaveLog("PreExit Begin");
 
@@ -865,7 +866,7 @@ namespace v2rayN.ViewModels
             string subID = GetSubIdByRemark(SelectedSub?.remarks);
             if (subID == null)
             {
-                throw new Exception("Selected a sub that we couldn't find its id");
+            //    throw new Exception("Selected a sub that we couldn't find its id");
             }
 
             _subId = subID;
@@ -1002,7 +1003,7 @@ namespace v2rayN.ViewModels
         {
             _subItems.Clear();
 
-            _subItems.Add(new SubItem { remarks = ResUI.AllGroupServers });
+            //_subItems.Add(new SubItem { remarks = ResUI.AllGroupServers });
             foreach (var item in LazyConfig.Instance.SubItems().OrderByDescending(t => t.sort))
             {
                 _subItems.Add(item);
@@ -1013,8 +1014,11 @@ namespace v2rayN.ViewModels
             }
             else
             {
-                SelectedSub = _subItems[0];
+                SelectedSub = _subItems.Count>0?_subItems[0]:null;
             }
+            
+
+
         }
 
         #endregion Servers && Groups
@@ -1100,6 +1104,7 @@ namespace v2rayN.ViewModels
             {
                 foreach (string id in addedSubIds)
                 {
+                    
                     if (Utils.IsSystemProxyEnabled(_config.sysProxyType))
                     {
                         UpdateSubscriptionProcess(id, true);
@@ -1108,13 +1113,17 @@ namespace v2rayN.ViewModels
                     {
                         UpdateSubscriptionProcess(id, false);
                     }
+                    
                 }
             }
             return (addedServersCount, addedSubIds);
         }
         public void AddServerOrSubViaClipboard()
         {
+            
             string clipboardData = Utils.GetClipboardData();
+            HomeAddServerOrSubViaClipboard(clipboardData);
+            return;
             int ret = ConfigHandler.AddBatchServers(ref _config, clipboardData, _subId, false);
             if (ret > 0)
             {
@@ -1129,6 +1138,8 @@ namespace v2rayN.ViewModels
         }
         public void AddServerOrSubViaDeepLink(string url)
         {
+            HomeAddServerOrSubViaClipboard(url);
+            return;
             int ret = ConfigHandler.AddBatchServers(ref _config, url, _subId, false);
             if (ret > 0)
             {
@@ -2141,6 +2152,7 @@ namespace v2rayN.ViewModels
                     }
                     if (addedSubsIds?.Count > 0)
                     {
+                        SelectedSub= LazyConfig.Instance.GetSubItem(addedSubsIds[0]);
                         msg += $"\nAdded subscription: {addedSubsIds?.Count}";
                     }
                     UI.Show(msg);
@@ -2193,7 +2205,7 @@ namespace v2rayN.ViewModels
             {
                 // Change connectVPN button color
                 ConnectProgress = true;
-                ConnectColor = "#FFFF0000";
+                ConnectColor = "#eab676";
 
                 // User selected a proxy mode
                 if (HomeSelectedProxyMode != null)
@@ -2274,29 +2286,36 @@ namespace v2rayN.ViewModels
                     //TODO: @hiddify1; change the connectVPN color to whatever should be
                     ConnectVPNLabelColor = "#7CFC0000";
                     ConnectVPNLabel = "Connected";
-                    ConnectColor = "#7CFC00";
+                    ConnectColor = "#33d91a";
                     IsConnected = true;
+                    SetSysProxy();
+                    return;
                 }
                 else
                 {
-                    // The server doesn't work
 
-                    //TODO: @hiddify1; change the connectVPN color to whatever should be
-                    ConnectColor = "#FFFF0000";
-                    ConnectVPNLabel = "Not Connected";
-                    ConnectVPNLabelColor = "#FFFF0000";
-                    IsConnected = false;
                 }
-                SetSysProxy();
-                return;
+                
+                
+                
             }
+            {
+                // The server doesn't work
 
+                //TODO: @hiddify1; change the connectVPN color to whatever should be
+                ConnectColor = "#FFFF0000";
+                ConnectVPNLabel = "Not Connected";
+                ConnectVPNLabelColor = "#FFFF0000";
+                ConnectColor = "#FFE0E0E0";
+                IsConnected = false;
+                UnsetSysProxy();
+            }
             // It's connected, should be disconnected
 
-            UnsetSysProxy();
+            //UnsetSysProxy();
 
             //TODO: @hiddify1; the connectVPN color should be reset
-            ConnectColor = "#FFE0E0E0";
+            //ConnectColor = "#FFE0E0E0";
 
             //SelectedProfile = null;
         }

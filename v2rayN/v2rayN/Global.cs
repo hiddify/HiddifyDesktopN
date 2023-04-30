@@ -25,7 +25,7 @@ namespace v2rayN
         public const string CustomRoutingListUrl = @"https://raw.githubusercontent.com/2dust/v2rayCustomRoutingList/master/";
         public const string singboxGeoUrl = "https://github.com/soffchen/sing-{0}/releases/latest/download/{0}.db";
         public const string SpeedPingTestUrl = @"https://www.google.com/generate_204";
-        public const string CustomRoutingListUrl = @"https://raw.githubusercontent.com/2dust/v2rayCustomRoutingList/master/";
+        
 
         public const string PromotionUrl = @"dGc6Ly9yZXNvbHZlP2RvbWFpbj1oaWRkaWZ5";
         public const string ConfigFileName = "guiNConfig.json";
@@ -154,6 +154,7 @@ namespace v2rayN
         public static readonly List<string> userAgent = new() { "chrome", "firefox", "safari", "edge", "none" };
 
         public static readonly List<string> allowInsecures = new() { "true", "false", "" };
+        public static readonly List<string> fragmentStrategies = new() { "random", "sni", "" };//hiddify
         public static readonly List<string> domainStrategy4Freedoms = new() { "AsIs", "UseIP", "UseIPv4", "UseIPv6", "" };
 
         public static readonly List<string> Languages = new() { "en", "fa-Ir", "ru", "zh-Hans"};
@@ -178,7 +179,6 @@ namespace v2rayN
         public static readonly string RestartProgramExePath = Path.GetFullPath(Path.Combine(Utils.StartupPath(), "bin", "hiddifyRestartN", "HiddifyRestartN.exe"));
         public static readonly string UpgradeProgramExePath = Path.GetFullPath(Path.Combine(Utils.StartupPath(), "bin", "hiddifyUpgradeN", "HiddifyUpgradeN.exe"));
         public static readonly string SpeedTestProgramExePath = Path.GetFullPath(Path.Combine(Utils.StartupPath(), "bin", "speedTest", "librespeed-cli.exe"));
-        #endregion
 
         #endregion global variable
     }

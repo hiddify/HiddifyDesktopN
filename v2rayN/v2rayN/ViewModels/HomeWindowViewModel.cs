@@ -15,7 +15,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using v2rayN.Views;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+
 using v2rayN.ViewModels;
 using v2rayN.Converters;
 using v2rayN.Mode;

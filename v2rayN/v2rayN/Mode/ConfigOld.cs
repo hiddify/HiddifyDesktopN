@@ -134,10 +134,7 @@
 
         public bool checkPreReleaseUpdate { get; set; } = false;
 
-        public bool enableSecurityProtocolTls13
-        {
-            get; set;
-        }
+        public bool enableSecurityProtocolTls13 { get; set; } = true;
 
         public int trayMenuServersLimit { get; set; }
 

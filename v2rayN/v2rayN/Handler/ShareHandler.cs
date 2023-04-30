@@ -773,6 +773,7 @@ namespace v2rayN.Handler
             item.alpn = Utils.UrlDecode(query["alpn"] ?? "");
             item.allowInsecure= query["allowInsecure"] ?? "";
             item.fingerprint = Utils.UrlDecode(query["fp"] ?? "");
+            item.fragment = Utils.UrlDecode(query["fragment"] ?? "");
             item.publicKey = Utils.UrlDecode(query["pbk"] ?? "");
             item.shortId = Utils.UrlDecode(query["sid"] ?? "");
             item.spiderX = Utils.UrlDecode(query["spx"] ?? "");

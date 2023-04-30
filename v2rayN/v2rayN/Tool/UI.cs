@@ -17,7 +17,7 @@ namespace v2rayN
         }
         public static void ShowError(string msg)
         {
-            MessageBox.Show(msg, "HiddifyN", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(msg, caption, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         public static MessageBoxResult ShowYesNo(string msg)

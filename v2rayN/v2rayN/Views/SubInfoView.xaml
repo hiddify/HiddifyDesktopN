@@ -1,5 +1,6 @@
 ﻿<UserControl x:Class="v2rayN.Views.SubInfoView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:conv="clr-namespace:v2rayN.Converters"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,6 +8,18 @@
              xmlns:local="clr-namespace:v2rayN.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Popupbox.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+            <conv:DelayColorConverter x:Key="DelayColorConverter" />
+            <conv:SizeConverter x:Key="SizeConverter" />
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <StackPanel  HorizontalAlignment="Stretch" >
         <Grid>
             <Grid.ColumnDefinitions>
@@ -15,10 +28,11 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal">
                 <TextBlock  
-                VerticalAlignment="Center" 
-                TextTrimming="CharacterEllipsis" 
-                MaxWidth="200"
-                Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="{Binding remarks}" >
+                    VerticalAlignment="Center" 
+                    TextTrimming="CharacterEllipsis" 
+                    HorizontalAlignment="Stretch"
+                    Style="{StaticResource MaterialDesignHeadline5TextBlock}"
+                    Text="{Binding remarks}" >
 
                 </TextBlock>
                 <!--<Button Name="GotoProfile"
@@ -29,12 +43,7 @@
                     <materialDesign:PackIcon Kind="OpenInNew"  />
                 </Button>-->
             </StackPanel>
-            <Button Name="NewProfile" Grid.Column="1"
-                                            Padding="0"
-                                                VerticalAlignment="Center"  Height="36" materialDesign:ButtonAssist.CornerRadius="8" 
-                                                Background="{x:Null}"
-                                                Command="{Binding HomeNewProfileCmd}"
-                                                BorderBrush="{x:Null}" Foreground="#FF0E0808">
+            
                 <!--<StackPanel Orientation="Horizontal" >
                     <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center"  />
                     <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" >
@@ -42,22 +51,22 @@
                     </TextBlock>
 
                 </StackPanel>-->
-            </Button>
+           
         </Grid>
 
 
-        <Grid >
+        <Grid Visibility="{Binding sub_info_visible}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <StackPanel Margin="0,0,20,0">
+            <StackPanel Margin="0,0,20,0" Visibility="{Binding sub_info_visible}">
                 <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding remaningExpireDays,StringFormat={}{0} Days}"></TextBlock>
                 <Label HorizontalAlignment="Center">Remaining</Label>
             </StackPanel>
 
-            <StackPanel Grid.Column="1">
+            <StackPanel Grid.Column="1" Visibility="{Binding sub_info_visible}">
 
                 <Grid >
                     <Grid.ColumnDefinitions>
@@ -81,12 +90,12 @@
                     </Button>-->
 
                     <Label Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                        <Label.Content>
+                        <Label.Content >
                             <TextBlock>
                                 <TextBlock.Text>
                                     <MultiBinding StringFormat="{}{0}/{1}">
-                                        <Binding Path="UsedDataGB" />
-                                        <Binding Path="TotalDataGB" />
+                                        <Binding Path="usage" Converter="{StaticResource SizeConverter}"/>
+                                        <Binding Path="total" Converter="{StaticResource SizeConverter}"/>
                                     </MultiBinding>
                                 </TextBlock.Text>
                             </TextBlock>
@@ -94,7 +103,7 @@
                     </Label>
                 </Grid>
                 <!--TODO: @hiddify1; Fix this progress bar-->
-                <ProgressBar Height="10" Value="25" HorizontalAlignment="Stretch" />
+                <ProgressBar Height="10" Value="{Binding usage}" Maximum="{Binding total}" HorizontalAlignment="Stretch" />
             </StackPanel>
         </Grid>
     </StackPanel>
