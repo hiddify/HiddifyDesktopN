@@ -1431,7 +1431,7 @@ namespace v2rayN
             // Remove "hiddify://install-sub?"
             if (hiddifySubDepplink.Contains("url="))
             {
-                return hiddifySubDepplink.Split("url=")[1];
+                return System.Web.HttpUtility.UrlDecode(hiddifySubDepplink.Split("url=")[1]);
 
             }
             return hiddifySubDepplink;
