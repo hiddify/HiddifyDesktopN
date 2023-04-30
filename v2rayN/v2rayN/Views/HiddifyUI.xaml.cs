@@ -25,7 +25,14 @@ namespace v2rayN.Views
     public partial class HiddifyUI : UserControl
     {
         public static Snackbar Snackbar = new();
-
+        public bool ShowTitleBar { 
+            get => titlebar.Visibility == Visibility.Visible;
+            set {
+                titlebar.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+            } 
+        }
+            
+        
         public HiddifyUI()
         {
             InitializeComponent();
@@ -44,6 +51,7 @@ namespace v2rayN.Views
             });
             
             ModifyTheme(false);
+            
         }
         private void OnCopy(object sender, ExecutedRoutedEventArgs e)
         {

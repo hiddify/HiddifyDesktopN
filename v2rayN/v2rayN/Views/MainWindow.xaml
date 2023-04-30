@@ -736,9 +736,16 @@
                 IconSource="/v2rayN.ico"
                 NoLeftClickDelay="True">
                     <tb:TaskbarIcon.ContextMenu>
+                        
                         <ContextMenu Style="{StaticResource DefContextMenu}">
-                            <MenuItem x:Name="menuSystemConnect" Height="128">
+                            <MenuItem Height="500">
                                 <MenuItem.Header>
+                                    <local:HiddifyUI DataContext="{Binding}" Height="500"  x:Name="HiddifyUI2"   HorizontalAlignment="Stretch" Width="424" ShowTitleBar="False"/>
+                                </MenuItem.Header>
+                            </MenuItem>
+                            <MenuItem x:Name="menuSystemConnect" Height="128" Visibility="Collapsed">
+                                <MenuItem.Header>
+
                                     <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" >
                                         <Button x:Name="ConnectVPN" Width="96" Height="96" materialDesign:ButtonProgressAssist.IsIndeterminate="{Binding ConnectProgress}"
                                             materialDesign:ButtonProgressAssist.IsIndicatorVisible="{Binding ConnectProgress}"
@@ -760,11 +767,11 @@
                                     </StackPanel>
                                 </MenuItem.Header>
                             </MenuItem>
-                            
-                            <Separator x:Name="sepRoutings" />
-                            <MenuItem x:Name="menuRoutings" Height="Auto">
+
+                            <Separator x:Name="sepRoutings" Visibility="Collapsed" />
+                            <MenuItem x:Name="menuRoutings" Height="Auto" Visibility="Collapsed">
                                 <MenuItem.Header>
-                                    <DockPanel>
+                                    <DockPanel >
                                         <ComboBox
                                         x:Name="cmbRoutings"
                                         MaxWidth="300"
@@ -775,7 +782,7 @@
                                     </DockPanel>
                                 </MenuItem.Header>
                             </MenuItem>
-                            <MenuItem Height="Auto">
+                            <MenuItem Height="Auto" Visibility="Collapsed">
                                 <MenuItem.Header>
                                     <DockPanel>
                                         <ComboBox
@@ -788,21 +795,21 @@
                                     </DockPanel>
                                 </MenuItem.Header>
                             </MenuItem>
-                            <Separator />
-                            <MenuItem
+                            <Separator Visibility="Collapsed" />
+                            <MenuItem Visibility="Collapsed"
                             x:Name="menuAddServerViaClipboard2"
                             Height="{StaticResource MenuItemHeight}"
                             Header="{x:Static resx:ResUI.menuAddServerViaClipboard}" />
-                            <MenuItem
+                            <MenuItem Visibility="Collapsed"
                             x:Name="menuAddServerViaScan2"
                             Height="{StaticResource MenuItemHeight}"
                             Header="{x:Static resx:ResUI.menuAddServerViaScan}" />
                             <MenuItem
-                            x:Name="menuSubUpdate2"
+                            x:Name="menuSubUpdate2" Visibility="Collapsed"
                             Height="{StaticResource MenuItemHeight}"
                             Header="{x:Static resx:ResUI.menuSubUpdate}" />
                             <MenuItem
-                            x:Name="menuSubUpdateViaProxy2"
+                            x:Name="menuSubUpdateViaProxy2" Visibility="Collapsed"
                             Height="{StaticResource MenuItemHeight}"
                             Header="{x:Static resx:ResUI.menuSubUpdateViaProxy}" />
                             <Separator />

@@ -30,7 +30,7 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-            <materialDesign:ColorZone Padding="16"
+            <materialDesign:ColorZone Padding="16" Name="titlebar"
                                   materialDesign:ElevationAssist.Elevation="Dp0"
                                   DockPanel.Dock="Top"
                                   Mode="Standard">
