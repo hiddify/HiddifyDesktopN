@@ -400,10 +400,29 @@ namespace v2rayN.ViewModels
             {
                 HomeGotoProfile(SelectedSub.id);
             });
-            HomeRealPingServerCmd = ReactiveCommand.CreateFromTask(() =>
+            HomeRealPingServerCmd = ReactiveCommand.CreateFromTask(() => 
             {
-                return HomeRealPingServer(_config.indexId);
+                return Task.Run(async () =>
+                {
+                    // Till now, we started a server
+                    // Now we calculate real ping of the server to make sure, it's working
+                    DelayProgress = true;
+                    HomeRealPingServer(_config.indexId);
+                    // Wait for delay calculation (10 seconds)
+                    short count = 1;
+                    while (!IsDelayCalculationFinished)
+                    {
+                        // We don't want to stuck in a infinite loop
+                        if (count == 25)
+                            break;
+
+                        await Task.Delay(400).ConfigureAwait(false);
+                        count += 1;
+                    }
+                    DelayProgress = false;
+                });
             });
+
             //servers
             AddVmessServerCmd = ReactiveCommand.Create(() =>
             {
@@ -876,7 +895,69 @@ namespace v2rayN.ViewModels
 
             _updateView(EViewAction.ProfilesFocus);
         }
+        // It selects appropiate server by selected sub and proxy mode
+        // It actually change config.IndexId
+        private void SelectAppropiateServer()
+        {
+            if (SelectedSub == null)
+            {
+                _noticeHandler.Enqueue("Please select a sub");
+                return;
+            }
+            // User selected a proxy mode
+            if (HomeSelectedProxyMode != null)
+            {
+                string proxyModeRemark = HomeSelectedProxyMode.Content.ToString();
+                // Handle manual mode
+                if (proxyModeRemark == "Manual")
+                {
+                    if (Utils.IsNullOrEmpty(_config.indexId))
+                    {
+                        //TODO: Send message to user about what happend
+                        _noticeHandler.Enqueue("Please select a server to connect");
+                        ConnectColor = "#FFE0E0E0";
+                        ConnectProgress = false;
+                        return;
+                    }
 
+                    SetDefaultServer(_config.indexId);
+                }
+                else
+                {
+                    // Now the selected proxy mode is auto either load balance
+                    ProfileItem server = GetSelectedServer(SelectedSub.id, proxyModeRemark);
+                    if (server == null)
+                    {
+                        //TODO: Send message to user about what happend
+                        ConnectColor = "#FFE0E0E0";
+                        ConnectProgress = false;
+                        return;
+                    }
+                    SetDefaultServer(server.indexId);
+                }
+            }
+            // There is no selected proxy mode (we use default proxy setting)
+            else
+            {
+                ProfileItem? server = null;
+                // Just set a default mode
+                var subServers = LazyConfig.Instance.ProfileItems(SelectedSub.id);
+                if (DefaultProxyMode == "Auto")
+                    server = subServers.FirstOrDefault(s => s.remarks == "Lowest Ping");
+                else if (DefaultProxyMode == "Load Balance")
+                    server = subServers.FirstOrDefault(s => s.remarks == DefaultProxyMode);
+
+                if (server == null)
+                {
+                    //TODO Send message to user about what happend
+                    ConnectColor = "#FFE0E0E0";
+                    ConnectProgress = false;
+                    return;
+                }
+
+                SetDefaultServer(server.indexId);
+            }
+        }
         private string? GetSubIdByRemark(string remarks)
         {
             foreach (SubItem item in _subItems)
@@ -2207,59 +2288,7 @@ namespace v2rayN.ViewModels
                 ConnectProgress = true;
                 ConnectColor = "#eab676";
 
-                // User selected a proxy mode
-                if (HomeSelectedProxyMode != null)
-                {
-                    string proxyModeRemark = HomeSelectedProxyMode.Content.ToString();
-                    // Handle manual mode
-                    if (proxyModeRemark == "Manual")
-                    {
-                        if (Utils.IsNullOrEmpty(_config.indexId))
-                        {
-                            //TODO: Send message to user about what happend
-                            _noticeHandler.Enqueue("Please select a server to connect");
-                            ConnectColor = "#FFE0E0E0";
-                            ConnectProgress = false;
-                            return;
-                        }
-
-                        SetDefaultServer(_config.indexId);
-                    }
-                    else
-                    {
-                        // Now the selected proxy mode is auto either load balance
-                        ProfileItem server = GetSelectedServer(SelectedSub.id, proxyModeRemark);
-                        if (server == null)
-                        {
-                            //TODO: Send message to user about what happend
-                            ConnectColor = "#FFE0E0E0";
-                            ConnectProgress = false;
-                            return;
-                        }
-                        SetDefaultServer(server.indexId);
-                    }
-                }
-                // There is no selected proxy mode (we use default proxy setting)
-                else
-                {
-                    ProfileItem? server = null;
-                    // Just set a default mode
-                    var subServers = LazyConfig.Instance.ProfileItems(SelectedSub.id);
-                    if (DefaultProxyMode == "Auto")
-                        server = subServers.FirstOrDefault(s => s.remarks == "Lowest Ping");
-                    else if (DefaultProxyMode == "Load Balance")
-                        server = subServers.FirstOrDefault(s => s.remarks == DefaultProxyMode);
-
-                    if (server == null)
-                    {
-                        //TODO Send message to user about what happend
-                        ConnectColor = "#FFE0E0E0";
-                        ConnectProgress = false;
-                        return;
-                    }
-
-                    SetDefaultServer(server.indexId);
-                }
+                SelectAppropiateServer();
 
                 // Till now, we started a server
                 // Now we calculate real ping of the server to make sure, it's working
