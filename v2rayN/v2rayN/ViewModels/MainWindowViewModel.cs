@@ -2284,10 +2284,10 @@ namespace v2rayN.ViewModels
             // It's disconnected or it should be connected again
             if (forceConnect || !IsConnected)
             {
+
                 // Change connectVPN button color
                 ConnectProgress = true;
                 ConnectColor = "#eab676";
-
                 SelectAppropiateServer();
 
                 // Till now, we started a server
@@ -2295,6 +2295,7 @@ namespace v2rayN.ViewModels
                 DelayProgress = true;
                 HomeRealPingServer(_config.indexId);
                 // Wait for delay calculation (10 seconds)
+                ConnectVPNLabel = "Connecting...";
                 short count = 1;
                 while (!IsDelayCalculationFinished)
                 {
@@ -2322,31 +2323,24 @@ namespace v2rayN.ViewModels
                 }
                 else
                 {
-
+                    // The server doesn't work
+                    ConnectColor = "#d6003b";
+                    ConnectVPNLabel = "Not Connected";
+                    IsConnected = false;
+                    return;
                 }
-                
-                
-                
             }
-            {
-                // The server doesn't work
 
+            // It's connected, should be disconnected
+            {
                 //TODO: @hiddify1; change the connectVPN color to whatever should be
-                ConnectColor = "#FFFF0000";
+                //ConnectColor = "#FFFF0000";
                 ConnectVPNLabel = "Not Connected";
                 ConnectVPNLabelColor = "#FFFF0000";
                 ConnectColor = "#FFE0E0E0";
                 IsConnected = false;
                 UnsetSysProxy();
             }
-            // It's connected, should be disconnected
-
-            //UnsetSysProxy();
-
-            //TODO: @hiddify1; the connectVPN color should be reset
-            //ConnectColor = "#FFE0E0E0";
-
-            //SelectedProfile = null;
         }
         public void HomeGotoProfile(string subId)
         {
@@ -2427,6 +2421,7 @@ namespace v2rayN.ViewModels
 
         private async Task HomeRealPingServer(string serverIndexId)
         {
+            SelectedProfileDelay = 0;
             IsDelayCalculationFinished = false;
             //DelayProgress = true;
             ProfileItem server = LazyConfig.Instance.GetProfileItem(serverIndexId);
