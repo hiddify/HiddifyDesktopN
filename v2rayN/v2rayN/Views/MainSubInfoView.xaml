@@ -6,6 +6,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:v2rayN.Views"
+             xmlns:resx="clr-namespace:v2rayN.Resx"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -50,8 +51,9 @@
                                                 BorderBrush="{x:Null}" Foreground="#FF0E0808">
                 <StackPanel Orientation="Horizontal" >
                     <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center"  />
-                    <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}" >
-                                    Import
+                    <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}"
+                        Text="{x:Static resx:ResUI.HomeImport}"
+                               >
                     </TextBlock>
 
                 </StackPanel>
@@ -66,8 +68,15 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Margin="0,0,20,0">
-                <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}" Text="{Binding SelectedSub.remaningExpireDays,StringFormat={}{0} Days}"></TextBlock>
-                <Label HorizontalAlignment="Center">Remaining</Label>
+                <TextBlock HorizontalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} {1}">
+                            <Binding Path="SelectedSub.remaningExpireDays" />
+                            <Binding Source="{x:Static resx:ResUI.HomeDays}" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <Label HorizontalAlignment="Center" Content="{x:Static resx:ResUI.HomeRemaining}"></Label>
             </StackPanel>
 
             <StackPanel Grid.Column="1">
@@ -85,8 +94,8 @@
                                                 Command="{Binding HomeUpdateUsageCmd}"
                                                 BorderBrush="{x:Null}" Foreground="#FF0E0808">
                         <StackPanel Orientation="Horizontal" >
-                            <TextBlock  >
-                                    Usage
+                            <TextBlock Text="{x:Static resx:ResUI.HomeUsage}">
+                                
                             </TextBlock>
                             <materialDesign:PackIcon Kind="Refresh" VerticalAlignment="Center"  />
 

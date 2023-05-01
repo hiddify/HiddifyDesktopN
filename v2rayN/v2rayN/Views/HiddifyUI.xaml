@@ -6,7 +6,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:resx="clr-namespace:v2rayN.Resx"        
+    xmlns:resx="clr-namespace:v2rayN.Resx"    
         
              d:DesignHeight="800" d:DesignWidth="400">
 
@@ -176,7 +176,8 @@
                     <Label.Content>
                         <TextBlock>
                             <TextBlock.Text>
-                                <MultiBinding StringFormat="{}Delay: {0}">
+                                <MultiBinding StringFormat="{}{0}: {1}">
+                                    <Binding Source="{x:Static resx:ResUI.HomeDelay}" />
                                     <Binding Path="SelectedProfileDelay" />
                                 </MultiBinding>
                             </TextBlock.Text>
@@ -224,7 +225,7 @@
             <materialDesign:Card  Grid.Row="1"
                 VerticalAlignment="Bottom" >
                 <StackPanel>
-                    <Expander HorizontalAlignment="Stretch" Header="Advanced" IsExpanded="True">
+                    <Expander HorizontalAlignment="Stretch" Header="{x:Static resx:ResUI.HomeAdvancedSettings}" IsExpanded="True">
                         <StackPanel Margin="24,8,24,16" Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}" >
                             <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" Visibility="Collapsed">
                                     Use For
@@ -261,8 +262,7 @@
 
                             <TextBlock Style="{StaticResource MaterialDesignDataGridTextColumnStyle}" />
 
-                            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" >
-                                    Proxy Selection Mode
+                            <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}" Text="{x:Static resx:ResUI.HomeProxyModeSelection}">
                             </TextBlock>
 
                             <ListBox Name="lstProxyModes"
@@ -288,9 +288,9 @@
                                 </ListBox.ToolTip>
 
 
-                                <ListBoxItem Content="Auto" IsSelected="True" />
-                                <ListBoxItem Content="Load Balance"/>
-                                <ListBoxItem Content="Manual" />
+                                <ListBoxItem Content="{x:Static resx:ResUI.HomeProxyAuto}" IsSelected="True" />
+                                <ListBoxItem Content="{x:Static resx:ResUI.HomeProxyLoadBalance}"/>
+                                <ListBoxItem Content="{x:Static resx:ResUI.HomeProxyManual}" />
                             </ListBox>
                             <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" />
                         </StackPanel>

@@ -2295,7 +2295,7 @@ namespace v2rayN.ViewModels
                 DelayProgress = true;
                 HomeRealPingServer(_config.indexId);
                 // Wait for delay calculation (10 seconds)
-                ConnectVPNLabel = "Connecting...";
+                ConnectVPNLabel = ResUI.HomeConnecting;
                 short count = 1;
                 while (!IsDelayCalculationFinished)
                 {
@@ -2315,7 +2315,7 @@ namespace v2rayN.ViewModels
 
                     //TODO: @hiddify1; change the connectVPN color to whatever should be
                     ConnectVPNLabelColor = "#7CFC0000";
-                    ConnectVPNLabel = "Connected :)";
+                    ConnectVPNLabel = ResUI.HomeConnected;
                     ConnectColor = "#33d91a";
                     IsConnected = true;
                     SetSysProxy();
@@ -2325,7 +2325,7 @@ namespace v2rayN.ViewModels
                 {
                     // The server doesn't work
                     ConnectColor = "#d6003b";
-                    ConnectVPNLabel = "Not Connected :(";
+                    ConnectVPNLabel = ResUI.HomeNotConnected;
                     IsConnected = false;
                     return;
                 }
@@ -2336,7 +2336,7 @@ namespace v2rayN.ViewModels
                 //TODO: @hiddify1; change the connectVPN color to whatever should be
                 //ConnectColor = "#FFFF0000";
                 ConnectColor = "#d6003b";
-                ConnectVPNLabel = "Disconnected :(";
+                ConnectVPNLabel = ResUI.HomeDisconnected;
                 ConnectVPNLabelColor = "#FFFF0000";
                 IsConnected = false;
                 UnsetSysProxy();

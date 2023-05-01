@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using v2rayN.Resx;
 using v2rayN.ViewModels;
 
 namespace v2rayN.Views
@@ -41,7 +42,7 @@ namespace v2rayN.Views
             {
                 //note you can use the message queue from any thread, but just for the demo here we 
                 //need to get the message queue from the snackbar, so need to be on the dispatcher
-                MainSnackbar.MessageQueue?.Enqueue("Welcome to Hiddify");
+                MainSnackbar.MessageQueue?.Enqueue(ResUI.HomeWelcomeMsg);
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
 

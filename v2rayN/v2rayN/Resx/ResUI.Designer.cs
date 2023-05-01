@@ -1796,7 +1796,112 @@ namespace v2rayN.Resx {
                 return ResourceManager.GetString("RoutingAllSites", resourceCulture);
             }
         }
-        
+
+        public static string HomeAdvancedSettings
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeAdvancedSettings", resourceCulture);
+            }
+        }
+        public static string HomeImport
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeImport", resourceCulture);
+            }
+        }
+        public static string HomeDelay
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeDelay", resourceCulture);
+            }
+        }
+        public static string HomeRemaining
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeRemaining", resourceCulture);
+            }
+        }
+        public static string HomeConnected
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeConnected", resourceCulture);
+            }
+        }
+        public static string HomeNotConnected
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeNotConnected", resourceCulture);
+            }
+        }
+        public static string HomeDisconnected
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeDisconnected", resourceCulture);
+            }
+        }
+        public static string HomeProxyAuto
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeProxyAuto", resourceCulture);
+            }
+        }
+        public static string HomeProxyLoadBalance
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeProxyLoadBalance", resourceCulture);
+            }
+        }
+        public static string HomeProxyManual
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeProxyManual", resourceCulture);
+            }
+        }
+        public static string HomeProxyModeSelection
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeProxyModeSelection", resourceCulture);
+            }
+        }
+        public static string HomeConnecting
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeConnecting", resourceCulture);
+            }
+        }
+        public static string HomeDays
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeDays", resourceCulture);
+            }
+        }
+        public static string HomeUsage
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeUsage", resourceCulture);
+            }
+        }
+        public static string HomeWelcomeMsg
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeWelcomeMsg", resourceCulture);
+            }
+        }
         /// <summary>
         ///   Looks up a localized string similar to Blocked Sites.
         /// </summary>

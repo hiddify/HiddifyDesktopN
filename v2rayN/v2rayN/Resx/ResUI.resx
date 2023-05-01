@@ -165,6 +165,62 @@
   <data name="FillLocalListeningPort" xml:space="preserve">
     <value>Please fill in the local listening port</value>
   </data>
+
+  <data name="HomeImport" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="HomeWelcomeMsg" xml:space="preserve">
+    <value>Welcome to the Hiddify</value>
+  </data>
+  <data name="HomeUsage" xml:space="preserve">
+    <value>Usage</value>
+  </data>
+  <data name="HomeDays" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="HomeConnected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="HomeProxyAuto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="HomeProxyLoadBalance" xml:space="preserve">
+    <value>LoadBalance</value>
+  </data>
+  <data name="HomeProxyManual" xml:space="preserve">
+    <value>Manual</value>
+  </data>
+  <data name="HomeNotConnected" xml:space="preserve">
+    <value>Not Connected</value>
+  </data>
+  <data name="HomeDisconnected" xml:space="preserve">
+    <value>Disconnected</value>
+  </data>
+  <data name="HomeRemaining" xml:space="preserve">
+    <value>Remaining</value>
+  </data>
+  <data name="HomeDelay" xml:space="preserve">
+    <value>Delay</value>
+  </data>
+  <data name="HomeConnecting" xml:space="preserve">
+    <value>Connecting...</value>
+  </data>
+  <data name="HomeProxyModeSelection" xml:space="preserve">
+    <value>Proxy Mode Selection</value>
+  </data>
+  <data name="HomeAdvancedSettings" xml:space="preserve">
+    <value>Advanced Settings</value>
+  </data>
+  <data name="MsgInformationTitle" xml:space="preserve">
+    <value>اطلاعات</value>
+  </data>
+  <data name="LvCustomIcon" xml:space="preserve">
+    <value>نماد سفارشی</value>
+  </data>
+  <data name="FillCorrectDNSText" xml:space="preserve">
+    <value>لطفاً DNS سفارشی صحیح را پر کنید</value>
+  </data>
+
   <data name="FillPassword" xml:space="preserve">
     <value>Please fill in the password</value>
   </data>
@@ -345,6 +401,9 @@
   </data>
   <data name="LvRemarks" xml:space="preserve">
     <value>Remarks</value>
+  </data>
+  <data name="HomeDelay" xml:space="preserve">
+    <value>Delay</value>
   </data>
   <data name="LvUrl" xml:space="preserve">
     <value>Url(Optional)</value>
