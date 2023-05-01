@@ -2315,7 +2315,7 @@ namespace v2rayN.ViewModels
 
                     //TODO: @hiddify1; change the connectVPN color to whatever should be
                     ConnectVPNLabelColor = "#7CFC0000";
-                    ConnectVPNLabel = "Connected";
+                    ConnectVPNLabel = "Connected :)";
                     ConnectColor = "#33d91a";
                     IsConnected = true;
                     SetSysProxy();
@@ -2325,7 +2325,7 @@ namespace v2rayN.ViewModels
                 {
                     // The server doesn't work
                     ConnectColor = "#d6003b";
-                    ConnectVPNLabel = "Not Connected";
+                    ConnectVPNLabel = "Not Connected :(";
                     IsConnected = false;
                     return;
                 }
@@ -2335,9 +2335,9 @@ namespace v2rayN.ViewModels
             {
                 //TODO: @hiddify1; change the connectVPN color to whatever should be
                 //ConnectColor = "#FFFF0000";
-                ConnectVPNLabel = "Not Connected";
+                ConnectColor = "#d6003b";
+                ConnectVPNLabel = "Disconnected :(";
                 ConnectVPNLabelColor = "#FFFF0000";
-                ConnectColor = "#FFE0E0E0";
                 IsConnected = false;
                 UnsetSysProxy();
             }
