@@ -1,5 +1,6 @@
-# v2rayN
+# HiddifyN
 A GUI client for Windows, support [Xray core](https://github.com/XTLS/Xray-core) and [v2fly core](https://github.com/v2fly/v2ray-core) and [others](https://github.com/2dust/v2rayN/wiki/List-of-supported-cores)
+![image](https://user-images.githubusercontent.com/114227601/236046684-35a41cbc-9b4f-4dbf-8592-ef0436fbb5b0.png)
 
 
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/2dust/v2rayN)](https://github.com/2dust/v2rayN/commits/master)
