@@ -1059,6 +1059,8 @@ namespace v2rayN.Handler
                         subscriptionItem.UsedDataGB = subscriptionItem.UsedDataGigaBytes();
                         subscriptionItem.TotalDataGB = subscriptionItem.TotalDataGigaBytes();
                         subscriptionItem.profileWebPageUrl = subInfo.ProfileWebPageUrl;
+                        if (!subInfo.ProfileTitle.IsNullOrWhiteSpace())
+                            subscriptionItem.remarks= subInfo.ProfileTitle??"";
                     }
 
                     if (subscriptionItem.remarks != null)

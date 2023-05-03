@@ -569,7 +569,7 @@ namespace v2rayN.Mode
         public long fragmentationIntervalTimeout { get; set; } = 100;
         public string strategy { get; set; } = "random";
         public int maxChunkSize { get; set; } = 100;
-        public string sni { get; set; } = "www.cloudflare.com";
+        public string sni { get; set; } = "";
     }
     public class Headers
     {

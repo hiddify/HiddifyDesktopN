@@ -14,5 +14,6 @@ namespace v2rayN.Mode
         public long Total { get; set; }
         public long ExpireDate { get; set; }
         public string? ProfileWebPageUrl { get; set; }
+        public string? ProfileTitle { get; set; }
     }
 }

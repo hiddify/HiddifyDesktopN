@@ -1581,6 +1581,16 @@ namespace v2rayN
                 }
             }
 
+            IEnumerable<string> profileTitleValue;
+            if (headers.TryGetValues("Profile-Title", out profileTitleValue))
+            {
+                string profileTitle = profileTitleValue.FirstOrDefault();
+                if (profileTitle != null)
+                {
+                    clashSubscriptionInfo.ProfileTitle = profileTitle;
+                }
+            }
+
             return clashSubscriptionInfo;
         }
 
