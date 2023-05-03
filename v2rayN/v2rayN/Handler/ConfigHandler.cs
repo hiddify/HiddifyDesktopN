@@ -1060,7 +1060,13 @@ namespace v2rayN.Handler
                         subscriptionItem.TotalDataGB = subscriptionItem.TotalDataGigaBytes();
                         subscriptionItem.profileWebPageUrl = subInfo.ProfileWebPageUrl;
                         if (!subInfo.ProfileTitle.IsNullOrWhiteSpace())
-                            subscriptionItem.remarks= subInfo.ProfileTitle??"";
+                        {
+                            subscriptionItem.remarks = subInfo.ProfileTitle ?? "";
+                            if (subscriptionItem.remarks.StartsWith("base64:")){
+                                subscriptionItem.remarks= Utils.Base64Decode(subscriptionItem.remarks.Substring("base64:".Length))
+                            }
+                        }
+                        
                     }
 
                     if (subscriptionItem.remarks != null)
