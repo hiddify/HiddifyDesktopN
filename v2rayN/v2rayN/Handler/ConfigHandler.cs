@@ -1063,7 +1063,7 @@ namespace v2rayN.Handler
                         {
                             subscriptionItem.remarks = subInfo.ProfileTitle ?? "";
                             if (subscriptionItem.remarks.StartsWith("base64:")){
-                                subscriptionItem.remarks= Utils.Base64Decode(subscriptionItem.remarks.Substring("base64:".Length))
+                                subscriptionItem.remarks = Utils.Base64Decode(subscriptionItem.remarks.Substring("base64:".Length));
                             }
                         }
                         
