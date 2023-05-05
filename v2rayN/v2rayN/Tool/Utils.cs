@@ -1576,9 +1576,7 @@ namespace v2rayN
             {
                 string profileWebPageUrl = profileWebPageValue.FirstOrDefault();
                 if (profileWebPageUrl != null)
-                {
                     clashSubscriptionInfo.ProfileWebPageUrl = profileWebPageUrl;
-                }
             }
 
             IEnumerable<string> profileTitleValue;
@@ -1586,11 +1584,16 @@ namespace v2rayN
             {
                 string profileTitle = profileTitleValue.FirstOrDefault();
                 if (profileTitle != null)
-                {
                     clashSubscriptionInfo.ProfileTitle = profileTitle;
-                }
             }
 
+            IEnumerable<int> profileUpdateIntervalValue;
+            if (headers.TryGetValues("Profile-Update-Interval",out profileUpdateIntervalValue))
+            {
+                int profileUpdateInterval = profileUpdateIntervalValue.FirstOrDefault();
+                if (profileUpdateIntervalValue != null)
+                    clashSubscriptionInfo.ProfileUpdateInterval = profileUpdateInterval;
+            }
             return clashSubscriptionInfo;
         }
 
