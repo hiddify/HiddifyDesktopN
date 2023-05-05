@@ -1587,10 +1587,10 @@ namespace v2rayN
                     clashSubscriptionInfo.ProfileTitle = profileTitle;
             }
 
-            IEnumerable<int> profileUpdateIntervalValue;
+            IEnumerable<string> profileUpdateIntervalValue;
             if (headers.TryGetValues("Profile-Update-Interval",out profileUpdateIntervalValue))
             {
-                int profileUpdateInterval = profileUpdateIntervalValue.FirstOrDefault();
+                int profileUpdateInterval = Convert.ToInt32(profileUpdateIntervalValue.FirstOrDefault());
                 if (profileUpdateIntervalValue != null)
                     clashSubscriptionInfo.ProfileUpdateInterval = profileUpdateInterval;
             }
