@@ -95,9 +95,23 @@
                                                 BorderBrush="{x:Null}" Foreground="#FF0E0808">
                         <StackPanel Orientation="Horizontal" >
                             <TextBlock Text="{x:Static resx:ResUI.HomeUsage}">
-                                
+
                             </TextBlock>
-                            <materialDesign:PackIcon Kind="Refresh" VerticalAlignment="Center"  />
+                            <materialDesign:PackIcon Kind="Refresh" VerticalAlignment="Center" Margin="2,0,0,0"  />
+
+                        </StackPanel>
+                    </Button>
+
+                    <Button Name="Delete" Grid.Column="1" HorizontalAlignment="Left"
+                                                VerticalAlignment="Bottom"  Padding="0" materialDesign:ButtonAssist.CornerRadius="8" 
+                                                Background="{x:Null}"
+                                                Command="{Binding HomeDeleteSubCmd}"
+                                                BorderBrush="{x:Null}" Foreground="#FF0E0808" Margin="5,0,0,0">
+                        <StackPanel Orientation="Horizontal" >
+                            <TextBlock Text="{x:Static resx:ResUI.HomeDelete}">
+
+                            </TextBlock>
+                            <materialDesign:PackIcon Kind="TrashCanOutline" VerticalAlignment="Center" Margin="2,0,0,0"  />
 
                         </StackPanel>
                     </Button>

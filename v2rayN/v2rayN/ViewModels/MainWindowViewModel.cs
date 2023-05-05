@@ -123,7 +123,7 @@ namespace v2rayN.ViewModels
         public ReactiveCommand<Unit, Unit> HomeConnectCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeUpdateUsageCmd { get; }
         public ReactiveCommand<Unit, Unit> HomeGotoProfileCmd { get; }
-        
+        public ReactiveCommand<Unit,Unit> HomeDeleteSubCmd { get; set; }
         public ReactiveCommand<Unit, Unit> HomeRealPingServerCmd { get; }
 
         //servers
@@ -422,7 +422,10 @@ namespace v2rayN.ViewModels
                     DelayProgress = false;
                 });
             });
-
+            HomeDeleteSubCmd = ReactiveCommand.Create(() =>
+            {
+                HomeDeleteSub();
+            });
             //servers
             AddVmessServerCmd = ReactiveCommand.Create(() =>
             {
@@ -2351,7 +2354,19 @@ namespace v2rayN.ViewModels
                 InitSubscriptionView();
             }
         }
-
+        private void HomeDeleteSub()
+        {
+            if (SelectedSub != null)
+            {
+                if (UI.ShowYesNo(ResUI.RemoveServer) == MessageBoxResult.No)
+                    return;
+                else
+                {
+                    ConfigHandler.DeleteSubItem(ref _config, SelectedSub.id);
+                    InitSubscriptionView();
+                }
+            }
+        }
         public void HomeSelectedRouteChanged()
         {
             Console.WriteLine(HomeSelectedRoutingItem);
