@@ -1895,6 +1895,14 @@ namespace v2rayN.Resx {
                 return ResourceManager.GetString("HomeUsage", resourceCulture);
             }
         }
+
+        public static string HomeDelete
+        {
+            get
+            {
+                return ResourceManager.GetString("HomeDelete", resourceCulture);
+            }
+        }
         public static string HomeWelcomeMsg
         {
             get

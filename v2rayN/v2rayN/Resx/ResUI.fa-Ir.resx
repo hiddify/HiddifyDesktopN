@@ -364,6 +364,9 @@
   <data name="HomeImport" xml:space="preserve">
     <value>افزودن</value>
   </data>
+  <data name="HomeDelete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
   <data name="HomeWelcomeMsg" xml:space="preserve">
     <value>به هیدیفای خوش امدید</value>
   </data>

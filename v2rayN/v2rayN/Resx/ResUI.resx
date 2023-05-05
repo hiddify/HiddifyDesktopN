@@ -169,6 +169,9 @@
   <data name="HomeImport" xml:space="preserve">
     <value>Import</value>
   </data>
+  <data name="HomeDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
   <data name="HomeWelcomeMsg" xml:space="preserve">
     <value>Welcome to the Hiddify</value>
   </data>
