@@ -1217,10 +1217,6 @@ namespace v2rayN.Handler
                 //maybe sub
                 if (str.StartsWith(Global.httpsProtocol) || str.StartsWith(Global.httpProtocol))
                 {
-
-                    // If it's sub, We get remaining day to expire & used data & total remained data & profile web page url
-                    // We add this information as a Server but these's just for display to user for their information
-
                     // Get user subscription info (like donwloaded/uploaded/total usage and expire date)
                     // Get expire epoch date
                     var headers = Utils.GetUrlResponseHeader(str,false);

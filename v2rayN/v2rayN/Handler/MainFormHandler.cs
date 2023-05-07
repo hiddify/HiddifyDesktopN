@@ -156,7 +156,8 @@ namespace v2rayN.Handler
 
         public void UpdateTask(Config config, Action<bool, string> update)
         {
-            Task.Run(() => UpdateTaskRunSubscription(config, update));
+            // We don't want to update subscription manually in code, it'll be handled in another part of code (search Auto update sub)
+            //Task.Run(() => UpdateTaskRunSubscription(config, update));
             Task.Run(() => UpdateTaskRunGeo(config, update));
         }
 
