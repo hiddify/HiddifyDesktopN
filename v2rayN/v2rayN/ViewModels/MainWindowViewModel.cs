@@ -2469,7 +2469,7 @@ namespace v2rayN.ViewModels
         public async Task HomeSelectedProxyChanged()
         {
             ProfileExpanded = false;
-            if (HomeSelectedProxyMode?.Content?.ToString() == "Manual")
+            if (HomeSelectedProxyMode?.Content?.ToString() == ResUI.HomeProxyManual)
             { 
                 ToggleV2rayPanel();
                 return;
