@@ -25,6 +25,10 @@ namespace v2rayN
         public const string CustomRoutingListUrl = @"https://raw.githubusercontent.com/2dust/v2rayCustomRoutingList/master/";
         public const string singboxGeoUrl = "https://github.com/soffchen/sing-{0}/releases/latest/download/{0}.db";
         public const string SpeedPingTestUrl = @"https://www.google.com/generate_204";
+        // It gives "204" status code (No Content)
+        //public const string ServerTestUrl = @"https://cp.cloudflare.com";
+        public const string ServerTestUrl = @"https://google.com/robots.txt";
+        public const int DefaultUpdateSubUsageIntervalSeconds = 60;
         
 
         public const string PromotionUrl = @"dGc6Ly9yZXNvbHZlP2RvbWFpbj1oaWRkaWZ5";

@@ -394,7 +394,8 @@ namespace v2rayN.ViewModels
             });
             HomeUpdateUsageCmd = ReactiveCommand.Create(() =>
             {
-                HomeUpdateUsage(SelectedSub.id);
+                if (SelectedSub != null)
+                    HomeUpdateUsage(SelectedSub);
             });
             HomeGotoProfileCmd = ReactiveCommand.Create(() =>
             {
@@ -672,7 +673,54 @@ namespace v2rayN.ViewModels
                 ToggleV2rayPanel();
             });
             Global.ShowInTaskbar = true;
-            HomeConnect(true);
+
+            // Auto update sub usage every Global.DefaultUpdateSubUsageIntervalSeconds seconds
+            new Thread(delegate ()
+            {
+                while (true)
+                {
+                    if (SelectedSub != null)
+                        HomeUpdateUsage(SelectedSub);
+
+                    Thread.Sleep(TimeSpan.FromSeconds(Global.DefaultUpdateSubUsageIntervalSeconds));
+                }
+            }).Start();
+
+            // Auto update sub (profiles/servers)
+            new Thread(delegate ()
+            {
+                while (true)
+                {
+                    if (SelectedSub != null)
+                    {
+                        if (SelectedSub.profileUpdateInterval == 0)
+                        {
+                            bool useProxy = Utils.IsSystemProxyEnabled(_config.sysProxyType);
+                            var headers = Utils.GetUrlResponseHeader(SelectedSub.url,useProxy);
+                            var subInfo = Utils.GetSubscriptionInfoFromHeaders(headers);
+                            if (subInfo == null)
+                                continue;
+                            if (subInfo.ProfileUpdateInterval != 0)
+                                // Change sub item
+                                SelectedSub.profileUpdateInterval = subInfo.ProfileUpdateInterval;
+
+                            // Edit sub item interval
+                            ConfigHandler.AddSubItem(ref _config, SelectedSub);
+                            continue;
+                        }
+                        else
+                        {
+                            if (Utils.IsSystemProxyEnabled(_config.sysProxyType))
+                                UpdateSubscriptionProcess(SelectedSub.id, true);
+                            else
+                                UpdateSubscriptionProcess(SelectedSub.id, false);
+                        }
+                        Thread.Sleep(TimeSpan.FromHours(SelectedSub.profileUpdateInterval));
+                    }
+                }
+            }).Start();
+            // Connect to the default sub
+            //HomeConnect(true);
         }
 
         private void Init()
@@ -2244,12 +2292,11 @@ namespace v2rayN.ViewModels
 
             }
         }
-        public void HomeUpdateUsage(string subId)
+        public void HomeUpdateUsage(SubItem sub)
         {
-            SubItem sub = LazyConfig.Instance.GetSubItem(subId);
             if (sub != null)
             {
-                var headers = Utils.GetUrlResponseHeader(sub.url);
+                var headers = Utils.GetUrlResponseHeader(sub.url,false);
                 if (headers != null)
                 {
                     var subInfo = Utils.GetSubscriptionInfoFromHeaders(headers);
@@ -2292,46 +2339,93 @@ namespace v2rayN.ViewModels
                 ConnectProgress = true;
                 ConnectColor = "#eab676";
                 SelectAppropiateServer();
-
+                await HomeRealPingServer(_config.indexId);
                 // Till now, we started a server
                 // Now we calculate real ping of the server to make sure, it's working
-                DelayProgress = true;
-                HomeRealPingServer(_config.indexId);
-                // Wait for delay calculation (10 seconds)
-                ConnectVPNLabel = ResUI.HomeConnecting;
-                short count = 1;
-                while (!IsDelayCalculationFinished)
+                
+                // If user selected load balance/auto we can't get "real ping" (i don't know why?!)
+                // So, Insted of "real ping", we just send a request and check the http response status
+                if (HomeSelectedProxyMode != null &&
+                    !Utils.IsNullOrEmpty(HomeSelectedProxyMode.Content.ToString()) &&
+                    (HomeSelectedProxyMode.Content.ToString() == "Auto" || HomeSelectedProxyMode.Content.ToString() == "Load Balance"))
                 {
-                    // We don't want to stuck in a infinite loop
-                    if (count == 25)
-                        break;
+                    DelayProgress = true;
+                    ConnectVPNLabel = ResUI.HomeConnecting;
 
-                    await Task.Delay(400).ConfigureAwait(false);
-                    count += 1;
-                }
-                ConnectProgress = false;
-                DelayProgress = false;
-                // Check delay
-                if (SelectedProfileDelay > 0 && SelectedProfileDelay != -1)
-                {
-                    // The server works
+                    bool useProxy = Utils.IsSystemProxyEnabled(_config.sysProxyType);
+                    var startTime = DateTime.Now;
+                    var statusCode = await Utils.GetUrlResponseStatusCode(Global.ServerTestUrl,useProxy);
+                    var delay = (DateTime.Now - startTime).Milliseconds;
+                    // Set server delay
+                    SelectedProfileDelay = delay;
+                    // Check returned status code
+                    if (statusCode != null && statusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        // The server works
+                        DelayProgress = false;
+                        ConnectProgress = false;
+                        ConnectVPNLabelColor = "#7CFC0000";
+                        ConnectVPNLabel = ResUI.HomeConnected;
+                        ConnectColor = "#33d91a";
+                        IsConnected = true;
+                        SetSysProxy();
+                        return;
+                    }
+                    else
+                    {
+                        // The server doesn't work
+                        DelayProgress = false;
+                        ConnectProgress = false;
+                        ConnectColor = "#d6003b";
+                        ConnectVPNLabel = ResUI.HomeNotConnected;
+                        IsConnected = false;
+                        return;
+                    }
 
-                    //TODO: @hiddify1; change the connectVPN color to whatever should be
-                    ConnectVPNLabelColor = "#7CFC0000";
-                    ConnectVPNLabel = ResUI.HomeConnected;
-                    ConnectColor = "#33d91a";
-                    IsConnected = true;
-                    SetSysProxy();
-                    return;
                 }
+                // the "Manual" mode is selected; neither "Auto" or "Load Balance"
                 else
                 {
-                    // The server doesn't work
-                    ConnectColor = "#d6003b";
-                    ConnectVPNLabel = ResUI.HomeNotConnected;
-                    IsConnected = false;
-                    return;
+                    DelayProgress = true;
+                    HomeRealPingServer(_config.indexId);
+                    // Wait for delay calculation (10 seconds)
+                    ConnectVPNLabel = ResUI.HomeConnecting;
+                    short count = 1;
+                    while (!IsDelayCalculationFinished)
+                    {
+                        // We don't want to stuck in a infinite loop
+                        if (count == 25)
+                            break;
+
+                        await Task.Delay(400).ConfigureAwait(false);
+                        count += 1;
+                    }
+                    ConnectProgress = false;
+                    DelayProgress = false;
+                    // Check delay
+                    if (SelectedProfileDelay > 0 && SelectedProfileDelay != -1)
+                    {
+                        // The server works
+
+                        //TODO: @hiddify1; change the connectVPN color to whatever should be
+                        ConnectVPNLabelColor = "#7CFC0000";
+                        ConnectVPNLabel = ResUI.HomeConnected;
+                        ConnectColor = "#33d91a";
+                        IsConnected = true;
+                        SetSysProxy();
+                        return;
+                    }
+                    else
+                    {
+                        // The server doesn't work
+                        ConnectColor = "#d6003b";
+                        ConnectVPNLabel = ResUI.HomeNotConnected;
+                        IsConnected = false;
+                        return;
+                    }
+
                 }
+
             }
 
             // It's connected, should be disconnected

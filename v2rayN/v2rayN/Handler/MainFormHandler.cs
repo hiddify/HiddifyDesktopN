@@ -170,8 +170,8 @@ namespace v2rayN.Handler
             {
                 var updateTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
                 var lstSubs = LazyConfig.Instance.SubItems()
-                            .Where(t => t.autoUpdateInterval > 0)
-                            .Where(t => updateTime - t.updateTime >= t.autoUpdateInterval * 60)
+                            .Where(t => t.profileUpdateInterval > 0)
+                            .Where(t => updateTime - t.updateTime >= t.profileUpdateInterval * 60)
                             .ToList();
 
                 foreach (var item in lstSubs)

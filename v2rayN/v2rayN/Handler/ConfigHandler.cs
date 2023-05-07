@@ -1040,7 +1040,7 @@ namespace v2rayN.Handler
 
                     // Get user subscription info (like donwloaded/uploaded/total usage and expire date)
                     // Get expire epoch date
-                    var headers = Utils.GetUrlResponseHeader(str);
+                    var headers = Utils.GetUrlResponseHeader(str,false);
                     var subInfo = Utils.GetSubscriptionInfoFromHeaders(headers);
                     //if (subInfo == null)
                     //{
@@ -1223,7 +1223,7 @@ namespace v2rayN.Handler
 
                     // Get user subscription info (like donwloaded/uploaded/total usage and expire date)
                     // Get expire epoch date
-                    var headers = Utils.GetUrlResponseHeader(str);
+                    var headers = Utils.GetUrlResponseHeader(str,false);
                     var subInfo = Utils.GetSubscriptionInfoFromHeaders(headers);
                     //if (subInfo == null)
                     //{
