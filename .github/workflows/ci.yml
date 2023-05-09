@@ -80,7 +80,8 @@ jobs:
     - name: Publish win x64
       working-directory: v2rayN
       run: |
-        dotnet publish --property WarningLevel=0 -c Release -o ../release/win-x64 -r win-x64 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true          
+        dotnet publish v2rayN\v2rayN.csproj --property WarningLevel=0 -c Release -o ../release/win-x64 -r win-x64 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true /p:PublishSingleFileExecutable=HiddifyN.exe
+#        dotnet publish --property WarningLevel=0 -c Release -o ../release/win-x64 -r win-x64 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true          
 
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
     - name: Upload build win-x64
@@ -93,7 +94,8 @@ jobs:
     - name: Publish win x86
       working-directory: v2rayN
       run: |
-        dotnet publish --property WarningLevel=0 -c Release -o ../release/win-x86 -r win-x86 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true
+        dotnet publish v2rayN\v2rayN.csproj  --property WarningLevel=0 -c Release -o ../release/win-x86 -r win-x86 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true
+#        dotnet publish --property WarningLevel=0 -c Release -o ../release/win-x86 -r win-x86 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true
 
     - name: Upload build win-x86
       uses: actions/upload-artifact@v3
