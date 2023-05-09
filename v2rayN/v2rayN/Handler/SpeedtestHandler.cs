@@ -337,6 +337,9 @@ namespace v2rayN.Handler
         public async Task<string> GetRealPingTime(DownloadHandle downloadHandle, IWebProxy webProxy)
         {
             int responseTime = await downloadHandle.GetRealPingTime(_config.speedTestItem.speedPingTestUrl, webProxy, 10);
+            responseTime = await downloadHandle.GetRealPingTime(_config.speedTestItem.speedPingTestUrl, webProxy, 10);
+            if (responseTime<0)
+                responseTime = await downloadHandle.GetRealPingTime(_config.speedTestItem.speedPingTestUrl, webProxy, 10);
             //string output = Utils.IsNullOrEmpty(status) ? FormatOut(responseTime, "ms") : status;
             return FormatOut(responseTime, Global.DelayUnit);
         }

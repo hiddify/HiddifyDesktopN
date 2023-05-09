@@ -209,6 +209,9 @@ namespace v2rayN.ViewModels
         [Reactive]
         public Icon NotifyIcon { get; set; }
 
+        public ProxyModeEnum[] ProxyModes => (ProxyModeEnum[])Enum.GetValues(typeof(ProxyModeEnum));
+
+
         [Reactive]
         public ImageSource AppIcon { get; set; }
 

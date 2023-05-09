@@ -253,8 +253,9 @@ namespace v2rayN.Handler
             return null;
         }
 
-        public async Task<int> RunAvailabilityCheck(IWebProxy? webProxy)
+        public async Task<int> RunAvailabilityCheck(IWebProxy? webProxy,int count=3)
         {
+            int responseTime = -1;
             try
             {
                 if (webProxy == null)
@@ -262,23 +263,24 @@ namespace v2rayN.Handler
                     webProxy = GetWebProxy(true);
                 }
 
-                try
-                {
-                    var config = LazyConfig.Instance.GetConfig();
-                    int responseTime = await GetRealPingTime(config.speedTestItem.speedPingTestUrl, webProxy, 10);
-                    return responseTime;
-                }
-                catch (Exception ex)
-                {
-                    Utils.SaveLog(ex.Message, ex);
-                    return -1;
-                }
+                
+                var config = LazyConfig.Instance.GetConfig();
+                responseTime = await GetRealPingTime(config.speedTestItem.speedPingTestUrl, webProxy, 10);
+                if (count == 3)
+                    responseTime = -1;
             }
             catch (Exception ex)
             {
                 Utils.SaveLog(ex.Message, ex);
-                return -1;
+                responseTime = -1;
             }
+            if (responseTime < 0 && count > 0)
+            {
+                await Task.Delay(500);
+                await RunAvailabilityCheck(webProxy, count - 1);
+            }
+
+            return responseTime;
         }
 
         public async Task<int> GetRealPingTime(string url, IWebProxy? webProxy, int downloadTimeout)

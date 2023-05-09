@@ -37,6 +37,7 @@
             <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
             <conv:DelayColorConverter x:Key="DelayColorConverter" />
             <conv:SizeConverter x:Key="SizeConverter" />
+            <conv:LocalizeConverter x:Key="LocalizeConverter" />
 
         </ResourceDictionary>
     </Window.Resources>

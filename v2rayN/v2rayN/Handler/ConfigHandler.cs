@@ -185,7 +185,7 @@ namespace v2rayN.Handler
             {
                 config.speedTestItem.speedTestUrl = Global.SpeedTestUrls[0];
             }
-            if (Utils.IsNullOrEmpty(config.speedTestItem.speedPingTestUrl))
+            //if (Utils.IsNullOrEmpty(config.speedTestItem.speedPingTestUrl))
             {
                 config.speedTestItem.speedPingTestUrl = Global.SpeedPingTestUrl;
             }
