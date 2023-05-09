@@ -76,7 +76,7 @@ namespace v2rayN.ViewModels
         public ListBoxItem HomeSelectedRoutingItem { get; set; }
 
         [Reactive]
-        public ListBoxItem HomeSelectedProxyMode { get; set; }
+        public ProxyModeEnum HomeSelectedProxyMode { get; set; } = ProxyModeEnum.Loadbalance;
         [Reactive]
         public int SelectedProfileDelay { get; set; }
         [Reactive]
@@ -971,9 +971,9 @@ namespace v2rayN.ViewModels
             // User selected a proxy mode
             if (HomeSelectedProxyMode != null)
             {
-                string proxyModeRemark = HomeSelectedProxyMode.Content.ToString();
+                
                 // Handle manual mode
-                if (proxyModeRemark == "Manual")
+                if (HomeSelectedProxyMode == ProxyModeEnum.Manual)
                 {
                     if (Utils.IsNullOrEmpty(_config.indexId))
                     {
@@ -989,7 +989,7 @@ namespace v2rayN.ViewModels
                 else
                 {
                     // Now the selected proxy mode is auto either load balance
-                    ProfileItem server = GetSelectedServer(SelectedSub.id, proxyModeRemark);
+                    ProfileItem server = GetSelectedServer(SelectedSub.id, HomeSelectedProxyMode);
                     if (server == null)
                     {
                         //TODO: Send message to user about what happend
@@ -2359,8 +2359,8 @@ namespace v2rayN.ViewModels
                 // If user selected load balance/auto we can't get "real ping" (i don't know why?!)
                 // So, Insted of "real ping", we just send a request and check the http response status
                 if (HomeSelectedProxyMode != null &&
-                    !Utils.IsNullOrEmpty(HomeSelectedProxyMode.Content.ToString()) &&
-                    (HomeSelectedProxyMode.Content.ToString() == "Auto" || HomeSelectedProxyMode.Content.ToString() == "Load Balance"))
+                    
+                    (HomeSelectedProxyMode== ProxyModeEnum.Smart || HomeSelectedProxyMode==ProxyModeEnum.Smart))
                 {
                     DelayProgress = true;
                     ConnectVPNLabel = ResUI.HomeConnecting;
@@ -2482,7 +2482,7 @@ namespace v2rayN.ViewModels
         public async Task HomeSelectedProxyChanged()
         {
             ProfileExpanded = false;
-            if (HomeSelectedProxyMode?.Content?.ToString() == ResUI.HomeProxyManual)
+            if (HomeSelectedProxyMode== ProxyModeEnum.Manual)
             { 
                 ToggleV2rayPanel();
                 return;
@@ -2508,9 +2508,9 @@ namespace v2rayN.ViewModels
             ColorModeDark = !ColorModeDark;
         }
 
-        private ProfileItem? GetSelectedServer(string subId,string proxyMode)
+        private ProfileItem? GetSelectedServer(string subId,ProxyModeEnum proxyMode)
         {
-            if (subId.IsNullOrEmpty() || proxyMode.IsNullOrEmpty())
+            if (subId.IsNullOrEmpty() || proxyMode==null)
                 return null;
 
 
@@ -2521,16 +2521,16 @@ namespace v2rayN.ViewModels
                 return null;
             }
 
-            if (proxyMode == "Manual")
+            if (proxyMode == ProxyModeEnum.Manual)
                 return null;
 
             ProfileItem server = null;
 
-            if (proxyMode == "Auto")
+            if (proxyMode == ProxyModeEnum.Smart)
             {
                 server = subServers.FirstOrDefault(s => s.remarks == "Lowest Ping");
             }
-            else if (proxyMode == "Load Balance")
+            else if (proxyMode == ProxyModeEnum.Loadbalance)
             {
                 server = subServers.FirstOrDefault(s => s.remarks == "Load Balance");
             }
