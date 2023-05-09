@@ -695,29 +695,37 @@ namespace v2rayN.ViewModels
                 {
                     if (SelectedSub != null)
                     {
-                        if (SelectedSub.profileUpdateInterval == 0)
+                        if (SelectedSub.enabled)
                         {
-                            bool useProxy = Utils.IsSystemProxyEnabled(_config.sysProxyType);
-                            var headers = Utils.GetUrlResponseHeader(SelectedSub.url,useProxy);
-                            var subInfo = Utils.GetSubscriptionInfoFromHeaders(headers);
-                            if (subInfo == null)
-                                continue;
-                            if (subInfo.ProfileUpdateInterval != 0)
-                                // Change sub item
-                                SelectedSub.profileUpdateInterval = subInfo.ProfileUpdateInterval;
+                            if (SelectedSub.profileUpdateInterval == 0)
+                            {
+                                bool useProxy = Utils.IsSystemProxyEnabled(_config.sysProxyType);
+                                var headers = Utils.GetUrlResponseHeader(SelectedSub.url,useProxy);
+                                var subInfo = Utils.GetSubscriptionInfoFromHeaders(headers);
+                                if (subInfo == null)
+                                    continue;
+                                if (subInfo.ProfileUpdateInterval != 0)
+                                    // Change sub item
+                                    SelectedSub.profileUpdateInterval = subInfo.ProfileUpdateInterval;
 
-                            // Edit sub item interval
-                            ConfigHandler.AddSubItem(ref _config, SelectedSub);
-                            continue;
-                        }
-                        else
-                        {
-                            if (Utils.IsSystemProxyEnabled(_config.sysProxyType))
-                                UpdateSubscriptionProcess(SelectedSub.id, true);
+                                // Edit sub item interval
+                                ConfigHandler.AddSubItem(ref _config, SelectedSub);
+                                continue;
+                            }
                             else
-                                UpdateSubscriptionProcess(SelectedSub.id, false);
+                            {
+                                if (Utils.IsSystemProxyEnabled(_config.sysProxyType))
+                                    UpdateSubscriptionProcess(SelectedSub.id, true);
+                                else
+                                    UpdateSubscriptionProcess(SelectedSub.id, false);
+                            }
+
                         }
                         Thread.Sleep(TimeSpan.FromHours(SelectedSub.profileUpdateInterval));
+                    }
+                    else
+                    {
+                        Thread.Sleep(700);
                     }
                 }
             }).Start();
