@@ -91,7 +91,7 @@ jobs:
     - name: Publish win ${{ matrix.configuration }}
       working-directory: v2rayN
       run: |
-        dotnet publish v2rayN\v2rayN.csproj --property WarningLevel=0 -c Release -o ../release/win-x64 -r win-${{ matrix.configuration }} -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true /p:PublishSingleFileExecutable=HiddifyN.exe
+        dotnet publish v2rayN\v2rayN.csproj --property WarningLevel=0 -c Release -o ../release/win-${{ matrix.configuration }} -r win-${{ matrix.configuration }} -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true /p:PublishSingleFileExecutable=HiddifyN.exe
 #        dotnet publish --property WarningLevel=0 -c Release -o ../release/win-x64 -r win-x64 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true          
     - name: add xray
       run: |
