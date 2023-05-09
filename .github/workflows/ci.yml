@@ -70,7 +70,7 @@ jobs:
       name: Download the xray core file ${{ matrix.configuration }}
       with:
         url: "https://github.com/hiddify/Hiddify-Xray-core/releases/latest/download/${{ matrix.xray }}"
-        target: tmp/
+        target: ./
         auto-match: true
 
     # Install the .NET Core workload
@@ -97,7 +97,7 @@ jobs:
     - name: add xray
       run: |
         mkdir release\win-${{ matrix.configuration }}\bin\Xray
-        7z x "tmp\${{ matrix.xray }}" -i!"*.exe"
+        7z x "${{ matrix.xray }}" -i!"*.exe"
         move *xray.exe  release\win-${{ matrix.configuration }}\bin\Xray\
         
     # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
