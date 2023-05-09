@@ -523,7 +523,7 @@
     <value>Help</value>
   </data>
   <data name="menuOptionSetting" xml:space="preserve">
-    <value>OptionSetting</value>
+    <value>Option Setting</value>
   </data>
   <data name="menuPromotion" xml:space="preserve">
     <value>Channel</value>
@@ -532,7 +532,7 @@
     <value>Reload</value>
   </data>
   <data name="menuRoutingSetting" xml:space="preserve">
-    <value>RoutingSetting</value>
+    <value>Routing Setting</value>
   </data>
   <data name="menuServers" xml:space="preserve">
     <value>Servers</value>
