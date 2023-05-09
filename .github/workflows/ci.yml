@@ -65,13 +65,9 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - uses: suisei-cn/actions-download-file@v1.3.0
-      id: downloadfile  # Remember to give an ID if you need the output
-      name: Download the xray core file ${{ matrix.configuration }}
-      with:
-        url: "https://github.com/hiddify/Hiddify-Xray-core/releases/latest/download/${{ matrix.xray }}"
-        target: ./
-        auto-match: true
+    - name: Download xray
+      run: curl -O https://github.com/hiddify/Hiddify-Xray-core/releases/latest/download/${{ matrix.xray }}
+    
 
     # Install the .NET Core workload
     - name: Install .NET Core
