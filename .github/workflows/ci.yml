@@ -50,7 +50,12 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [Release]
+          include:
+          - configuration: x64
+            xray: Xray-windows-64.zip
+          - configuration: x86
+            xray: Xray-windows-32.zip
+      
 
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
@@ -60,6 +65,13 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
+    - uses: suisei-cn/actions-download-file@v1.3.0
+      id: downloadfile  # Remember to give an ID if you need the output
+      name: Download the xray core file ${{ matrix.configuration }}
+      with:
+        url: "https://github.com/hiddify/Hiddify-Xray-core/releases/latest/download/${{ matrix.xray }}"
+        target: tmp/
+        auto-match: true
 
     # Install the .NET Core workload
     - name: Install .NET Core
@@ -77,29 +89,23 @@ jobs:
       run: |
         dotnet build --configuration Release --no-restore
         
-    - name: Publish win x64
+    - name: Publish win ${{ matrix.configuration }}
       working-directory: v2rayN
       run: |
-        dotnet publish v2rayN\v2rayN.csproj --property WarningLevel=0 -c Release -o ../release/win-x64 -r win-x64 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true /p:PublishSingleFileExecutable=HiddifyN.exe
+        dotnet publish v2rayN\v2rayN.csproj --property WarningLevel=0 -c Release -o ../release/win-x64 -r win-${{ matrix.configuration }} -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true /p:PublishSingleFileExecutable=HiddifyN.exe
 #        dotnet publish --property WarningLevel=0 -c Release -o ../release/win-x64 -r win-x64 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true          
-
-    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
-    - name: Upload build win-x64
-      uses: actions/upload-artifact@v3
-      with:
-        name: win-x64
-        path: release/win-x64
-        retention-days: 5
-
-    - name: Publish win x86
-      working-directory: v2rayN
+    - name: add xray
       run: |
-        dotnet publish v2rayN\v2rayN.csproj  --property WarningLevel=0 -c Release -o ../release/win-x86 -r win-x86 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true
-#        dotnet publish --property WarningLevel=0 -c Release -o ../release/win-x86 -r win-x86 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true
-
-    - name: Upload build win-x86
+        mkdir release\win-${{ matrix.configuration }}\bin\Xray
+        7z x "tmp\${{ matrix.xray }}" -i!"*.exe"
+        move *xray.exe  release\win-${{ matrix.configuration }}\bin\Xray\
+        
+    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
+    - name: Upload build win-${{ matrix.configuration }}
       uses: actions/upload-artifact@v3
       with:
-        name: win-x86
-        path: release/win-x86
+        name: win-${{ matrix.configuration }}
+        path: release/win-${{ matrix.configuration }}
         retention-days: 5
+
+    
