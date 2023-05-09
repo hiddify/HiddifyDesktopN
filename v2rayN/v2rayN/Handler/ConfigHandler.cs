@@ -187,7 +187,7 @@ namespace v2rayN.Handler
             }
             //if (Utils.IsNullOrEmpty(config.speedTestItem.speedPingTestUrl))
             {
-                config.speedTestItem.speedPingTestUrl = Global.SpeedPingTestUrl;
+                config.speedTestItem.speedPingTestUrl = Global.SpeedPingTestUrlGoogle;
             }
 
             if (config.guiItem.statisticsFreshRate is > 100 or < 1)
@@ -1040,7 +1040,7 @@ namespace v2rayN.Handler
 
                     // Get user subscription info (like donwloaded/uploaded/total usage and expire date)
                     // Get expire epoch date
-                    var headers = Utils.GetUrlResponseHeader(str);
+                    var headers = Utils.GetUrlResponseHeader(str,false);
                     var subInfo = Utils.GetSubscriptionInfoFromHeaders(headers);
                     //if (subInfo == null)
                     //{
@@ -1217,13 +1217,9 @@ namespace v2rayN.Handler
                 //maybe sub
                 if (str.StartsWith(Global.httpsProtocol) || str.StartsWith(Global.httpProtocol))
                 {
-
-                    // If it's sub, We get remaining day to expire & used data & total remained data & profile web page url
-                    // We add this information as a Server but these's just for display to user for their information
-
                     // Get user subscription info (like donwloaded/uploaded/total usage and expire date)
                     // Get expire epoch date
-                    var headers = Utils.GetUrlResponseHeader(str);
+                    var headers = Utils.GetUrlResponseHeader(str,false);
                     var subInfo = Utils.GetSubscriptionInfoFromHeaders(headers);
                     //if (subInfo == null)
                     //{
@@ -1632,7 +1628,7 @@ namespace v2rayN.Handler
             return AddSubItem(ref config, subItem);
         }
 
-        public static int AddSubItem(ref Config config, SubItem subItem)
+        public static int AddSubItem(ref Config config, SubItem subItem,bool doNotFocusOnWindowAfterAdd = false)
         {
             if (Utils.IsNullOrEmpty(subItem.id))
             {
@@ -1659,7 +1655,8 @@ namespace v2rayN.Handler
             }
             if (SqliteHelper.Instance.Replace(subItem) > 0)
             {
-                Utils.SetMainPageReload();
+                if (!doNotFocusOnWindowAfterAdd)
+                    Utils.SetMainPageReload();
                 return 0;
             }
             else

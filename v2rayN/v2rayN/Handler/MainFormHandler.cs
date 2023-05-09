@@ -156,7 +156,8 @@ namespace v2rayN.Handler
 
         public void UpdateTask(Config config, Action<bool, string> update)
         {
-            Task.Run(() => UpdateTaskRunSubscription(config, update));
+            // We don't want to update subscription manually in code, it'll be handled in another part of code (search Auto update sub)
+            //Task.Run(() => UpdateTaskRunSubscription(config, update));
             Task.Run(() => UpdateTaskRunGeo(config, update));
         }
 
@@ -170,8 +171,8 @@ namespace v2rayN.Handler
             {
                 var updateTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
                 var lstSubs = LazyConfig.Instance.SubItems()
-                            .Where(t => t.autoUpdateInterval > 0)
-                            .Where(t => updateTime - t.updateTime >= t.autoUpdateInterval * 60)
+                            .Where(t => t.profileUpdateInterval > 0)
+                            .Where(t => updateTime - t.updateTime >= t.profileUpdateInterval * 60)
                             .ToList();
 
                 foreach (var item in lstSubs)

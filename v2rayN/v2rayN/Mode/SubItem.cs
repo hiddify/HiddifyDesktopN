@@ -33,7 +33,7 @@ namespace v2rayN.Mode
         public int TotalDataGB { get; set; }
         public string? profileWebPageUrl { get; set; }
 
-        public int autoUpdateInterval { get; set; }
+        public int profileUpdateInterval { get; set; }
 
         public long updateTime { get; set; }
 

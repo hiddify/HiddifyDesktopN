@@ -1313,11 +1313,34 @@ namespace v2rayN
 
         public static void SetMainPageReload()
         {
-            LockMainFormReloadFile();
+            bool tryAgain = false;
+            do
+            {
+                try
+                {
+                    LockMainFormReloadFile();
+                }
+                catch (Exception)
+                {
+                    tryAgain = true;
+                }
+
+            } while (tryAgain);
         }
         public static void UnsetMainPageReload()
         {
-            UnlockMainFormReloadFile();
+            bool tryAgain = false;
+            do
+            {
+                try
+                {
+                    UnlockMainFormReloadFile();
+                }
+                catch (Exception)
+                {
+                    tryAgain = true;
+                }
+            }while(tryAgain);
         }
         public static bool DoesMainPageNeedReload()
         {
@@ -1437,19 +1460,82 @@ namespace v2rayN
             return hiddifySubDepplink;
         }
 
-        public static HttpResponseHeaders? GetUrlResponseHeader(string url)
+        public static HttpResponseHeaders? GetUrlResponseHeader(string url, bool useProgramProxy)
         {
-            using (var client = new HttpClient())
+            HttpClientHandler handler;
+            if (!useProgramProxy)
+                handler = new HttpClientHandler() { UseProxy = false };
+            else
+                handler = new HttpClientHandler() { UseProxy = true };
+
+            using (var client = new HttpClient(handler))
             {
-                System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls13 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 client.DefaultRequestHeaders.Accept.Clear();
-                var response = client.GetAsync(new Uri(url)).Result;
-                if (response.StatusCode == HttpStatusCode.OK)
+                try
                 {
-                    return response.Headers;
+                    var response = client.Send(new HttpRequestMessage(HttpMethod.Head,url));
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        return response.Headers;
+                    }
+                }
+                catch (Exception)
+                {
+                    return null;
                 }
             }
             return null;
+        }
+        public async static Task<HttpStatusCode?> GetUrlResponseStatusCode(string url,bool useProgramProxy)
+        {
+            HttpClientHandler handler;
+            if (!useProgramProxy)
+                handler = new HttpClientHandler() { UseProxy = false};
+            else
+                handler = new HttpClientHandler() {  UseProxy =true};
+
+            using (var client = new HttpClient(handler))
+            {
+                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls13 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                client.DefaultRequestHeaders.Accept.Clear();
+                try
+                {
+                    var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
+                    return response.StatusCode;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
+
+        public async static Task<bool> IsUrlStatusCode204(string url, bool useProgramProxy)
+        {
+            HttpClientHandler handler;
+            if (!useProgramProxy)
+                handler = new HttpClientHandler() { UseProxy = false };
+            else
+                handler = new HttpClientHandler() { UseProxy = true };
+
+            using (var client = new HttpClient(handler))
+            {
+                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls13 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                client.DefaultRequestHeaders.Accept.Clear();
+                try
+                {
+                    var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
+                    if (response.StatusCode == HttpStatusCode.NoContent)
+                        return true;
+                    else
+                        return false;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
         }
 
         public static DateTime EpochToDate(long epoch)
