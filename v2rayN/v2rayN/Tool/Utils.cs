@@ -1511,7 +1511,7 @@ namespace v2rayN
             }
         }
 
-        public async static Task<bool?> IsUrlStatusCode204(string url, bool useProgramProxy)
+        public async static Task<bool> IsUrlStatusCode204(string url, bool useProgramProxy)
         {
             HttpClientHandler handler;
             if (!useProgramProxy)
@@ -1521,7 +1521,7 @@ namespace v2rayN
 
             using (var client = new HttpClient(handler))
             {
-                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls13 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 client.DefaultRequestHeaders.Accept.Clear();
                 try
                 {

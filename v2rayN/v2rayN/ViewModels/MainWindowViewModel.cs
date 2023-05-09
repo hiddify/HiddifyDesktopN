@@ -335,6 +335,8 @@ namespace v2rayN.ViewModels
             RefreshRoutingsMenu();
             RefreshServers();
 
+            // Enable Tls 1.3
+            _config.guiItem.enableSecurityProtocolTls13 = true;
 
             this.WhenAnyValue(x => x.HomeSelectedRoutingItem).Subscribe(c => HomeSelectedRouteChanged());
 
