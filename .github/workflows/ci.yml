@@ -67,7 +67,7 @@ jobs:
         fetch-depth: 0
     - name: Download xray
       run: |
-        curl -O https://github.com/hiddify/Hiddify-Xray-core/releases/latest/download/${{ matrix.xray }}
+        wget https://github.com/hiddify/Hiddify-Xray-core/releases/latest/download/${{ matrix.xray }}
         dir
       
     
@@ -96,6 +96,7 @@ jobs:
     - name: add xray
       run: |
         mkdir release\win-${{ matrix.configuration }}\bin\Xray
+        dir
         7z x "${{ matrix.xray }}" -i!"*.exe"
         move *xray.exe  release\win-${{ matrix.configuration }}\bin\Xray\
         
