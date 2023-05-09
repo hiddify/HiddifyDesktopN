@@ -1510,6 +1510,34 @@ namespace v2rayN
                 }
             }
         }
+
+        public async static Task<bool?> IsUrlStatusCode204(string url, bool useProgramProxy)
+        {
+            HttpClientHandler handler;
+            if (!useProgramProxy)
+                handler = new HttpClientHandler() { UseProxy = false };
+            else
+                handler = new HttpClientHandler() { UseProxy = true };
+
+            using (var client = new HttpClient(handler))
+            {
+                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                client.DefaultRequestHeaders.Accept.Clear();
+                try
+                {
+                    var response = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, url));
+                    if (response.StatusCode == HttpStatusCode.NoContent)
+                        return true;
+                    else
+                        return false;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+        }
+
         public static DateTime EpochToDate(long epoch)
         {
             return DateTimeOffset.FromUnixTimeSeconds(epoch).DateTime;

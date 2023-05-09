@@ -187,7 +187,7 @@ namespace v2rayN.Handler
             }
             if (Utils.IsNullOrEmpty(config.speedTestItem.speedPingTestUrl))
             {
-                config.speedTestItem.speedPingTestUrl = Global.SpeedPingTestUrl;
+                config.speedTestItem.speedPingTestUrl = Global.SpeedPingTestUrlGoogle;
             }
 
             if (config.guiItem.statisticsFreshRate is > 100 or < 1)
@@ -1628,7 +1628,7 @@ namespace v2rayN.Handler
             return AddSubItem(ref config, subItem);
         }
 
-        public static int AddSubItem(ref Config config, SubItem subItem)
+        public static int AddSubItem(ref Config config, SubItem subItem,bool doNotFocusOnWindowAfterAdd = false)
         {
             if (Utils.IsNullOrEmpty(subItem.id))
             {
@@ -1655,7 +1655,8 @@ namespace v2rayN.Handler
             }
             if (SqliteHelper.Instance.Replace(subItem) > 0)
             {
-                Utils.SetMainPageReload();
+                if (!doNotFocusOnWindowAfterAdd)
+                    Utils.SetMainPageReload();
                 return 0;
             }
             else

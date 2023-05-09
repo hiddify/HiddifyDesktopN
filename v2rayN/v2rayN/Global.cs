@@ -24,10 +24,8 @@ namespace v2rayN
         public const string geoUrl = "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/{0}.dat";
         public const string CustomRoutingListUrl = @"https://raw.githubusercontent.com/2dust/v2rayCustomRoutingList/master/";
         public const string singboxGeoUrl = "https://github.com/soffchen/sing-{0}/releases/latest/download/{0}.db";
-        public const string SpeedPingTestUrl = @"https://www.google.com/generate_204";
-        // It gives "204" status code (No Content)
-        //public const string ServerTestUrl = @"https://cp.cloudflare.com";
-        public const string ServerTestUrl = @"https://google.com/robots.txt";
+        public const string SpeedPingTestUrlGoogle = @"https://www.google.com/generate_204";
+        public const string SpeedPingTestUrlCloadFlare = @"https://cp.cloudflare.com/generate_2";
         public const int DefaultUpdateSubUsageIntervalSeconds = 60;
         
 

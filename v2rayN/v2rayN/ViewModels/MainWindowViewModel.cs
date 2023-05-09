@@ -2312,7 +2312,7 @@ namespace v2rayN.ViewModels
                         sub.profileWebPageUrl = subInfo.ProfileWebPageUrl;
 
                         // Replace the sub with new information
-                        if (ConfigHandler.AddSubItem(ref _config, sub) == 0)
+                        if (ConfigHandler.AddSubItem(ref _config, sub,true) == 0)
                         {
                             //successed
                         }
@@ -2354,12 +2354,12 @@ namespace v2rayN.ViewModels
 
                     bool useProxy = Utils.IsSystemProxyEnabled(_config.sysProxyType);
                     var startTime = DateTime.Now;
-                    var statusCode = await Utils.GetUrlResponseStatusCode(Global.ServerTestUrl,useProxy);
+                    var isStatusCode204 = await Utils.IsUrlStatusCode204(Global.SpeedPingTestUrlCloadFlare,useProxy);
                     var delay = (DateTime.Now - startTime).Milliseconds;
                     // Set server delay
                     SelectedProfileDelay = delay;
                     // Check returned status code
-                    if (statusCode != null && statusCode == System.Net.HttpStatusCode.OK)
+                    if (isStatusCode204)
                     {
                         // The server works
                         DelayProgress = false;
