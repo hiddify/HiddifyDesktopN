@@ -17,6 +17,7 @@ using System.IO;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.Pkcs;
 using System.Security.RightsManagement;
 using System.Text;
@@ -260,6 +261,8 @@ namespace v2rayN.ViewModels
         [Reactive]
         public bool DelayProgress { get; set; } = false;
         [Reactive]
+        public bool Loading { get; set; } = false;
+        [Reactive]
         public string ConnectColor { get; set; } = "#FFE0E0E0";
 
         [Reactive]
@@ -395,7 +398,8 @@ namespace v2rayN.ViewModels
             });
             HomeConnectCmd = ReactiveCommand.CreateFromTask(() =>
             {
-               return HomeConnect();
+                
+                return HomeConnect();
             });
             HomeUpdateUsageCmd = ReactiveCommand.Create(() =>
             {
@@ -2339,6 +2343,9 @@ namespace v2rayN.ViewModels
         }
         public async Task HomeConnect(bool forceConnect = false)
         {
+            //var result = DialogHost.Show("hi!", "RootDialog");
+            
+            
             if (SelectedSub == null)
             {
                 _noticeHandler.Enqueue("Please select a sub");
@@ -2415,11 +2422,13 @@ namespace v2rayN.ViewModels
                     }
                     ConnectProgress = false;
                     DelayProgress = false;
+                    //DialogHost.CloseDialogCommand.Execute("",null);
+                    
                     // Check delay
                     if (SelectedProfileDelay > 0 && SelectedProfileDelay != -1)
                     {
                         // The server works
-
+                        
                         //TODO: @hiddify1; change the connectVPN color to whatever should be
                         ConnectVPNLabelColor = "#7CFC0000";
                         ConnectVPNLabel = ResUI.HomeConnected;

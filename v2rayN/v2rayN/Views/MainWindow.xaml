@@ -45,7 +45,19 @@
     <materialDesign:DialogHost
         Identifier="RootDialog"
         SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}"
+        IsOpen="{Binding Loading}"
         Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+        <materialDesign:DialogHost.DialogContent >
+            <materialDesign:Card
+  Padding="4"
+  UniformCornerRadius="14">
+                <ProgressBar
+    IsIndeterminate="True"
+    Style="{StaticResource MaterialDesignCircularProgressBar}"
+    Value="50" />
+            </materialDesign:Card>
+            
+        </materialDesign:DialogHost.DialogContent>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="400" />
