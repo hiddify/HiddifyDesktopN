@@ -791,6 +791,7 @@ namespace v2rayN.ViewModels
                     _updateView(EViewAction.AdjustMainLvColWidth);
                 }
             }
+            Loading = false;
         }
 
         private void UpdateStatisticsHandler(ServerSpeedItem update)
@@ -1248,23 +1249,26 @@ namespace v2rayN.ViewModels
         }
         public (int, List<string>) HomeAddServerOrSubViaClipboard(string cData)
         {
+            Loading = true;
             var (addedServersCount, addedSubIds) = ConfigHandler.HomeAddBatchServers(ref _config, cData, _subId, false, null);
             if (addedSubIds.Count > 0)
             {
                 foreach (string id in addedSubIds)
                 {
                     
-                    if (Utils.IsSystemProxyEnabled(_config.sysProxyType))
-                    {
-                        UpdateSubscriptionProcess(id, true);
-                    }
-                    else
-                    {
+                    //if (Utils.IsSystemProxyEnabled(_config.sysProxyType))
+                    //{
+                    //    UpdateSubscriptionProcess(id, true);
+                    //}
+                    //else
+                    //{
+                    //TODO: we should first get the sub link without proxy if not working use proxy
                         UpdateSubscriptionProcess(id, false);
-                    }
+                    //}
                     
                 }
             }
+            else { Loading = false; }
             return (addedServersCount, addedSubIds);
         }
         public void AddServerOrSubViaClipboard()
