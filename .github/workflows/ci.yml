@@ -66,7 +66,10 @@ jobs:
       with:
         fetch-depth: 0
     - name: Download xray
-      run: curl -O https://github.com/hiddify/Hiddify-Xray-core/releases/latest/download/${{ matrix.xray }}
+      run: |
+        curl -O https://github.com/hiddify/Hiddify-Xray-core/releases/latest/download/${{ matrix.xray }}
+        dir
+      
     
 
     # Install the .NET Core workload
