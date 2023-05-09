@@ -1470,7 +1470,7 @@ namespace v2rayN
 
             using (var client = new HttpClient(handler))
             {
-                System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                System.Net.ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls13 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 client.DefaultRequestHeaders.Accept.Clear();
                 try
                 {
@@ -1497,7 +1497,7 @@ namespace v2rayN
 
             using (var client = new HttpClient(handler))
             {
-                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls13 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 client.DefaultRequestHeaders.Accept.Clear();
                 try
                 {
