@@ -67,7 +67,7 @@ jobs:
         fetch-depth: 0
     - name: Download xray
       run: |
-        wget https://github.com/hiddify/Hiddify-Xray-core/releases/latest/download/${{ matrix.xray }}
+        curl -L -o ${{ matrix.xray }} https://github.com/hiddify/Hiddify-Xray-core/releases/latest/download/${{ matrix.xray }}
         dir
       
     
