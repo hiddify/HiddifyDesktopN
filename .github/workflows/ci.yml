@@ -1,0 +1,105 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# This workflow will build, test, sign and package a WPF or Windows Forms desktop application
+# built on .NET Core.
+# To learn how to migrate your existing application to .NET Core,
+# refer to https://docs.microsoft.com/en-us/dotnet/desktop-wpf/migration/convert-project-from-net-framework
+#
+# To configure this workflow:
+#
+# 1. Configure environment variables
+# GitHub sets default environment variables for every workflow run.
+# Replace the variables relative to your project in the "env" section below.
+#
+# 2. Signing
+# Generate a signing certificate in the Windows Application
+# Packaging Project or add an existing signing certificate to the project.
+# Next, use PowerShell to encode the .pfx file using Base64 encoding
+# by running the following Powershell script to generate the output string:
+#
+# $pfx_cert = Get-Content '.\SigningCertificate.pfx' -Encoding Byte
+# [System.Convert]::ToBase64String($pfx_cert) | Out-File 'SigningCertificate_Encoded.txt'
+#
+# Open the output file, SigningCertificate_Encoded.txt, and copy the
+# string inside. Then, add the string to the repo as a GitHub secret
+# and name it "Base64_Encoded_Pfx."
+# For more information on how to configure your signing certificate for
+# this workflow, refer to https://github.com/microsoft/github-actions-for-desktop-apps#signing
+#
+# Finally, add the signing certificate password to the repo as a secret and name it "Pfx_Key".
+# See "Build the Windows Application Packaging project" below to see how the secret is used.
+#
+# For more information on GitHub Actions, refer to https://github.com/features/actions
+# For a complete CI/CD sample to get started with GitHub Action workflows for Desktop Applications,
+# refer to https://github.com/microsoft/github-actions-for-desktop-apps
+
+name: .NET Core Desktop
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Release]
+
+    runs-on: windows-latest  # For a list of available runner types, refer to
+                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore
+      run: | 
+        dotnet restore
+      working-directory: v2rayN
+        
+    
+    - name: Build
+      working-directory: v2rayN
+      run: |
+        dotnet build --configuration Release --no-restore
+        
+    - name: Publish win x64
+      working-directory: v2rayN
+      run: |
+        dotnet publish v2rayN\v2rayN.csproj --property WarningLevel=0 -c Release -o ../release/win-x64 -r win-x64 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true /p:PublishSingleFileExecutable=HiddifyN.exe
+#        dotnet publish --property WarningLevel=0 -c Release -o ../release/win-x64 -r win-x64 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true          
+
+    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
+    - name: Upload build win-x64
+      uses: actions/upload-artifact@v3
+      with:
+        name: win-x64
+        path: release/win-x64
+        retention-days: 5
+
+    - name: Publish win x86
+      working-directory: v2rayN
+      run: |
+        dotnet publish v2rayN\v2rayN.csproj  --property WarningLevel=0 -c Release -o ../release/win-x86 -r win-x86 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true
+#        dotnet publish --property WarningLevel=0 -c Release -o ../release/win-x86 -r win-x86 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true
+
+    - name: Upload build win-x86
+      uses: actions/upload-artifact@v3
+      with:
+        name: win-x86
+        path: release/win-x86
+        retention-days: 5
