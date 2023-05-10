@@ -7,6 +7,9 @@ using v2rayN.ViewModels;
 using v2rayN.Tool;
 using System.Net;
 using HiddifyN.Tool;
+using v2rayN.Views;
+using System.IO.Pipes;
+using System.IO;
 
 namespace v2rayN
 {
@@ -45,8 +48,10 @@ namespace v2rayN
             {
                 ProgramStarted.Set();
                 IsNewInstance = true;
+                sendLinkToUi();
             }
 
+            
             Global.processJob = new Job();
 
             Logging.Setup();
@@ -56,10 +61,42 @@ namespace v2rayN
             Logging.ClearLogs();
 
             Thread.CurrentThread.CurrentUICulture = new(_config.uiItem.currentLanguage);
-
+            
             base.OnStartup(e);
+            
         }
 
+        private void sendLinkToUi()
+        {
+            try
+            {
+                using (var pipeClient = new NamedPipeClientStream("HiddifyPipe"))
+                {
+                    pipeClient.Connect();
+
+                    using (var writer = new StreamWriter(pipeClient))
+                    {
+                        var args = Environment.GetCommandLineArgs();
+                        // Write the message to the named pipe
+                        string message = args.Length>1? args[1]:"";
+                        writer.WriteLine(message);
+                        writer.Flush();
+                        Thread.Sleep(10000);
+                    }
+                    
+                    pipeClient.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions that occur while sending the message
+                // ...
+            }
+            
+
+            // Exit the new instance of the application
+            Application.Current.Shutdown();
+        }
         private void Init()
         {
             if (ConfigHandler.LoadConfig(ref _config) != 0)
@@ -93,5 +130,8 @@ namespace v2rayN
         {
             Utils.SaveLog("TaskScheduler_UnobservedTaskException", e.Exception);
         }
+
+
+
     }
 }

@@ -3,6 +3,8 @@ using DynamicData.Binding;
 using ReactiveUI;
 using Splat;
 using System.ComponentModel;
+using System.IO;
+using System.IO.Pipes;
 using System.Reactive.Disposables;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,10 +24,32 @@ namespace v2rayN.Views
 {
     public partial class MainWindow
     {
-        private static Config _config;
+        private NamedPipeServerStream _pipeServer;
 
+        private static Config _config;
+        private void HandleClientConnection(IAsyncResult ar)
+        {
+            using (var reader = new StreamReader(_pipeServer))
+            {
+                string message = reader.ReadLine()??"";
+                
+                HandleDeepLink(message);
+             
+            }
+
+            // Disconnect the client and start listening for another connection
+            try { 
+            _pipeServer.Disconnect();
+                _pipeServer.Dispose();
+            }
+            catch (Exception e){ }
+            _pipeServer = new NamedPipeServerStream("HiddifyPipe");
+            _pipeServer.BeginWaitForConnection(HandleClientConnection, null);
+        }
         public MainWindow()
         {
+            _pipeServer = new NamedPipeServerStream("HiddifyPipe");
+            _pipeServer.BeginWaitForConnection(HandleClientConnection, PipeDirection.InOut);
 
             InitializeComponent();
             _config = LazyConfig.Instance.GetConfig();
@@ -273,43 +297,55 @@ namespace v2rayN.Views
             }
         }
 
-        private void HandleDeepLink()
+        public void HandleDeepLink(String? message=null)
         {
+            if (message != null)
+                this.Dispatcher.Invoke(Activate);
+            
             string[] Args = Environment.GetCommandLineArgs();
-            if (Args.Length > 1)
+            if (Args.Length > 1|| message!=null)
             {
-                var uri = Args[1];
+                
+                var uri = message??Args[1];
                 var (isValidUri, scheme) = DeepLinking.IsUriForProgram(uri);
+                
                 if (isValidUri)
                 {
-                    // Parse uri
-                    var item = DeepLinking.ParseUri(uri);
-                    // Error handling
-                    if (item.err != null && item.err != "" && item.res == null)
-                    {
-                        // Notice error
-                        ViewModel?._noticeHandler?.SendMessage(ResUI.MsgDeepLinkIsInvalid);
+                    
 
-                    }
-                    // Add server or subscription to the program
-                    else
+                    this.Dispatcher.Invoke(() =>
                     {
-                        if (item.res.protocol != null)
-                        {
-                            ViewModel?.AddServerOrSubViaDeepLink(item.res.protocol.Uri);
+                        // Parse uri
+                        var item = DeepLinking.ParseUri(uri);
 
-                            Utils.SetMainPageReload();
-                        }
-                        else if (item.res.subscription != null)
+
+                        // Error handling
+                        if (item.err != null && item.err != "" && item.res == null)
                         {
-                            ViewModel?.AddServerOrSubViaDeepLink(item.res.subscription.Url);
-                            Utils.SetMainPageReload();
+                            // Notice error
+                            ViewModel?._noticeHandler?.SendMessage(ResUI.MsgDeepLinkIsInvalid);
+
                         }
+                        // Add server or subscription to the program
                         else
                         {
-                            // WTF is happening here !
+                            if (item.res.protocol != null)
+                            {
+                                ViewModel?.AddServerOrSubViaDeepLink(item.res.protocol.Uri);
+
+                                Utils.SetMainPageReload();
+                            }
+                            else if (item.res.subscription != null)
+                            {
+                                ViewModel?.AddServerOrSubViaDeepLink(item.res.subscription.Url);
+                                Utils.SetMainPageReload();
+                            }
+                            else
+                            {
+                                // WTF is happening here !
+                            }
                         }
-                    }
+                    });
                 }
             }
         }
@@ -334,6 +370,7 @@ namespace v2rayN.Views
         {
             e.Cancel = true;
             ViewModel?.ShowHideWindow(false);
+
         }
 
 
@@ -353,6 +390,11 @@ namespace v2rayN.Views
             tbNotify.Dispose();
             StorageUI();
             ViewModel?.MyAppExit(false);
+            if (_pipeServer != null)
+            {
+                _pipeServer.Dispose();
+                _pipeServer = null;
+            }
         }
 
         private void Current_SessionEnding(object sender, SessionEndingCancelEventArgs e)
@@ -792,5 +834,6 @@ namespace v2rayN.Views
         {
 
         }
+
     }
 }

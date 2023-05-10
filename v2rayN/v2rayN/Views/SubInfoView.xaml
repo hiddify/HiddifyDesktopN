@@ -35,6 +35,7 @@
                     Text="{Binding remarks}" >
 
                 </TextBlock>
+                
                 <!--<Button Name="GotoProfile"
                     Command="{Binding HomeGotoProfileCmd}"
                     Margin="10,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}"

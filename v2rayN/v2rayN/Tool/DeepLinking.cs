@@ -5,7 +5,7 @@ namespace v2rayN.Tool
 {
     public class DeepLinking
     {
-        const string FriendlyName = "HiddifyDesktopN URI Scheme";
+        const string FriendlyName = "HiddifyN";
         const string SchemeSeperator = "://";
         readonly static string applicationLocation = Utils.GetExePath();
         public static void RegisterSchemes()

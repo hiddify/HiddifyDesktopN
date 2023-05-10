@@ -1268,7 +1268,9 @@ namespace v2rayN.ViewModels
                     
                 }
             }
-            else { Loading = false; }
+            else { 
+                Loading = false; 
+            }
             return (addedServersCount, addedSubIds);
         }
         public void AddServerOrSubViaClipboard()

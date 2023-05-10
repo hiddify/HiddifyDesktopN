@@ -36,11 +36,26 @@
 
                 </TextBlock>
                 <Button Name="GotoProfile"
+                        Visibility="Collapsed"
                     Command="{Binding HomeGotoProfileCmd}"
-                    Margin="10,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}"
-                    Foreground="Black"
+                     Background="{x:Null}" BorderBrush="{x:Null}"
+                    
+                        Style="{StaticResource MaterialDesignFlatButton}"
                     >
                     <materialDesign:PackIcon Kind="OpenInNew"  />
+                </Button>
+                <Button Name="Delete"  
+                                                Background="{x:Null}"
+                                    Style="{StaticResource MaterialDesignFlatButton}"
+                                                Command="{Binding HomeDeleteSubCmd}"
+                                                BorderBrush="{x:Null}" >
+                    <StackPanel Orientation="Horizontal" >
+                        <!--<TextBlock Text="{x:Static resx:ResUI.HomeDelete}">
+
+                            </TextBlock>-->
+                        <materialDesign:PackIcon Kind="TrashCanOutline" VerticalAlignment="Center" Margin="2,0,0,0"  />
+
+                    </StackPanel>
                 </Button>
             </StackPanel>
             <Button Name="NewProfile" Grid.Column="1"
@@ -48,7 +63,8 @@
                                                 VerticalAlignment="Center"  Height="36" materialDesign:ButtonAssist.CornerRadius="8" 
                                                 Background="{x:Null}"
                                                 Command="{Binding HomeNewProfileCmd}"
-                                                BorderBrush="{x:Null}" Foreground="#FF0E0808">
+                    Style="{StaticResource MaterialDesignFlatButton}"
+                                                BorderBrush="{x:Null}" >
                 <StackPanel Orientation="Horizontal" >
                     <materialDesign:PackIcon Kind="Plus" VerticalAlignment="Center"  />
                     <TextBlock Style="{StaticResource MaterialDesignBody1TextBlock}"
@@ -102,19 +118,7 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Name="Delete" Grid.Column="1" HorizontalAlignment="Left"
-                                                VerticalAlignment="Bottom"  Padding="0" materialDesign:ButtonAssist.CornerRadius="8" 
-                                                Background="{x:Null}"
-                                                Command="{Binding HomeDeleteSubCmd}"
-                                                BorderBrush="{x:Null}" Foreground="#FF0E0808" Margin="5,0,0,0">
-                        <StackPanel Orientation="Horizontal" >
-                            <TextBlock Text="{x:Static resx:ResUI.HomeDelete}">
-
-                            </TextBlock>
-                            <materialDesign:PackIcon Kind="TrashCanOutline" VerticalAlignment="Center" Margin="2,0,0,0"  />
-
-                        </StackPanel>
-                    </Button>
+                    
 
                     <Label Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                         <Label.Content>
