@@ -1,0 +1,89 @@
+name: Release
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - "v*"
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+          include:
+          - configuration: x64
+            xray: Xray-windows-64.zip
+          - configuration: x86
+            xray: Xray-windows-32.zip
+      
+
+    runs-on: windows-latest  # For a list of available runner types, refer to
+                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Download xray
+      run: |
+        curl -L -o ${{ matrix.xray }} https://github.com/hiddify/Hiddify-Xray-core/releases/latest/download/${{ matrix.xray }}
+        dir
+      
+    
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore
+      run: | 
+        dotnet restore
+      working-directory: v2rayN
+        
+    
+    - name: Build
+      working-directory: v2rayN
+      run: |
+        dotnet build --configuration Release --no-restore
+        
+    - name: Publish win ${{ matrix.configuration }}
+      working-directory: v2rayN
+      run: |
+        dotnet publish v2rayN\v2rayN.csproj --property WarningLevel=0 -c Release -o ../release/win-${{ matrix.configuration }} -r win-${{ matrix.configuration }} -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true /p:PublishSingleFileExecutable=HiddifyN.exe
+#        dotnet publish --property WarningLevel=0 -c Release -o ../release/win-x64 -r win-x64 -p:PublishSingleFile=true --self-contained false /p:UseAppHost=true /p:PublishReadyToRun=true          
+    - name: add xray
+      run: |
+        mkdir release\win-${{ matrix.configuration }}\bin\Xray
+        dir
+        7z x "${{ matrix.xray }}" -i!"*.exe"
+        move *xray.exe  release\win-${{ matrix.configuration }}\bin\Xray\
+        
+    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
+    - name: Upload build win-${{ matrix.configuration }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: win-${{ matrix.configuration }}
+        path: release/win-${{ matrix.configuration }}
+        retention-days: 5
+  publish:
+    - uses: actions/checkout@v1
+    - name: Load Release URL File from release job
+      uses: actions/download-artifact@v1
+      with:
+        name: win-x64.zip
+    - name: Load Release URL File from release job
+      uses: actions/download-artifact@v1
+      with:
+        name: win-x86.zip
+    - name: Upload Release
+      uses: softprops/action-gh-release@v1
+      with:
+          # tag: ${{ github.ref_name }}
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          files: *.zip
+          prerelease: false
+          generate_release_notes: true    
