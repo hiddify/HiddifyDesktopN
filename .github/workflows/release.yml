@@ -69,6 +69,8 @@ jobs:
         path: release/win-${{ matrix.configuration }}
         retention-days: 5
   publish:
+    runs-on: ubuntu-latest
+    steps:
     - uses: actions/checkout@v1
     - name: Load Release URL File from release job
       uses: actions/download-artifact@v1
@@ -84,6 +86,6 @@ jobs:
           # tag: ${{ github.ref_name }}
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
-          files: *.zip
+          files: "*.zip"
           prerelease: false
           generate_release_notes: true    
