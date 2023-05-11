@@ -2373,7 +2373,7 @@ namespace v2rayN.ViewModels
                 // So, Insted of "real ping", we just send a request and check the http response status
                 if (HomeSelectedProxyMode != null &&
                     
-                    (HomeSelectedProxyMode== ProxyModeEnum.Smart || HomeSelectedProxyMode==ProxyModeEnum.Smart))
+                    (HomeSelectedProxyMode== ProxyModeEnum.Smart || HomeSelectedProxyMode==ProxyModeEnum.Loadbalance))
                 {
                     DelayProgress = true;
                     ConnectVPNLabel = ResUI.HomeConnecting;
