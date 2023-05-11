@@ -2365,7 +2365,7 @@ namespace v2rayN.ViewModels
                 ConnectProgress = true;
                 ConnectColor = "#eab676";
                 SelectAppropiateServer();
-                await HomeRealPingServer(_config.indexId);
+                //await HomeRealPingServer(_config.indexId);
                 // Till now, we started a server
                 // Now we calculate real ping of the server to make sure, it's working
                 
@@ -2382,11 +2382,11 @@ namespace v2rayN.ViewModels
                     var startTime = DateTime.Now;
                     var isStatusCode204 = await Utils.IsUrlStatusCode204(Global.SpeedPingTestUrlCloadFlare,useProxy);
                     var delay = (DateTime.Now - startTime).Milliseconds;
-                    // Set server delay
-                    SelectedProfileDelay = delay;
                     // Check returned status code
                     if (isStatusCode204)
                     {
+                        // Set server delay
+                        SelectedProfileDelay = delay;
                         // The server works
                         DelayProgress = false;
                         ConnectProgress = false;
@@ -2399,6 +2399,7 @@ namespace v2rayN.ViewModels
                     }
                     else
                     {
+                        SelectedProfileDelay = -1;
                         // The server doesn't work
                         DelayProgress = false;
                         ConnectProgress = false;

@@ -1653,6 +1653,14 @@ namespace v2rayN.Handler
                 }
                 subItem.sort = maxSort + 1;
             }
+            var subs = LazyConfig.Instance.SubItems();
+            // Do not add the sub if it's already exist
+            foreach (SubItem item in subs)
+            {
+                if (subItem.url == item.url)
+                    return 0;
+            }
+
             if (SqliteHelper.Instance.Replace(subItem) > 0)
             {
                 if (!doNotFocusOnWindowAfterAdd)
